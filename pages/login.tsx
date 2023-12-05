@@ -28,10 +28,6 @@ function Login() {
         onChange={onChangePw}
         value={password}
       />
-      <div>
-        <input type="checkbox" className="w-4 mt-3" />
-        <span className="ml-1">로그인 상태 유지</span>
-      </div>
       <Link href="/">
         <button className="p-2 mt-7">LOGIN</button>
       </Link>
