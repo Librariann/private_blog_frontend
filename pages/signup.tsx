@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Input from "../components/input";
 import Button from "@/components/button";
+import { register } from "module";
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -16,8 +19,8 @@ function SignUp() {
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
       <Input
+        type="email"
         className="mt-10"
-        type="text"
         placeholder="Email"
         onChange={onChangeId}
         value={email}
