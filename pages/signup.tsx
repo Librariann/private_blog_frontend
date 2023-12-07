@@ -10,8 +10,6 @@ interface ISignUpForm {
   password: string;
 }
 function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const {
     register,
     getValues,
@@ -20,12 +18,6 @@ function SignUp() {
   } = useForm<ISignUpForm>({
     mode: "onChange",
   });
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
