@@ -21,38 +21,40 @@ function SignUp() {
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
-      <input
-        {...register("email", {
-          required: "Email is required",
-          pattern:
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        })}
-        className={`mt-10 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        type="email"
-        required
-        placeholder="Email"
-      />
-      {errors.email?.type === "pattern" && (
-        <FormError errorMessage={"Please enter a valid email"} />
-      )}
-      {errors.email?.message && (
-        <FormError errorMessage={errors.email?.message} />
-      )}
-      <input
-        {...register("password", {
-          required: "Password is required",
-        })}
-        className={`mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        type="password"
-        placeholder="Passowrd"
-      />
-      {errors.password?.type === "pattern" && (
-        <FormError errorMessage={"Please enter a valid password"} />
-      )}
-      {errors.password?.message && (
-        <FormError errorMessage={errors.password?.message} />
-      )}
-      <Button className="mt-6" buttonName="회원가입"></Button>
+      <form>
+        <input
+          {...register("email", {
+            required: "Email is required",
+            pattern:
+              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          })}
+          className={`mt-10 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          type="email"
+          required
+          placeholder="Email"
+        />
+        {errors.email?.type === "pattern" && (
+          <FormError errorMessage={"Please enter a valid email"} />
+        )}
+        {errors.email?.message && (
+          <FormError errorMessage={errors.email?.message} />
+        )}
+        <input
+          {...register("password", {
+            required: "Password is required",
+          })}
+          className={`mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          type="password"
+          placeholder="Passowrd"
+        />
+        {errors.password?.type === "pattern" && (
+          <FormError errorMessage={"Please enter a valid password"} />
+        )}
+        {errors.password?.message && (
+          <FormError errorMessage={errors.password?.message} />
+        )}
+        <Button className="mt-6" buttonName="회원가입"></Button>
+      </form>
     </div>
   );
 }

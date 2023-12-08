@@ -34,10 +34,6 @@ const Input: React.FC<IInput> = ({
     return;
   }
 
-  if (getInputType !== "password") {
-    return;
-  }
-
   return (
     <input
       {...register(getInputType, {
