@@ -1,33 +1,54 @@
 import { useState } from "react";
 import Link from "next/link";
-
+import { useForm } from "react-hook-form";
+import FormError from "@/components/form-error";
+interface ILoginForm {
+  email: string;
+  password: string;
+}
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
-  const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const {
+    register,
+    getValues,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<ILoginForm>({
+    mode: "onChange",
+  });
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">LOGIN</h1>
       <input
-        type="text"
-        className="mt-14 border md:text-2xl"
-        placeholder="Username"
-        onChange={onChangeId}
-        value={username}
+        {...register("email", {
+          required: "Email is required",
+          pattern:
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        })}
+        className={`mt-10 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+        type="email"
+        required
+        placeholder="Email"
       />
+      {errors.email?.type === "pattern" && (
+        <FormError errorMessage={"Please enter a valid email"} />
+      )}
+      {errors.email?.message && (
+        <FormError errorMessage={errors.email?.message} />
+      )}
       <input
+        {...register("password", {
+          required: "Password is required",
+        })}
+        className={`mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         type="password"
-        placeholder="Password"
-        autoComplete="new-password"
-        className="mt-3 border md:text-2xl"
-        onChange={onChangePw}
-        value={password}
+        placeholder="Passowrd"
       />
+      {errors.password?.type === "pattern" && (
+        <FormError errorMessage={"Please enter a valid password"} />
+      )}
+      {errors.password?.message && (
+        <FormError errorMessage={errors.password?.message} />
+      )}
       <Link href="/">
         <button className="p-2 mt-7">LOGIN</button>
       </Link>
