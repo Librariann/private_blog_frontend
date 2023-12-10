@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import Input from "../components/input";
@@ -9,6 +10,16 @@ interface ISignUpForm {
   email: string;
   password: string;
 }
+
+export const CREATE_ACCOUNT_MUTATION = gql`
+  mutation createAccount($createAccountInput: CreateAccountInput!) {
+    createAccount(input: $createAccountInput) {
+      ok
+      error
+    }
+  }
+`;
+
 function SignUp() {
   const {
     register,
@@ -18,10 +29,39 @@ function SignUp() {
   } = useForm<ISignUpForm>({
     mode: "onChange",
   });
+  const onCompleted = (data: CreateAccountMutation) => {
+    const {
+      createAccount: { ok },
+    } = data;
+    if (ok) {
+      alert("Account Created! Log in now!");
+      //redirect
+      navigate("/");
+    }
+  };
+  const [
+    createAccountMutation,
+    { loading, data: createAccountMutationResult },
+  ] = useMutation<CreateAccountMutation, CreateAccountMutationVariables>(
+    CREATE_ACCOUNT_MUTATION,
+    {
+      onCompleted,
+    }
+  );
+  const onSubmit = () => {
+    if (!loading) {
+      const { email, password, role } = getValues();
+      createAccountMutation({
+        variables: {
+          createAccountInput: { email, password, role },
+        },
+      });
+    }
+  };
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
-      <form>
+      <form onSubmit={}>
         <input
           {...register("email", {
             required: "Email is required",
