@@ -6,6 +6,10 @@ import Input from "../components/input";
 import Button from "@/components/button";
 import { register } from "module";
 import FormError from "@/components/form-error";
+import {
+  CreateAccountMutation,
+  CreateAccountMutationVariables,
+} from "./gql/graphql";
 interface ISignUpForm {
   email: string;
   password: string;
@@ -36,7 +40,7 @@ function SignUp() {
     if (ok) {
       alert("Account Created! Log in now!");
       //redirect
-      navigate("/");
+      //navigate("/");
     }
   };
   const [
@@ -50,10 +54,10 @@ function SignUp() {
   );
   const onSubmit = () => {
     if (!loading) {
-      const { email, password, role } = getValues();
+      const { email, password } = getValues();
       createAccountMutation({
         variables: {
-          createAccountInput: { email, password, role },
+          createAccountInput: { email, password },
         },
       });
     }
@@ -61,7 +65,7 @@ function SignUp() {
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
-      <form onSubmit={}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
           {...register("email", {
             required: "Email is required",
