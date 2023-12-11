@@ -10,7 +10,7 @@ import {
   CreateAccountMutation,
   CreateAccountMutationVariables,
 } from "./gql/graphql";
-interface ISignUpForm {
+interface ICreateAccountForm {
   email: string;
   password: string;
 }
@@ -24,13 +24,13 @@ export const CREATE_ACCOUNT_MUTATION = gql`
   }
 `;
 
-function SignUp() {
+function CreateAccount() {
   const {
     register,
     getValues,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<ISignUpForm>({
+  } = useForm<ICreateAccountForm>({
     mode: "onChange",
   });
   const onCompleted = (data: CreateAccountMutation) => {
@@ -103,4 +103,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default CreateAccount;
