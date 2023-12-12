@@ -276,7 +276,7 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   password: Scalars['String']['output'];
-  profileImage: Scalars['String']['output'];
+  profileImage?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
