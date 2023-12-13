@@ -52,6 +52,7 @@ function CreateAccount() {
       onCompleted,
     }
   );
+
   const onSubmit = () => {
     if (!loading) {
       const { email, password } = getValues();

@@ -40,12 +40,14 @@ function Login() {
       //navigate("/");
     }
   };
+
   const [loginMutation, { loading, data: loginMutationResult }] = useMutation<
     LoginMutation,
     LoginMutationVariables
   >(LOGIN_MUTATION, {
     onCompleted,
   });
+
   const onSubmit = () => {
     if (!loading) {
       const { email, password } = getValues();
@@ -56,6 +58,7 @@ function Login() {
       });
     }
   };
+
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">LOGIN</h1>
