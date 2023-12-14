@@ -10,6 +10,7 @@ import {
   CreateAccountMutation,
   CreateAccountMutationVariables,
 } from "./gql/graphql";
+import { useRouter } from "next/navigation";
 interface ICreateAccountForm {
   email: string;
   password: string;
@@ -33,14 +34,17 @@ function CreateAccount() {
   } = useForm<ICreateAccountForm>({
     mode: "onChange",
   });
+
+  const navigate = useRouter();
   const onCompleted = (data: CreateAccountMutation) => {
     const {
-      createAccount: { ok },
+      createAccount: { ok, error },
     } = data;
     if (ok) {
-      alert("Account Created! Log in now!");
-      //redirect
-      //navigate("/");
+      alert("계정이 생성 됐습니다.");
+      navigate.push("/login");
+    } else {
+      alert(error);
     }
   };
   const [
@@ -66,14 +70,17 @@ function CreateAccount() {
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid gap-3 mt-5 mb-5 w-full"
+      >
         <input
           {...register("email", {
-            required: "Email is required",
+            required: "이메일 형식에 맞게 작성해주세요",
             pattern:
               /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
           })}
-          className={`mt-10 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          className="input"
           type="email"
           required
           placeholder="Email"
@@ -86,9 +93,9 @@ function CreateAccount() {
         )}
         <input
           {...register("password", {
-            required: "Password is required",
+            required: "비밀번호는 필수 입니다.",
           })}
-          className={`mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          className="input"
           type="password"
           placeholder="Passowrd"
         />
@@ -98,7 +105,11 @@ function CreateAccount() {
         {errors.password?.message && (
           <FormError errorMessage={errors.password?.message} />
         )}
-        <Button className="mt-6" buttonName="회원가입"></Button>
+        <Button
+          canClick={isValid}
+          loading={loading}
+          actionText="계정생성"
+        ></Button>
       </form>
     </div>
   );

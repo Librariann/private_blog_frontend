@@ -1,21 +1,22 @@
 import { ChangeEventHandler } from "react";
 
-interface IButton {
-  buttonName: string;
-  className: string;
-  onClick?: () => void;
+interface IButtonProps {
+  canClick: boolean;
+  loading: boolean;
+  actionText: string;
 }
 
-const Button: React.FC<IButton> = ({ buttonName, className, onClick }) => {
+const Button: React.FC<IButtonProps> = ({ canClick, loading, actionText }) => {
   return (
     <button
-      className={`
-        ${className}
-         bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline border rounded p-2 transition-colors
-        `}
-      onClick={onClick}
+      data-testid="button"
+      className={`text-lg font-medium focus:outline-none text-white py-4 transition-colors ${
+        canClick
+          ? "bg-blue-500 hover:bg-blue-700"
+          : "bg-gray-300 pointer-events-none"
+      }`}
     >
-      {buttonName}
+      {loading ? "Loading..." : actionText}
     </button>
   );
 };
