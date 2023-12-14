@@ -5,8 +5,12 @@
   @apply focus:outline-none focus:border-gray-500 p-3 border-2 text-lg font-light border-gray-200 transition-colors;
 }
 
+.input-new {
+  @apply focus:outline-none shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+}
+
 .btn {
-  @apply text-lg font-medium focus:outline-none text-white py-4 transition-colors bg-lime-500 hover:bg-lime-700;
+  @apply text-lg font-medium focus:outline-none text-white py-2 transition-colors bg-lime-500 hover:bg-lime-700;
 }
 
 @tailwind utilities;

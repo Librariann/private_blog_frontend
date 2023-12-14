@@ -80,7 +80,7 @@ function CreateAccount() {
             pattern:
               /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
           })}
-          className="input"
+          className="input-new"
           type="email"
           required
           placeholder="Email"
@@ -95,7 +95,7 @@ function CreateAccount() {
           {...register("password", {
             required: "비밀번호는 필수 입니다.",
           })}
-          className="input"
+          className="input-new"
           type="password"
           placeholder="Passowrd"
         />

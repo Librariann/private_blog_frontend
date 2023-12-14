@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import FormError from "@/components/form-error";
 import { gql, useMutation } from "@apollo/client";
 import { LoginMutation, LoginMutationVariables } from "./gql/graphql";
+import Button from "@/components/button";
+import { useRouter } from "next/navigation";
 interface ILoginForm {
   email: string;
   password: string;
@@ -29,13 +31,16 @@ function Login() {
     mode: "onChange",
   });
 
+  const navigate = useRouter();
+
   const onCompleted = (data: LoginMutation) => {
+    console.log(data);
     const {
       login: { ok, token },
     } = data;
     if (ok && token) {
-      alert("Account Created! Log in now!");
       console.log(token);
+      navigate.push("/");
       //redirect
       //navigate("/");
     }
@@ -59,17 +64,24 @@ function Login() {
     }
   };
 
+  const redirectCreateAccount = () => {
+    navigate.push("/create-account");
+  };
+
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">LOGIN</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid gap-3 mt-5 mb-5 w-full"
+      >
         <input
           {...register("email", {
             required: "Email is required",
             pattern:
               /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
           })}
-          className={`mt-10 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          className="input-new"
           type="email"
           required
           placeholder="Email"
@@ -84,7 +96,7 @@ function Login() {
           {...register("password", {
             required: "Password is required",
           })}
-          className={`mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          className="input-new"
           type="password"
           placeholder="Passowrd"
         />
@@ -94,13 +106,22 @@ function Login() {
         {errors.password?.message && (
           <FormError errorMessage={errors.password?.message} />
         )}
-        <Link href="/">
-          <button className="p-2 mt-7">LOGIN</button>
-        </Link>
-        <div>
-          <Link href="join">회원가입</Link>
-        </div>
+        <Button
+          canClick={isValid}
+          loading={loading}
+          actionText="로그인"
+        ></Button>
       </form>
+      <div>
+        계정이 없으신 분들은{" "}
+        <span
+          className="cursor-pointer font-bold text-xl underline decoration-sky-500"
+          onClick={redirectCreateAccount}
+        >
+          여기
+        </span>
+        를 클릭해주세요
+      </div>
     </div>
   );
 }
