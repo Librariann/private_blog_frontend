@@ -67,6 +67,11 @@ function CreateAccount() {
       });
     }
   };
+
+  const redirectLogin = () => {
+    navigate.push("/login");
+  };
+
   return (
     <div className="grid grid-rows-1 justify-center">
       <h1 className="mt-60 font-bold md:text-4xl text-center">회원가입</h1>
@@ -111,6 +116,16 @@ function CreateAccount() {
           actionText="계정생성"
         ></Button>
       </form>
+      <div>
+        이미 계정이 있으신 분들은{" "}
+        <span
+          className="cursor-pointer font-bold text-xl underline decoration-sky-500 hover:text-red-600"
+          onClick={redirectLogin}
+        >
+          여기
+        </span>
+        를 클릭해주세요
+      </div>
     </div>
   );
 }

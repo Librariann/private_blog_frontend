@@ -34,15 +34,16 @@ function Login() {
   const navigate = useRouter();
 
   const onCompleted = (data: LoginMutation) => {
-    console.log(data);
     const {
-      login: { ok, token },
+      login: { ok, error, token },
     } = data;
     if (ok && token) {
       console.log(token);
       navigate.push("/");
       //redirect
       //navigate("/");
+    } else {
+      alert(error);
     }
   };
 
@@ -115,7 +116,7 @@ function Login() {
       <div>
         계정이 없으신 분들은{" "}
         <span
-          className="cursor-pointer font-bold text-xl underline decoration-sky-500"
+          className="cursor-pointer font-bold text-xl underline decoration-sky-500 hover:text-red-600"
           onClick={redirectCreateAccount}
         >
           여기
