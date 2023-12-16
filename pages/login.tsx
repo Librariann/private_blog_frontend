@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import FormError from "@/components/form-error";
 import { gql, useMutation } from "@apollo/client";
 import { LoginMutation, LoginMutationVariables } from "./gql/graphql";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
+import { authTokenVar } from "@/apollo";
 interface ILoginForm {
   email: string;
   password: string;
@@ -38,7 +38,8 @@ function Login() {
       login: { ok, error, token },
     } = data;
     if (ok && token) {
-      console.log(token);
+      localStorage.setItem(LOCAL_STORAGE_TOKEN, token);
+      authTokenVar(token);
       navigate.push("/");
       //redirect
       //navigate("/");
