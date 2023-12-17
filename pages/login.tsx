@@ -6,6 +6,7 @@ import { LoginMutation, LoginMutationVariables } from "./gql/graphql";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { authTokenVar } from "@/apollo";
+import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 interface ILoginForm {
   email: string;
   password: string;
