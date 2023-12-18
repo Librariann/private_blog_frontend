@@ -5,7 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 import { LoginMutation, LoginMutationVariables } from "./gql/graphql";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
-import { authTokenVar } from "@/apollo";
+import { authTokenVar, apolloClient } from "@/apollo";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 interface ILoginForm {
   email: string;
@@ -22,7 +22,7 @@ export const LOGIN_MUTATION = gql`
   }
 `;
 
-function Login() {
+export default function Login() {
   const {
     register,
     getValues,
@@ -129,4 +129,25 @@ function Login() {
   );
 }
 
-export default Login;
+// export async function getServerSideProps() {
+//   const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+//   console.log(token);
+//   const client = apolloClient;
+//   const { data } = await client.query({
+//     query: gql`
+//       query Countries {
+//         countries {
+//           code
+//           name
+//           emoji
+//         }
+//       }
+//     `,
+//   });
+
+//   return {
+//     props: {
+//       login: data,
+//     },
+//   };
+// }

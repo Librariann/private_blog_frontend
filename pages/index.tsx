@@ -1,9 +1,10 @@
 import { useMe } from "@/hooks/useMe";
+import { apolloClient } from "@/apollo";
+import { gql } from "@apollo/client";
 
-const Home = () => {
-  const { data, error, loading } = useMe();
+export default function Home() {
+  const { data } = useMe();
+
   console.log(data);
   return <div className="">Hello World!</div>;
-};
-
-export default Home;
+}
