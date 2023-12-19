@@ -1,10 +1,17 @@
 import { useMe } from "@/hooks/useMe";
-import { apolloClient } from "@/apollo";
-import { gql } from "@apollo/client";
 
 export default function Home() {
   const { data } = useMe();
-
   console.log(data);
-  return <div className="">Hello World!</div>;
+
+  const logout = () => {
+    console.log("logout");
+  };
+
+  return (
+    <>
+      <div className="">Hello World!</div>
+      <button onClick={logout}>로그아웃</button>
+    </>
+  );
 }
