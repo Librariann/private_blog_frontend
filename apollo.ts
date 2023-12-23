@@ -6,6 +6,10 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
+import {
+  NextSSRApolloClient,
+  NextSSRInMemoryCache,
+} from "@apollo/experimental-nextjs-app-support/ssr";
 
 export const authTokenVar = makeVar("");
 export const isLoggedInVar = makeVar(false);
@@ -29,9 +33,9 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-export const apolloClient = new ApolloClient({
+export const apolloClient = new NextSSRApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache({
+  cache: new NextSSRInMemoryCache({
     typePolicies: {
       Query: {
         fields: {
