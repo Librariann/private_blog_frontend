@@ -11,25 +11,16 @@ import {
   NextSSRInMemoryCache,
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
-export const authTokenVar = makeVar("");
-export const isLoggedInVar = makeVar(false);
-
 export const makeClient = () => {
   const httpLink = createHttpLink({
     uri: "http://localhost:3000/graphql",
   });
 
   const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
-    console.log(token);
-    if (token) {
-      authTokenVar(token);
-      isLoggedInVar(Boolean(token));
-    }
     return {
       headers: {
         ...headers,
-        "x-jwt": token || "",
+        "x-jwt": localStorage.getItem(LOCAL_STORAGE_TOKEN) || "",
       },
     };
   });
@@ -42,12 +33,12 @@ export const makeClient = () => {
           fields: {
             isLoggedIn: {
               read() {
-                return isLoggedInVar();
+                return localStorage.getItem(LOCAL_STORAGE_TOKEN) ? true : false;
               },
             },
             token: {
               read() {
-                return authTokenVar();
+                return localStorage.getItem(LOCAL_STORAGE_TOKEN);
               },
             },
           },

@@ -6,7 +6,6 @@ import { LoginMutation, LoginMutationVariables } from "./gql/graphql";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
-import { authTokenVar, isLoggedInVar } from "@/apollo";
 interface ILoginForm {
   email: string;
   password: string;
@@ -40,8 +39,6 @@ export default function Login() {
     } = data;
     if (ok && token) {
       localStorage.setItem(LOCAL_STORAGE_TOKEN, token);
-      authTokenVar(token);
-      isLoggedInVar(true);
       navigate.push("/");
     } else {
       alert(error);
