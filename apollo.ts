@@ -6,44 +6,44 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
-import {
-  NextSSRApolloClient,
-  NextSSRInMemoryCache,
-} from "@apollo/experimental-nextjs-app-support/ssr";
 
-export const makeClient = () => {
-  const httpLink = createHttpLink({
-    uri: "http://localhost:3000/graphql",
-  });
+export const isBrowser = typeof window !== "undefined";
+const token = isBrowser ? localStorage.getItem(LOCAL_STORAGE_TOKEN) : null;
+console.log(token);
+export const authTokenVar = makeVar(token);
+export const isLoggedInVar = makeVar(Boolean(token));
 
-  const authLink = setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        "x-jwt": localStorage.getItem(LOCAL_STORAGE_TOKEN) || "",
-      },
-    };
-  });
+const httpLink = createHttpLink({
+  uri: "http://localhost:3000/graphql",
+});
 
-  return new NextSSRApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new NextSSRInMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            isLoggedIn: {
-              read() {
-                return localStorage.getItem(LOCAL_STORAGE_TOKEN) ? true : false;
-              },
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      "x-jwt": authTokenVar() || "",
+    },
+  };
+});
+
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          isLoggedIn: {
+            read() {
+              return isLoggedInVar();
             },
-            token: {
-              read() {
-                return localStorage.getItem(LOCAL_STORAGE_TOKEN);
-              },
+          },
+          token: {
+            read() {
+              return authTokenVar();
             },
           },
         },
       },
-    }),
-  });
-};
+    },
+  }),
+});

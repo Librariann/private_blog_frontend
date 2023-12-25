@@ -4,8 +4,6 @@ import { useMe } from "@/hooks/useMe";
 export default function Home() {
   const { data } = useMe();
 
-  console.log(data);
-
   const logout = () => {
     localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
   };
