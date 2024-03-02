@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import FormError from "@/components/form-error";
@@ -58,6 +60,7 @@ export default function Login() {
   const onSubmit = () => {
     if (!loading) {
       const { email, password } = getValues();
+      console.log(email, password);
       loginMutation({
         variables: {
           loginInput: { email, password },
