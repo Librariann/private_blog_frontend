@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start:dev": "set -a && . ./.env; next dev",
+    "start:dev": "set -a && . ./.env.local; next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,8 +13,9 @@
     "@apollo/client": "^3.8.0-rc.2",
     "@apollo/experimental-nextjs-app-support": "^0.5.2",
     "client": "^0.0.1",
+    "dotenv": "^16.4.5",
     "graphql": "^16.8.1",
-    "next": "14.0.3",
+    "next": "^14.0.3",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.48.2"
