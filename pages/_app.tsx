@@ -1,13 +1,17 @@
+"use client";
+
 import type { AppProps } from "next/app";
 import Layout from "../components/layout";
 import "../styles/globals.css";
 import { client, isLoggedInVar } from "@/apollo";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import LoginCheck from "../components/login-check";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <Layout>
+        <LoginCheck />
         <Component {...pageProps} />
       </Layout>
     </ApolloProvider>
