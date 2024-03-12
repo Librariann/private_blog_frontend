@@ -66,7 +66,7 @@ function CreateAccount() {
         },
       });
     }
-  }; 
+  };
 
   const redirectLogin = () => {
     navigate.push("/login");
