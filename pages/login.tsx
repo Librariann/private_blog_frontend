@@ -60,7 +60,6 @@ export default function Login() {
   const onSubmit = () => {
     if (!loading) {
       const { email, password } = getValues();
-      console.log(email, password);
       loginMutation({
         variables: {
           loginInput: { email, password },
