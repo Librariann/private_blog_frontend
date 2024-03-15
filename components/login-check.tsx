@@ -20,7 +20,7 @@ const LoginCheck = () => {
     ) {
       router.push("/");
     }
-  }, []);
+  });
 
   return null;
 };
