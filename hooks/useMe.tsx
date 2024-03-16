@@ -16,7 +16,7 @@ export const ME_QUERY = gql`
 
 export const useMe = () => {
   const { data } = useQuery(ME_QUERY);
-
+  console.log(data);
   return {
     data,
   };
