@@ -1,32 +1,28 @@
 "use client";
 
-import { authTokenVar, isLoggedInVar } from "@/apollo";
+import { authTokenVar, client, isLoggedInVar } from "@/apollo";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
-import UserInfo from "@/components/user-info";
 import { useRouter } from "next/router";
 
 export default function Home() {
   const router = useRouter();
   const logout = () => {
     localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
+    authTokenVar(null);
+    isLoggedInVar(false);
+    client.resetStore(); // Apollo Client 캐시 초기화
     router.push("/login");
   };
 
-  const routerTest = () => {
-    router.push("/TEST");
+  const myPage = () => {
+    router.push("/my-page");
   };
 
   return (
     <>
       <div className="">Hello World!</div>
-      <UserInfo />
+      <button onClick={myPage}>MyPage</button>
       <button onClick={logout}>로그아웃</button>
-      <span
-        className="cursor-pointer font-bold text-xl underline decoration-sky-500 hover:text-red-600"
-        onClick={routerTest}
-      >
-        여기
-      </span>
     </>
   );
 }
