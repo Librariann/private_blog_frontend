@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { clearToken } from "../pages/index";
 
 export const ME_QUERY = gql`
   query me {
@@ -15,8 +16,10 @@ export const ME_QUERY = gql`
 `;
 
 export const useMe = () => {
-  const { data } = useQuery(ME_QUERY);
-  console.log(data);
+  const { data, error } = useQuery(ME_QUERY);
+  if (error?.message === "Token has expired") {
+    console.log(error.message);
+  }
   return {
     data,
   };
