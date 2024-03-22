@@ -4,13 +4,18 @@ import { authTokenVar, client, isLoggedInVar } from "@/apollo";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 import { useRouter } from "next/router";
 
+export const clearToken = () => {
+  localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
+  authTokenVar(null);
+  isLoggedInVar(false);
+  client.resetStore(); // Apollo Client 캐시 초기화
+};
+
 export default function Home() {
   const router = useRouter();
+
   const logout = () => {
-    localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
-    authTokenVar(null);
-    isLoggedInVar(false);
-    client.resetStore(); // Apollo Client 캐시 초기화
+    clearToken();
     router.push("/login");
   };
 
