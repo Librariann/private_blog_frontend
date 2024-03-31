@@ -25,9 +25,6 @@ export const CHANGE_PASSWORD_MUTATION = gql`
 `;
 
 const MyPage = () => {
-  const [password, setPassword] = useState<string>();
-  const [checkPassword, setCheckPassword] = useState<string>();
-
   const {
     register,
     getValues,
@@ -73,7 +70,6 @@ const MyPage = () => {
               {...register("password")}
               type="password"
               className="password"
-              // onChange={statePassword}
             />
           </li>
           <li>
@@ -81,7 +77,6 @@ const MyPage = () => {
               {...register("checkPassword")}
               type="password"
               className="checkPassword"
-              // onChange={stateCheckPassword}
             />
           </li>
         </ul>
