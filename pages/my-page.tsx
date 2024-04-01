@@ -57,7 +57,6 @@ const MyPage = () => {
         },
       });
       alert(result.data?.changePassword.message);
-      alert();
     } else {
       alert("비밀번호가 다릅니다.");
     }
