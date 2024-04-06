@@ -6,40 +6,58 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-  ChangePasswordMutation,
-  ChangePasswordMutationVariables,
+  UpdatePasswordMutation,
+  UpdatePasswordMutationVariables,
 } from "./gql/graphql";
 
-interface IChangePasswordForm {
+interface IUpdatePasswordForm {
   password: string;
   checkPassword: string;
 }
 
-export const CHANGE_PASSWORD_MUTATION = gql`
-  mutation changePassword($password: String!) {
-    changePassword(password: $password) {
+export const UPDATE_PASSWORD_MUTATION = gql`
+  mutation updatePassword($password: String!) {
+    updatePassword(password: $password) {
       ok
+      error
       message
     }
   }
 `;
 
 const MyPage = () => {
+  const router = useRouter();
   const {
     register,
     getValues,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<IChangePasswordForm>({
+  } = useForm<IUpdatePasswordForm>({
     mode: "onChange",
   });
 
-  const [changePasswordMutation] = useMutation<
-    ChangePasswordMutation,
-    ChangePasswordMutationVariables
-  >(CHANGE_PASSWORD_MUTATION);
+  const onCompleted = (data: UpdatePasswordMutation) => {
+    const {
+      updatePassword: { ok, error, message },
+    } = data;
 
-  const router = useRouter();
+    if (ok) {
+      alert(message);
+      router.push("/");
+    } else {
+      alert(error);
+    }
+  };
+
+  const [
+    updatePasswordMutation,
+    { loading, data: updatePasswordMutationResult },
+  ] = useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(
+    UPDATE_PASSWORD_MUTATION,
+    {
+      onCompleted,
+    }
+  );
 
   const routingMainPage = () => {
     router.push("/");
@@ -48,12 +66,11 @@ const MyPage = () => {
   const onSubmit = async () => {
     const { password, checkPassword } = getValues();
     if (password === checkPassword) {
-      const result = await changePasswordMutation({
+      updatePasswordMutation({
         variables: {
           password,
         },
       });
-      alert(result.data?.changePassword.message);
     } else {
       alert("비밀번호가 다릅니다.");
     }
@@ -80,7 +97,7 @@ const MyPage = () => {
             />
           </li>
         </ul>
-        <Button canClick={isValid} loading={false} actionText="변경"></Button>
+        <Button canClick={isValid} loading={loading} actionText="변경"></Button>
       </form>
       <button onClick={routingMainPage}>메인으로</button>
     </>
