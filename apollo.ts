@@ -9,15 +9,20 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
 // 클라이언트에서만 사용할 수 있는 localStorage 접근
-const getAuthToken = () => {
+export const getToken = () => {
   if (typeof window !== "undefined") {
     return localStorage.getItem(LOCAL_STORAGE_TOKEN);
   }
   return null;
 };
-const token = getAuthToken();
-export const authTokenVar = makeVar(token);
-export const isLoggedInVar = makeVar(Boolean(token));
+export const authTokenVar = makeVar<string | null>(null);
+export const isLoggedInVar = makeVar<boolean>(Boolean(false));
+
+if (typeof window !== "undefined") {
+  const token = getToken();
+  authTokenVar(token);
+  isLoggedInVar(Boolean(token));
+}
 
 //TODO:추후 환경에 맞춰 유동적으로 바뀔수있게 변경 예정
 const httpLink = createHttpLink({
