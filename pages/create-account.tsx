@@ -1,10 +1,6 @@
-import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
-import Input from "../components/input";
 import Button from "@/components/button";
-import { register } from "module";
 import FormError from "@/components/form-error";
 import {
   CreateAccountMutation,
