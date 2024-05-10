@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import { clearToken } from "../pages/index";
 
 export const ME_QUERY = gql`
   query me {
