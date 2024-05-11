@@ -8,14 +8,19 @@ import { ApolloProvider } from "@apollo/client";
 import LoginCheck from "../components/login-check";
 import Header from "@/components/header";
 import { useRouter } from "next/router";
+import LeftNavigator from "@/components/left-navigator";
+
+const hiddenHeaderPaths = ["/login", "/create-account"];
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const navigate = useRouter();
+  const { pathname } = useRouter();
+  const showHeader = !hiddenHeaderPaths.includes(pathname);
   return (
     <ApolloProvider client={client}>
       <Layout>
         {/* <LoginCheck */}
-        <Header />
+        {showHeader && <Header />}
+        {showHeader && <LeftNavigator />}
         <Component {...pageProps} />
       </Layout>
     </ApolloProvider>
