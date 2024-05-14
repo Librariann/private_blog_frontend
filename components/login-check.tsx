@@ -1,6 +1,7 @@
 "use client";
 
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
+import { handlePathes } from "@/pages/_app";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -9,15 +10,13 @@ const LoginCheck = () => {
 
   useEffect(() => {
     const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
-    const currentPageUri = router.asPath;
+    const { pathname } = router;
+    const checkUri = handlePathes.includes(pathname);
     if (!token) {
       router.push("/login");
     }
 
-    if (
-      token &&
-      (currentPageUri === "/login" || currentPageUri === "/create-account")
-    ) {
+    if (token && checkUri) {
       router.push("/");
     }
   });
