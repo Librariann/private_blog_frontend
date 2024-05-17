@@ -77,32 +77,34 @@ function CreateAccount() {
       >
         <input
           {...register("email", {
-            required: "이메일 형식에 맞게 작성해주세요",
-            pattern:
-              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            required: true,
+            pattern: {
+              value:
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: "유효한 이메일 주소를 입력해주세요",
+            },
           })}
           className="input-new"
           type="email"
-          required
           placeholder="Email"
         />
-        {errors.email?.type === "pattern" && (
-          <FormError errorMessage={"Please enter a valid email"} />
-        )}
         {errors.email?.message && (
           <FormError errorMessage={errors.email?.message} />
         )}
         <input
           {...register("password", {
-            required: "비밀번호는 필수 입니다.",
+            required: true,
+            pattern: {
+              value:
+                /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]{10,}$/,
+              message:
+                "대문자, 소문자, 숫자, 특수문자를 조합해 10자리 이상으로 비밀번호를 입력해주세요",
+            },
           })}
           className="input-new"
           type="password"
           placeholder="Passowrd"
         />
-        {errors.password?.type === "pattern" && (
-          <FormError errorMessage={"Please enter a valid password"} />
-        )}
         {errors.password?.message && (
           <FormError errorMessage={errors.password?.message} />
         )}
