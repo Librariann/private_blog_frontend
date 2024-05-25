@@ -26,6 +26,12 @@ export type Category = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type CategoryCount = {
+  __typename?: 'CategoryCount';
+  categoryTitle: Scalars['String']['output'];
+  count: Scalars['Int']['output'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   comment: Scalars['String']['output'];
@@ -65,6 +71,18 @@ export type CreateCommentOutput = {
   __typename?: 'CreateCommentOutput';
   commentId: Scalars['Int']['output'];
   error?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type CreateHashTagInput = {
+  hashtag: Scalars['String']['input'];
+  postId: Scalars['Int']['input'];
+};
+
+export type CreateHashTagOutput = {
+  __typename?: 'CreateHashTagOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  hashtagId: Scalars['Int']['output'];
   ok: Scalars['Boolean']['output'];
 };
 
@@ -133,10 +151,24 @@ export type EditPostOutput = {
   ok: Scalars['Boolean']['output'];
 };
 
+export type GetCategoriesCountOutput = {
+  __typename?: 'GetCategoriesCountOutput';
+  categoryCounts?: Maybe<Array<CategoryCount>>;
+  error?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+};
+
 export type GetCategoriesOutput = {
   __typename?: 'GetCategoriesOutput';
   categories?: Maybe<Array<Category>>;
   error?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type GetHashTagOutput = {
+  __typename?: 'GetHashTagOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  hashtags?: Maybe<Array<Hashtag>>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -145,6 +177,22 @@ export type GetPostListOutput = {
   error?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
   posts?: Maybe<Array<Post>>;
+};
+
+export type GetPostOneOutput = {
+  __typename?: 'GetPostOneOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+  post?: Maybe<Post>;
+};
+
+export type Hashtag = {
+  __typename?: 'Hashtag';
+  createdAt: Scalars['DateTime']['output'];
+  hashtag: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
+  postId?: Maybe<Scalars['Float']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type LoginInput = {
@@ -164,6 +212,7 @@ export type Mutation = {
   createAccount: CreateAccountOutput;
   createCategory: CreateCategoryOutput;
   createComment: CreateCommentOutput;
+  createHashTag: CreateHashTagOutput;
   createPost: CreatePostOutput;
   deleteCategory: DeleteCategoryOutput;
   deleteComment: DeleteCommentOutput;
@@ -172,6 +221,7 @@ export type Mutation = {
   editComment: EditCommentOutput;
   editPost: EditPostOutput;
   login: LoginOutput;
+  updateHashTag: UpdateHashTagOutput;
   updatePassword: UpdatePasswordOutput;
   updatePostHits: UpdatePostHitsOutput;
 };
@@ -189,6 +239,11 @@ export type MutationCreateCategoryArgs = {
 
 export type MutationCreateCommentArgs = {
   input: CreateCommentInput;
+};
+
+
+export type MutationCreateHashTagArgs = {
+  input: CreateHashTagInput;
 };
 
 
@@ -232,6 +287,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationUpdateHashTagArgs = {
+  input: UpdateHashTagInput;
+};
+
+
 export type MutationUpdatePasswordArgs = {
   password: Scalars['String']['input'];
 };
@@ -243,10 +303,11 @@ export type MutationUpdatePostHitsArgs = {
 
 export type Post = {
   __typename?: 'Post';
-  category: Array<Category>;
+  category: Category;
   comments: Array<Comment>;
   contents: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  hashtags: Array<Hashtag>;
   hits: Scalars['Int']['output'];
   id: Scalars['Float']['output'];
   title: Scalars['String']['output'];
@@ -256,14 +317,33 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   getCategories: GetCategoriesOutput;
+  getCategoriesCounts: GetCategoriesCountOutput;
+  getHashTagList: GetHashTagOutput;
   getPostList: GetPostListOutput;
+  getPostOne?: Maybe<GetPostOneOutput>;
   me: User;
   userProfile: UserProfileOutput;
 };
 
 
+export type QueryGetPostOneArgs = {
+  postId: Scalars['Int']['input'];
+};
+
+
 export type QueryUserProfileArgs = {
   userId: Scalars['Int']['input'];
+};
+
+export type UpdateHashTagInput = {
+  hashtag: Scalars['String']['input'];
+  postId: Scalars['Int']['input'];
+};
+
+export type UpdateHashTagOutput = {
+  __typename?: 'UpdateHashTagOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
 };
 
 export type UpdatePasswordOutput = {
@@ -298,6 +378,11 @@ export type UserProfileOutput = {
   user?: Maybe<User>;
 };
 
+export type GetCategoriesCountsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCategoriesCountsQuery = { __typename?: 'Query', getCategoriesCounts: { __typename?: 'GetCategoriesCountOutput', ok: boolean, categoryCounts?: Array<{ __typename?: 'CategoryCount', categoryTitle: string, count: number }> | null } };
+
 export type CreateAccountMutationVariables = Exact<{
   createAccountInput: CreateAccountInput;
 }>;
@@ -320,6 +405,7 @@ export type UpdatePasswordMutationVariables = Exact<{
 export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'UpdatePasswordOutput', ok: boolean, error?: string | null, message?: string | null } };
 
 
+export const GetCategoriesCountsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCategoriesCounts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCategoriesCounts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"categoryCounts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetCategoriesCountsQuery, GetCategoriesCountsQueryVariables>;
 export const CreateAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createAccountInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAccountInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAccount"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createAccountInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<CreateAccountMutation, CreateAccountMutationVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const UpdatePasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
