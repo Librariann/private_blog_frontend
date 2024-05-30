@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  GetCategoriesCountsQuery,
-  GetCategoriesQuery,
-  GetCategoriesQueryVariables,
-} from "@/pages/gql/graphql";
+import { GetCategoriesCountsQuery } from "@/pages/gql/graphql";
 import { gql, useQuery } from "@apollo/client";
 
 export const GET_CATEGORIES_COUNTS_QUERY = gql`
