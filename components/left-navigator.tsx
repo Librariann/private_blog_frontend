@@ -1,6 +1,9 @@
 "use client";
 
-import { GetCategoriesCountsQuery } from "@/pages/gql/graphql";
+import {
+  GetCategoriesCountsQuery,
+  GetCategoriesCountsQueryVariables,
+} from "@/pages/gql/graphql";
 import { gql, useQuery } from "@apollo/client";
 
 export const GET_CATEGORIES_COUNTS_QUERY = gql`
@@ -18,7 +21,7 @@ export const GET_CATEGORIES_COUNTS_QUERY = gql`
 const LeftNavigator = () => {
   const { loading, error, data } = useQuery<
     GetCategoriesCountsQuery,
-    GetCategoriesQueryVariables
+    GetCategoriesCountsQueryVariables
   >(GET_CATEGORIES_COUNTS_QUERY);
   return (
     <nav className="h-full bg-gray-800 text-white p-4">
