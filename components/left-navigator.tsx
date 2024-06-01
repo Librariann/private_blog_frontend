@@ -19,7 +19,7 @@ export const GET_CATEGORIES_COUNTS_QUERY = gql`
 `;
 
 const LeftNavigator = () => {
-  const { loading, error, data } = useQuery<
+  const { loading, data } = useQuery<
     GetCategoriesCountsQuery,
     GetCategoriesCountsQueryVariables
   >(GET_CATEGORIES_COUNTS_QUERY);
