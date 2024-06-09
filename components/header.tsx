@@ -23,7 +23,7 @@ const Header = () => {
 
   const logout = () => {
     clearToken();
-    navigate.push("/");
+    setIsToken(null);
   };
 
   const myPage = () => {
