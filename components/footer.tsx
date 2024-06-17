@@ -1,5 +1,3 @@
-"use client";
-
 const Footer = () => {
   return (
     <footer className="w-full h-16 flex items-center bg-header-color pl-5">
