@@ -1,5 +1,3 @@
-"use client";
-
 import { authTokenVar, client, getToken, isLoggedInVar } from "@/apollo";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 import { useRouter } from "next/router";
