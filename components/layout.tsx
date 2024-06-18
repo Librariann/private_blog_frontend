@@ -17,14 +17,12 @@ function Layout({ children }: Props) {
     setSelectedItem(item);
   };
 
-  console.log(selectedItem);
-
   return (
     <div className="p-0 font-sans flex flex-col min-h-screen">
       {isLayoutVisible ? (
         <>
           <Header />
-          <div className="flex-grow" style={{ height: "calc(100vh - 128px)" }}>
+          <div className="flex-grow" style={{ height: "calc(100vh - 64px)" }}>
             <div className="flex flex-row h-full">
               <div className="w-1/6">
                 <LeftNavigator selectItem={handleSelect} />
@@ -32,7 +30,7 @@ function Layout({ children }: Props) {
               <div className="w-full">{children}</div>
             </div>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </>
       ) : (
         <div className="w-full">{children}</div>
