@@ -4,17 +4,34 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import {
   GetCategoriesCountsQuery,
   GetCategoriesCountsQueryVariables,
+  GetPostListByCategoryIdQuery,
+  GetPostListByCategoryIdQueryVariables,
 } from "../gql/graphql";
 import { gql } from "@apollo/client";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+type Posts = {
+  id: number;
+  title: string;
+  contents: string;
+  category: {
+    id: number;
+  };
+};
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
-  query getCategoriesCounts {
-    getCategoriesCounts {
+  query getPostListByCategoryId($categoryId: Int!) {
+    getPostListByCategoryId(categoryId: $categoryId) {
       ok
-      categoryCounts {
+      error
+      posts {
         id
-        categoryTitle
-        count
+        title
+        contents
+        category {
+          id
+        }
       }
     }
   }
@@ -30,11 +47,17 @@ const fetchCategories = async () => {
   return data.getCategoriesCounts.categoryCounts;
 };
 
-// const fetchSomeDataById = async (categoryId:number) => {
-//     const {data} = await client.query({
-//         query:
-//     })
-// }
+const fetchSomeDataById = async (categoryId: number) => {
+  const { data } = await client.query<
+    GetPostListByCategoryIdQuery,
+    GetPostListByCategoryIdQueryVariables
+  >({
+    query: GET_POST_BY_CATEGORYID_QUERY,
+    variables: { categoryId },
+  });
+
+  return data.getPostListByCategoryId?.posts;
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // 데이터 소스에서 모든 카테고리 가져오기
@@ -51,13 +74,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false, // 없는 경로에 대해 404 반환
+    fallback: true, // 없는 경로에 대해 404 반환
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { contents } = params!;
-  console.log(params);
 
   const categories = await fetchCategories();
   const category = categories?.find(
@@ -70,8 +92,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  // 유효한 콘텐츠를 불러오는 로직
-  const content = `Content for ${contents}`;
+  const content = await fetchSomeDataById(category.id);
 
   return {
     props: {
@@ -80,8 +101,26 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-const Contents = ({ content }: { content: string }) => {
-  return <div className="">{content}</div>;
+const Contents = ({ content }: { content: Posts[] }) => {
+  const router = useRouter();
+  const { query } = router;
+
+  if (content.length === 0) {
+    return <p>No posts available.</p>;
+  }
+  return (
+    <>
+      {content.map((post) => {
+        return (
+          <Link key={post.id} href={`/${query.contents}/${post.id}`}>
+            {post.title}
+            {post.contents}
+            {post.category.id}
+          </Link>
+        );
+      })}
+    </>
+  );
 };
 
 export default Contents;
