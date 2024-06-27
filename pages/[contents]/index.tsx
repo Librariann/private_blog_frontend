@@ -10,8 +10,9 @@ import {
 import { gql } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Posts from "@/components/posts";
 
-type Posts = {
+export type PostsProps = {
   id: number;
   title: string;
   contents: string;
@@ -92,30 +93,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const content = await fetchSomeDataById(category.id);
-
+  const posts = await fetchSomeDataById(category.id);
   return {
     props: {
-      content,
+      posts,
     },
   };
 };
 
-const Contents = ({ content }: { content: Posts[] }) => {
+const Contents = ({ posts }: { posts: PostsProps[] }) => {
   const router = useRouter();
   const { query } = router;
 
-  if (content.length === 0) {
+  if (posts.length === 0) {
     return <p>No posts available.</p>;
   }
   return (
     <>
-      {content.map((post) => {
+      {posts.map((post) => {
         return (
           <Link key={post.id} href={`/${query.contents}/${post.id}`}>
-            {post.title}
-            {post.contents}
-            {post.category.id}
+            <Posts post={post} />
           </Link>
         );
       })}
