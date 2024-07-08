@@ -29,7 +29,7 @@ export const GET_POST_BY_ID_QUERY = gql`
   }
 `;
 
-const Post = ({ post }: PostProps) => {
+const PostDetail = ({ post }: PostProps) => {
   if (!post) {
     return <div>Post not found!</div>;
   }
@@ -73,4 +73,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-export default Post;
+export default PostDetail;
