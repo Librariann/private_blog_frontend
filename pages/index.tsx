@@ -2,8 +2,9 @@ import { client } from "@/apollo";
 import { gql } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import { GetPostListQuery, GetPostListQueryVariables } from "./gql/graphql";
+import Link from "next/link";
 
-const GET_POST_LIST_QUERY = gql`
+export const GET_POST_LIST_QUERY = gql`
   query getPostList {
     getPostList {
       posts {
@@ -12,11 +13,9 @@ const GET_POST_LIST_QUERY = gql`
         contents
         hits
         category {
-          id
           categoryTitle
         }
         hashtags {
-          id
           hashtag
         }
       }
@@ -24,8 +23,37 @@ const GET_POST_LIST_QUERY = gql`
   }
 `;
 
-const Home = () => {
-  return <>Hello Home!</>;
+type postsProps = {
+  id: number;
+  title: string;
+  contents: string;
+  hits: number;
+  category: {
+    categoryTitle: string;
+  };
+  hashtags: {
+    hashtag: string;
+  };
+};
+
+const Home = ({ posts }: { posts: postsProps[] }) => {
+  return (
+    <div>
+      {posts.map((v) => {
+        return (
+          <div key={v.id}>
+            <ul>
+              <li>
+                <Link href={`/${v.category.categoryTitle}/${v.id}`}>
+                  {v.title}&nbsp;{v.hits}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -36,10 +64,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     >({
       query: GET_POST_LIST_QUERY,
     });
-    console.log(data);
     return {
       props: {
-        posts: "TEST",
+        posts: data.getPostList.posts,
       },
     };
   } catch (error) {
