@@ -27,7 +27,7 @@ function Layout({ children }: Props) {
               <div className="w-1/6">
                 <LeftNavigator selectItem={handleSelect} />
               </div>
-              <div className="w-full">{children}</div>
+              <div className="w-full overflow-y-auto">{children}</div>
             </div>
           </div>
           {/* <Footer /> */}
