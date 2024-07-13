@@ -1,10 +1,10 @@
 import { client } from "@/apollo";
 import { GET_POST_LIST_QUERY } from "@/pages";
-import { PostsProps } from "@/pages/[contents]";
+import { PostsByCategoryProps } from "@/pages/[contents]";
 import { gql } from "@apollo/client";
 import { GetServerSideProps } from "next";
 
-const Posts = (post: PostsProps) => {
+const Posts = (post: PostsByCategoryProps) => {
   console.log(post);
   return <div>Hello Posts!</div>;
 };
