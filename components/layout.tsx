@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import Header from "./header";
 import LeftNavigator from "./left-navigator";
-import Footer from "./footer";
 import { useState } from "react";
 
 type Props = {
