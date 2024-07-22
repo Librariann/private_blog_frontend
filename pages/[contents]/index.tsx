@@ -62,7 +62,6 @@ const fetchSomeDataById = async (categoryId: number) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   // 데이터 소스에서 모든 카테고리 가져오기
   const categories = await fetchCategories();
-
   if (!categories) {
     throw new Error("category error!");
   }
