@@ -79,11 +79,11 @@ const Home = ({ posts }: { posts: postsProps[] }) => {
                   />
                   <div className="p-2">
                     <PostTitle>{post.title}</PostTitle>
-                    <PostContents className="line-clamp-3">
+                    <PostContents className="header-color">
                       {post.contents}
                     </PostContents>
                     <PostBottom>
-                      <span className="mr-3">
+                      <span className="line-clamp-3">
                         댓글 수:{commentsArray.length}
                       </span>
                       <span>좋아요 수:{post.hits}</span>
