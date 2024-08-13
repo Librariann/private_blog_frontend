@@ -24,9 +24,10 @@ if (typeof window !== "undefined") {
   isLoggedInVar(Boolean(token));
 }
 
-//TODO:추후 환경에 맞춰 유동적으로 바뀔수있게 변경 예정
+//TODO: 추후 환경에 맞춰 유동적으로 바뀔수있게 변경 예정
 const httpLink = createHttpLink({
-  uri: "http://localhost:3003/graphql",
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
+  // uri: "http://localhost:3003/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
