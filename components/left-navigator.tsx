@@ -3,7 +3,7 @@
 import {
   GetCategoriesCountsQuery,
   GetCategoriesCountsQueryVariables,
-} from "@/pages/gql/graphql";
+} from "@/src/gql/graphql";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,18 +21,13 @@ export const GET_CATEGORIES_COUNTS_QUERY = gql`
   }
 `;
 
-type LeftNavigatorProps = {
-  selectItem: (item: string) => void;
-};
-
-const LeftNavigator = ({ selectItem }: LeftNavigatorProps) => {
+const LeftNavigator = () => {
   const { loading, data } = useQuery<
     GetCategoriesCountsQuery,
     GetCategoriesCountsQueryVariables
   >(GET_CATEGORIES_COUNTS_QUERY);
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
-
   useEffect(() => {
     setHydrated(true); // 컴포넌트가 클라이언트에서 렌더링된 후 hydrated 상태를 true로 설정
   }, []);
@@ -43,15 +38,27 @@ const LeftNavigator = ({ selectItem }: LeftNavigatorProps) => {
   }
 
   const handleClick = (categoryTitle: string) => {
-    selectItem(categoryTitle);
     router.push(`/${encodeURIComponent(categoryTitle)}`);
   };
+
+  const sumAllCategoryCounts = data?.getCategoriesCounts.categoryCounts?.reduce(
+    (acc, cur) => {
+      return acc + cur.count;
+    },
+    0
+  );
   return (
     <nav className="h-full bg-gray-800 text-white p-4">
       {loading ? (
         <p>Loading...</p>
       ) : (
         <ul className="space-y-2">
+          <li
+            onClick={() => router.push("/")}
+            className="block px-4 py-2 rounded hover:bg-gray-700 cursor-pointer"
+          >
+            All ({sumAllCategoryCounts})
+          </li>
           {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
             <li
               key={categories.categoryTitle}
