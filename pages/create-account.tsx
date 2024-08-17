@@ -5,7 +5,7 @@ import FormError from "@/components/form-error";
 import {
   CreateAccountMutation,
   CreateAccountMutationVariables,
-} from "./gql/graphql";
+} from "../src/gql/graphql";
 import { useRouter } from "next/navigation";
 interface ICreateAccountForm {
   email: string;
