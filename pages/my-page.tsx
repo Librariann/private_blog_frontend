@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import {
   UpdatePasswordMutation,
   UpdatePasswordMutationVariables,
-} from "./gql/graphql";
+} from "../src/gql/graphql";
 
 interface IUpdatePasswordForm {
   password: string;
