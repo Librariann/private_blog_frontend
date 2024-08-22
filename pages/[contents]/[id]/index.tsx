@@ -1,18 +1,24 @@
 import { GetServerSideProps } from "next";
 import { client } from "@/apollo"; // Apollo Client 설정 파일
 import { gql } from "@apollo/client";
-import {
-  GetPostByIdQuery,
-  GetPostByIdQueryVariables,
-} from "@/pages/gql/graphql";
+import { GetPostByIdQuery, GetPostByIdQueryVariables } from "@/src/gql/graphql";
 
-type PostProps = {
+export type PostProps = {
   post: {
     id: number;
     title: string;
     contents: string;
     hits: number;
-  } | null;
+    comments: {
+      comment: string;
+    };
+    category: {
+      categoryTitle: string;
+    };
+    hashtags: {
+      hashtag: string;
+    };
+  };
 };
 
 export const GET_POST_BY_ID_QUERY = gql`

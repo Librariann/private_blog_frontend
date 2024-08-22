@@ -6,17 +6,24 @@ import {
   GetCategoriesCountsQueryVariables,
   GetPostListByCategoryIdQuery,
   GetPostListByCategoryIdQueryVariables,
-} from "../gql/graphql";
+} from "../../src/gql/graphql";
 import { gql } from "@apollo/client";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Posts from "@/components/posts";
 
 export type PostsByCategoryProps = {
   id: number;
   title: string;
   contents: string;
+  hits: number;
   category: {
     id: number;
+    categoryTitle: string;
+  };
+  comments: {
+    comment: string;
+  };
+  hashtags: {
+    hashtag: string;
   };
 };
 
@@ -29,8 +36,15 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         id
         title
         contents
+        hits
         category {
-          id
+          categoryTitle
+        }
+        comments {
+          comment
+        }
+        hashtags {
+          hashtag
         }
       }
     }
@@ -38,13 +52,24 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
 `;
 
 const fetchCategories = async () => {
-  const { data } = await client.query<
-    GetCategoriesCountsQuery,
-    GetCategoriesCountsQueryVariables
-  >({
-    query: GET_CATEGORIES_COUNTS_QUERY,
-  });
-  return data.getCategoriesCounts.categoryCounts;
+  try {
+    const { data } = await client.query<
+      GetCategoriesCountsQuery,
+      GetCategoriesCountsQueryVariables
+    >({
+      query: GET_CATEGORIES_COUNTS_QUERY,
+      fetchPolicy: "cache-first", // 캐시 우선 정책 적용
+    });
+
+    if (!data?.getCategoriesCounts?.categoryCounts) {
+      throw new Error("카테고리 데이터를 가져오는데 실패했습니다.");
+    }
+
+    return data.getCategoriesCounts.categoryCounts;
+  } catch (error) {
+    console.error("카테고리 조회 중 오류 발생:", error);
+    return [];
+  }
 };
 
 const fetchSomeDataById = async (categoryId: number) => {
@@ -79,7 +104,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { contents } = params!;
-
   const categories = await fetchCategories();
   const category = categories?.find(
     (category) => category.categoryTitle === contents
@@ -100,21 +124,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 const Contents = ({ posts }: { posts: PostsByCategoryProps[] }) => {
-  const router = useRouter();
-  const { query } = router;
-
-  if (posts.length === 0) {
+  if (posts !== undefined && posts.length === 0) {
     return <p>No posts available.</p>;
   }
   return (
     <>
-      {posts.map((post) => {
-        return (
-          <Link key={post.id} href={`/${query.contents}/${post.id}`}>
-            <div>{post.title}</div>
-          </Link>
-        );
-      })}
+      <div className="p-10">
+        <ul className="flex flex-wrap justify-start">
+          {posts !== undefined &&
+            posts.map((post) => {
+              return <Posts key={post.id} post={post} />;
+            })}
+        </ul>
+      </div>
+      ;
     </>
   );
 };
