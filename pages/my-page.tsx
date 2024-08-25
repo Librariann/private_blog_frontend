@@ -97,7 +97,7 @@ const MyPage = () => {
             />
           </li>
         </ul>
-        <Button canClick={isValid} loading={loading} actionText="변경"></Button>
+        <Button canClick={isValid} loading={loading} actionText="변경" />
       </form>
       <button onClick={routingMainPage}>메인으로</button>
     </>
