@@ -1,5 +1,5 @@
 import { client } from "@/apollo";
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import {
   GetPostListQuery,
@@ -45,11 +45,15 @@ export type postsProps = {
   };
 };
 
-const Home = ({ posts }: { posts: postsProps[] }) => {
+const Home = () => {
+  const { data, loading } = useQuery<GetPostListQuery>(GET_POST_LIST_QUERY, {
+    ssr: false,
+  });
+  if (loading) return <div>Loading...</div>;
   return (
     <div className="p-10">
       <ul className="flex flex-wrap justify-start">
-        {posts.map((post) => {
+        {data?.getPostList?.posts?.map((post) => {
           return <Posts key={post.id} post={post} />;
         })}
       </ul>
@@ -59,15 +63,14 @@ const Home = ({ posts }: { posts: postsProps[] }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const { data } = await client.query<
-      GetPostListQuery,
-      GetPostListQueryVariables
-    >({
+    const apolloClient = client;
+    await apolloClient.query({
       query: GET_POST_LIST_QUERY,
     });
+
     return {
       props: {
-        posts: data.getPostList.posts,
+        initialApolloState: apolloClient.cache.extract(),
       },
     };
   } catch (error) {
