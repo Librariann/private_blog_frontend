@@ -14,7 +14,7 @@ const PostContents = styled.div`
 
 const PostBottom = styled.div``;
 
-const Posts = ({ post }: PostProps) => {
+const Posts = ({ post }: any) => {
   const commentsArray = Array.isArray(post.comments)
     ? post.comments
     : [post.comments];
@@ -27,18 +27,21 @@ const Posts = ({ post }: PostProps) => {
         <div className="relative w-full h-72">
           <Image
             src="/images/noimage.webp"
-            width={300}
-            height={200}
+            fill
             alt="No image available"
-            className="w-[300px] h-[200px] object-contain"
+            className="object-cover rounded-lg"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            priority
           />
-          <div className="p-2">
-            <PostTitle>{post.title}</PostTitle>
-            <PostContents className="header-color">
+          <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent backdrop-blur-sm">
+            <PostTitle className="text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+              {post.title}
+            </PostTitle>
+            <PostContents className="header-color text-gray-100 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
               {post.contents}
             </PostContents>
-            <PostBottom>
-              <span className="line-clamp-3">
+            <PostBottom className="text-gray-100 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
+              <span className="line-clamp-3 mr-4">
                 댓글 수:{commentsArray.length}
               </span>
               <span>좋아요 수:{post.hits}</span>
