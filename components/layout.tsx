@@ -3,7 +3,9 @@ import Header from "./header";
 import LeftNavigator from "./left-navigator";
 import PostWriteButton from "./post-write-button";
 import { isLoggedInVar } from "@/apollo";
-import { useEffect } from "react";
+import { useReactiveVar } from "@apollo/client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Props = {
   children: React.ReactNode;
@@ -12,11 +14,17 @@ export const handlePathes = ["/login", "/create-account", "/404"];
 const authPage = ["/my-page", "/post-write"];
 function Layout({ children }: Props) {
   const { pathname, push } = useRouter();
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   //로그인 했을경우에만 접근 가능
   useEffect(() => {
     // 클라이언트 측에서만 실행되도록 설정
-    if (authPage.includes(pathname) && !isLoggedInVar()) {
+    if (authPage.includes(pathname) && !isLoggedIn) {
       alert("권한이 없습니다.");
       push("/");
     }
@@ -35,7 +43,13 @@ function Layout({ children }: Props) {
               </div>
               <div className="w-full overflow-y-auto">{children}</div>
             </div>
-            <PostWriteButton />
+            {mounted && isLoggedIn && (
+              <div className="fixed bottom-6 right-6">
+                <Link href="/post-write">
+                  <PostWriteButton />
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* <Footer /> */}
