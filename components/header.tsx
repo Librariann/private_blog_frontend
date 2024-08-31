@@ -1,11 +1,13 @@
+"use client";
 import { authTokenVar, client, getToken, isLoggedInVar } from "@/apollo";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import { useMe } from "@/hooks/useMe";
 const Header = () => {
   const navigate = useRouter();
   const [isToken, setIsToken] = useState<string | null>();
+  const { data } = useMe();
 
   useEffect(() => {
     const token = getToken();
@@ -16,8 +18,13 @@ const Header = () => {
     localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
     authTokenVar(null);
     isLoggedInVar(false);
-    client.resetStore(); // Apollo Client 캐시 초기화
+    client.clearStore(); // Apollo Client 캐시 초기화
   };
+
+  if (data === "Token has expired") {
+    clearToken();
+    setIsToken(null);
+  }
 
   const logout = () => {
     clearToken();
