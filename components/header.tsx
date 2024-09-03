@@ -4,6 +4,8 @@ import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useMe } from "@/hooks/useMe";
+import ConfirmModal from "./modal/confirm-modal";
+
 const Header = () => {
   const navigate = useRouter();
   const [isToken, setIsToken] = useState<string | null>();
@@ -26,21 +28,28 @@ const Header = () => {
     setIsToken(null);
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const logout = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
     clearToken();
     setIsToken(null);
+    setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   const myPage = () => {
     navigate.push("/my-page");
   };
 
-  const handleAuth = () => {
-    if (isToken) {
-      logout();
-    } else {
-      navigate.push("/login");
-    }
+  const login = () => {
+    navigate.push("/login");
   };
   return (
     <div className="w-full h-16 flex items-center bg-header-color pl-5">
@@ -54,11 +63,18 @@ const Header = () => {
         {isToken && <div onClick={myPage}>유저 정보</div>}
         &nbsp;&nbsp;&nbsp;
         {isToken ? (
-          <div onClick={handleAuth}>로그아웃</div>
+          <div onClick={logout}>로그아웃</div>
         ) : (
-          <div onClick={handleAuth}>로그인</div>
+          <div onClick={login}>로그인</div>
         )}
       </div>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onConfirm={handleLogoutConfirm}
+        title="로그아웃"
+        message="정말 로그아웃 하시겠습니까?"
+      />
     </div>
   );
 };
