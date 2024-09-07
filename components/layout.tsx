@@ -16,6 +16,11 @@ function Layout({ children }: Props) {
   const { pathname, push } = useRouter();
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -35,11 +40,14 @@ function Layout({ children }: Props) {
     <div className="p-0 font-sans flex flex-col min-h-screen">
       {isLayoutVisible ? (
         <>
-          <Header />
+          <Header onMenuToggle={handleMobileMenuClose} />
           <div className="flex-grow" style={{ height: "calc(100vh - 64px)" }}>
             <div className="flex flex-row h-full">
-              <div className="w-1/6">
-                <LeftNavigator />
+              <div className="md:block md:w-1/6">
+                <LeftNavigator
+                  isOpen={isMobileMenuOpen}
+                  onClose={handleMobileMenuClose}
+                />
               </div>
               <div className="w-full overflow-y-auto">{children}</div>
             </div>
