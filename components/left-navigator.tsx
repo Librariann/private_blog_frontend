@@ -21,7 +21,12 @@ export const GET_CATEGORIES_COUNTS_QUERY = gql`
   }
 `;
 
-const LeftNavigator = () => {
+type LeftNavigatorProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   const { loading, data } = useQuery<
     GetCategoriesCountsQuery,
     GetCategoriesCountsQueryVariables
@@ -29,16 +34,15 @@ const LeftNavigator = () => {
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    setHydrated(true); // 컴포넌트가 클라이언트에서 렌더링된 후 hydrated 상태를 true로 설정
+    setHydrated(true);
   }, []);
-
   if (!hydrated) {
-    // 클라이언트에서 렌더링되기 전에는 빈 상태로 유지하여 서버와 클라이언트의 HTML 불일치를 방지
     return null;
   }
 
   const handleClick = (categoryTitle: string) => {
     router.push(`/${encodeURIComponent(categoryTitle)}`);
+    onClose(); // 모바일에서 카테고리 선택 시 메뉴 닫기
   };
 
   const sumAllCategoryCounts = data?.getCategoriesCounts.categoryCounts?.reduce(
@@ -47,30 +51,131 @@ const LeftNavigator = () => {
     },
     0
   );
+
+  // 현재 선택된 카테고리 확인
+  const currentCategory = router.asPath.split("/")[1]; // URL에서 첫번째 경로 부분만 가져오기
+  const isHome = router.asPath === "/";
+
   return (
-    <nav className="h-full bg-gray-800 text-white p-4">
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="space-y-2">
-          <li
-            onClick={() => router.push("/")}
-            className="block px-4 py-2 rounded hover:bg-gray-700 cursor-pointer"
-          >
-            All ({sumAllCategoryCounts})
-          </li>
-          {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+    <>
+      {/* 데스크톱 뷰 */}
+      <nav className="hidden md:block h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6">
+        <div className="mb-8 border-b border-gray-700 pb-4">
+          <h2 className="text-xl font-bold">카테고리</h2>
+        </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+          </div>
+        ) : (
+          <ul className="space-y-3">
             <li
-              key={categories.categoryTitle}
-              onClick={() => handleClick(categories.categoryTitle)}
-              className="block px-4 py-2 rounded hover:bg-gray-700 cursor-pointer"
+              onClick={() => router.push("/")}
+              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 cursor-pointer ${
+                isHome ? "bg-gray-700" : "hover:bg-gray-700"
+              }`}
             >
-              {categories.categoryTitle} ({categories.count})
+              <span className="font-medium">전체 보기</span>
+              <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                {sumAllCategoryCounts}
+              </span>
             </li>
-          ))}
-        </ul>
-      )}
-    </nav>
+            {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+              <li
+                key={categories.categoryTitle}
+                onClick={() => handleClick(categories.categoryTitle)}
+                className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${
+                  decodeURIComponent(currentCategory) ===
+                  categories.categoryTitle
+                    ? "bg-gray-700"
+                    : ""
+                }`}
+              >
+                <span>{categories.categoryTitle}</span>
+                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                  {categories.count}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </nav>
+
+      {/* 모바일 뷰 */}
+      <div
+        className={`md:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={onClose}
+      >
+        <nav
+          className={`fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6 transform transition-transform duration-300 ease-in-out shadow-xl ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+            <h2 className="text-xl font-bold">카테고리</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-700 rounded-full transition-colors duration-200"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-32">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              <li
+                onClick={() => {
+                  router.push("/");
+                  onClose();
+                }}
+                className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 cursor-pointer ${
+                  isHome ? "bg-gray-700" : "hover:bg-gray-700"
+                }`}
+              >
+                <span className="font-medium">전체 보기</span>
+                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                  {sumAllCategoryCounts}
+                </span>
+              </li>
+              {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+                <li
+                  key={categories.categoryTitle}
+                  onClick={() => handleClick(categories.categoryTitle)}
+                  className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${
+                    decodeURIComponent(currentCategory) ===
+                    categories.categoryTitle
+                      ? "bg-gray-700"
+                      : ""
+                  }`}
+                >
+                  <span>{categories.categoryTitle}</span>
+                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                    {categories.count}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </nav>
+      </div>
+    </>
   );
 };
 
