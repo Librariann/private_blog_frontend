@@ -1,4 +1,4 @@
-import { PostProps } from "@/pages/[contents]/[id]";
+import { PostsProps } from "@/pages";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
@@ -14,16 +14,19 @@ const PostContents = styled.div`
 
 const PostBottom = styled.div``;
 
-const Posts = ({ post }: any) => {
+const Posts = ({ post }: { post: PostsProps }) => {
   const commentsArray = Array.isArray(post.comments)
     ? post.comments
     : [post.comments];
   return (
     <li
       key={post.id}
-      className="relative w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mb-6 p-2"
+      className="relative w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mb-6 p-2 flex justify-center"
     >
-      <Link href={`/${post.category.categoryTitle}/${post.id}`}>
+      <Link
+        href={`/${post.category.categoryTitle}/${post.id}`}
+        className="w-full"
+      >
         <div className="relative w-full h-72">
           <Image
             src="/images/noimage.webp"
