@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        count\n      }\n    }\n  }\n": types.GetCategoriesCountsDocument,
     "\n  query getPostById($postId: Int!) {\n    getPostById(postId: $postId) {\n      ok\n      post {\n        id\n        title\n        contents\n        hits\n      }\n    }\n  }\n": types.GetPostByIdDocument,
     "\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListByCategoryIdDocument,
@@ -20,7 +21,7 @@ const documents = {
     "\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
     "\n  mutation updatePassword($password: String!) {\n    updatePassword(password: $password) {\n      ok\n      error\n      message\n    }\n  }\n": types.UpdatePasswordDocument,
-    "\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      ok\n      error\n    }\n  }\n": types.CreatePostDocument,
+    "\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n": types.CreatePostDocument,
 };
 
 /**
@@ -37,6 +38,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -68,7 +73,7 @@ export function graphql(source: "\n  mutation updatePassword($password: String!)
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createPost($input: CreatePostInput!) {\n    createPost(input: $input) {\n      ok\n      error\n    }\n  }\n"];
+export function graphql(source: "\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n"): (typeof documents)["\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
