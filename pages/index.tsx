@@ -29,7 +29,7 @@ export const GET_POST_LIST_QUERY = gql`
   }
 `;
 
-export type postsProps = {
+export type PostsProps = {
   id: number;
   title: string;
   contents: string;
@@ -39,10 +39,10 @@ export type postsProps = {
   };
   comments: {
     comment: string;
-  };
+  }[]; // 배열 타입으로 수정
   hashtags: {
     hashtag: string;
-  };
+  }[]; // 배열 타입으로 수정
 };
 
 const Home = () => {
