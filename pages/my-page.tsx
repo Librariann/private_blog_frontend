@@ -1,5 +1,4 @@
 import Button from "@/components/button";
-import Input from "@/components/input";
 import UserInfo from "@/components/user-info";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -9,6 +8,7 @@ import {
   UpdatePasswordMutation,
   UpdatePasswordMutationVariables,
 } from "../src/gql/graphql";
+import { CategoryAddForm } from "@/components/category-add-form";
 
 interface IUpdatePasswordForm {
   password: string;
@@ -99,6 +99,7 @@ const MyPage = () => {
         </ul>
         <Button canClick={isValid} loading={loading} actionText="변경" />
       </form>
+      <CategoryAddForm />
       <button onClick={routingMainPage}>메인으로</button>
     </>
   );
