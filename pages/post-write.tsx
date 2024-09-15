@@ -10,10 +10,11 @@ import { useRouter } from "next/router";
 import { CreatePostMutation, CreatePostMutationVariables } from "./gql/graphql";
 
 const CREATE_POST_MUTATION = gql`
-  mutation createPost($input: CreatePostInput!) {
-    createPost(input: $input) {
+  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
+    createPost(input: $input, hashtags: $hashtags) {
       ok
       error
+      postId
     }
   }
 `;
@@ -29,7 +30,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 
 function PostWrite() {
   const router = useRouter();
-  const [createPostMutation, { loading }] = useMutation<
+  const [createPostMutation, { loading: postLoading }] = useMutation<
     CreatePostMutation,
     CreatePostMutationVariables
   >(CREATE_POST_MUTATION, {
@@ -39,6 +40,10 @@ function PostWrite() {
           fields: {
             getPostList(existing = {}) {
               cache.evict({ fieldName: "getPostList" });
+              return existing;
+            },
+            getCategoriesCounts(existing = {}) {
+              cache.evict({ fieldName: "getCategoriesCounts" });
               return existing;
             },
           },
@@ -57,33 +62,44 @@ function PostWrite() {
 
   const [md, setMd] = useState<string | undefined>("");
   const [selectedCategory, setSelectedCategory] = useState(1);
+  const [hashtags, setHashtags] = useState<string[]>([]);
+  const [hashtagInput, setHashtagInput] = useState("");
+
+  const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && hashtagInput.trim()) {
+      e.preventDefault();
+      if (!hashtags.includes(hashtagInput.trim())) {
+        setHashtags([...hashtags, hashtagInput.trim()]);
+      }
+      setHashtagInput("");
+    }
+  };
+
+  const removeHashtag = (tagToRemove: string) => {
+    setHashtags(hashtags.filter((tag) => tag !== tagToRemove));
+  };
 
   const onSubmit = async (data: postingProps) => {
     try {
       const { title } = data;
-      console.log("전송할 데이터:", {
-        title,
-        contents: md,
-        categoryId: selectedCategory,
-      });
-
-      const result = await createPostMutation({
+      const postResult = await createPostMutation({
         variables: {
           input: {
             title,
             contents: md || "",
             categoryId: selectedCategory,
           },
+          hashtags,
         },
       });
 
-      console.log("응답 결과:", result);
+      console.log("게시물 생성 결과:", postResult);
 
-      if (result.data?.createPost.ok) {
+      if (postResult.data?.createPost.ok) {
         alert("게시물이 성공적으로 작성되었습니다.");
         router.push("/");
       } else {
-        alert(result.data?.createPost.error);
+        alert(postResult.data?.createPost.error);
       }
     } catch (error) {
       alert("게시물 작성 중 오류가 발생했습니다.");
@@ -91,39 +107,78 @@ function PostWrite() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <input
-          {...register("title", { required: "제목을 입력해주세요" })}
-          className="w-full p-2 border rounded-lg mb-4"
-          placeholder="제목을 입력하세요"
-        />
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(Number(e.target.value))}
-          className="w-full p-2 border rounded-lg mb-4"
+    <div className="w-full min-h-screen px-4 md:px-8 py-4 md:py-8">
+      <div className="max-w-4xl mx-auto">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4 md:space-y-6"
         >
-          <option value={1}>프로그래밍</option>
-          <option value={2}>일상</option>
-          <option value={3}>취미</option>
-        </select>
-        <div className="rounded-lg shadow-md overflow-hidden">
-          <MDEditor
-            value={md}
-            onChange={setMd}
-            autoFocus={true}
-            height={800}
-            className="border-0"
+          <input
+            {...register("title", { required: "제목을 입력해주세요" })}
+            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="제목을 입력하세요"
           />
-        </div>
-        <div className="flex justify-end">
-          <Button
-            canClick={isValid && !loading}
-            loading={loading}
-            actionText="게시물 생성"
-          />
-        </div>
-      </form>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(Number(e.target.value))}
+            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value={1}>프로그래밍</option>
+            <option value={2}>일상</option>
+            <option value={3}>취미</option>
+          </select>
+          <div className="flex flex-col space-y-2">
+            <input
+              type="text"
+              value={hashtagInput}
+              onChange={(e) => setHashtagInput(e.target.value)}
+              onKeyDown={handleHashtagInput}
+              className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="해시태그를 입력하고 Enter를 누르세요"
+            />
+            <div className="flex flex-wrap gap-2">
+              {hashtags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full flex items-center"
+                >
+                  #{tag}
+                  <button
+                    type="button"
+                    onClick={() => removeHashtag(tag)}
+                    className="ml-2 text-blue-600 hover:text-blue-800"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-lg shadow-md overflow-hidden">
+            {typeof window !== "undefined" && (
+              <MDEditor
+                value={md}
+                onChange={setMd}
+                autoFocus={false}
+                height={
+                  typeof window !== "undefined" && window.innerWidth < 768
+                    ? 400
+                    : 800
+                }
+                className="border-0"
+                preview="edit"
+              />
+            )}
+          </div>
+          <div className="flex justify-end mt-4">
+            <Button
+              canClick={isValid && !postLoading}
+              loading={postLoading}
+              actionText="게시물 생성"
+            />
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
