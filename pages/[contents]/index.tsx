@@ -9,23 +9,7 @@ import {
 } from "../../src/gql/graphql";
 import { gql } from "@apollo/client";
 import Posts from "@/components/posts";
-
-export type PostsByCategoryProps = {
-  id: number;
-  title: string;
-  contents: string;
-  hits: number;
-  category: {
-    id: number;
-    categoryTitle: string;
-  };
-  comments: {
-    comment: string;
-  };
-  hashtags: {
-    hashtag: string;
-  };
-};
+import { PostsProps } from "@/pages";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
   query getPostListByCategoryId($categoryId: Int!) {
@@ -123,7 +107,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-const Contents = ({ posts }: { posts: PostsByCategoryProps[] }) => {
+const Contents = ({ posts }: { posts: PostsProps[] }) => {
   if (posts !== undefined && posts.length === 0) {
     return <p>No posts available.</p>;
   }
@@ -137,7 +121,6 @@ const Contents = ({ posts }: { posts: PostsByCategoryProps[] }) => {
             })}
         </ul>
       </div>
-      ;
     </>
   );
 };
