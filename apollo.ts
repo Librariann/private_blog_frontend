@@ -27,7 +27,6 @@ if (typeof window !== "undefined") {
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
   credentials: "same-origin",
-  // uri: "http://localhost:3003/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -39,25 +38,28 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-export const client = new ApolloClient({
-  ssrMode: typeof window === "undefined",
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          isLoggedIn: {
-            read() {
-              return isLoggedInVar();
+export function createApolloClient(initialState = null) {
+  return new ApolloClient({
+    ssrMode: typeof window === "undefined",
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            isLoggedIn: {
+              read() {
+                return isLoggedInVar();
+              },
             },
-          },
-          token: {
-            read() {
-              return authTokenVar();
+            token: {
+              read() {
+                return authTokenVar();
+              },
             },
           },
         },
       },
-    },
-  }),
-});
+    }),
+  });
+}
+export const client = createApolloClient();
