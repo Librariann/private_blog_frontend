@@ -19,10 +19,7 @@ const Posts = ({ post }: { post: PostsProps }) => {
     ? post.comments
     : [post.comments];
   return (
-    <li
-      key={post.id}
-      className="relative w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mb-6 p-2 flex justify-center"
-    >
+    <li className="relative w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mb-6 p-2 flex justify-center">
       <Link
         href={`/${post.category.categoryTitle}/${post.id}`}
         className="w-full"
