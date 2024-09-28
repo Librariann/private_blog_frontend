@@ -4,6 +4,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  experimental: {
+    esmExternals: "loose",
+  },
 };
 
-module.exports = removeImports({...nextConfig});
+module.exports = removeImports({ ...nextConfig });
