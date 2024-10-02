@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { CreatePostMutation, CreatePostMutationVariables } from "./gql/graphql";
+import ConfirmModal from "@/components/modal/confirm-modal";
+import MDEditor from "@uiw/react-md-editor";
 
 const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
@@ -24,11 +26,13 @@ type postingProps = {
   categoryId: number;
 };
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
-  ssr: false,
-});
+// const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+//   ssr: false,
+// });
 
 function PostWrite() {
+  const [open, setOpen] = useState(false);
+  const [confirm, setConfirm] = useState();
   const router = useRouter();
   const [createPostMutation, { loading: postLoading }] = useMutation<
     CreatePostMutation,
@@ -80,6 +84,7 @@ function PostWrite() {
   };
 
   const onSubmit = async (data: postingProps) => {
+    setOpen(true);
     try {
       const { title } = data;
       const postResult = await createPostMutation({
@@ -92,8 +97,6 @@ function PostWrite() {
           hashtags,
         },
       });
-
-      console.log("게시물 생성 결과:", postResult);
 
       if (postResult.data?.createPost.ok) {
         alert("게시물이 성공적으로 작성되었습니다.");
@@ -154,7 +157,10 @@ function PostWrite() {
               ))}
             </div>
           </div>
-          <div className="rounded-lg shadow-md overflow-hidden">
+          <div
+            className="rounded-lg shadow-md overflow-hidden"
+            data-color-mode="dark"
+          >
             {typeof window !== "undefined" && (
               <MDEditor
                 value={md}
@@ -166,7 +172,7 @@ function PostWrite() {
                     : 800
                 }
                 className="border-0"
-                preview="edit"
+                preview="live"
               />
             )}
           </div>
@@ -179,6 +185,17 @@ function PostWrite() {
           </div>
         </form>
       </div>
+      <ConfirmModal
+        isOpen={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+        onConfirm={() => {
+          handleSubmit(onSubmit)();
+        }}
+        title="게시물 작성"
+        message="게시물을 작성하시겠습니까?"
+      />
     </div>
   );
 }
