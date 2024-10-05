@@ -59,7 +59,7 @@ export function createApolloClient(initialState = null) {
           },
         },
       },
-    }),
+    }).restore(initialState || {}),
   });
 }
 export const client = createApolloClient();
