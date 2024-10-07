@@ -4,7 +4,7 @@ import { gql, useMutation } from "@apollo/client";
 import {
   CreateCategoryMutation,
   CreateCategoryMutationVariables,
-} from "@/pages/gql/graphql";
+} from "@/gql/graphql";
 
 type CreateCategoryForm = {
   categoryTitle: string;
