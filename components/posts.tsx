@@ -44,7 +44,7 @@ const Posts = ({ post }: { post: PostsProps }) => {
               <span className="line-clamp-3 mr-4">
                 댓글 수:{commentsArray.length}
               </span>
-              <span>좋아요 수:{post.hits}</span>
+              <span>조회수:{post.hits}</span>
             </PostBottom>
           </div>
         </div>
