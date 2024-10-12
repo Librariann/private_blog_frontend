@@ -3,11 +3,11 @@
 import { useForm } from "react-hook-form";
 import FormError from "@/components/form-error";
 import { gql, useMutation } from "@apollo/client";
-import { LoginMutation, LoginMutationVariables } from "../src/gql/graphql";
 import Button from "@/components/button";
 import { useRouter } from "next/navigation";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 import { authTokenVar, isLoggedInVar } from "@/apollo";
+import { LoginMutation, LoginMutationVariables } from "@/gql/graphql";
 interface ILoginForm {
   email: string;
   password: string;
