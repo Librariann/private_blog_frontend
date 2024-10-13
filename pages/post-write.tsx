@@ -5,11 +5,15 @@ import dynamic from "next/dynamic";
 import Button from "@/components/button";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { CreatePostMutation, CreatePostMutationVariables } from "./gql/graphql";
 import ConfirmModal from "@/components/modal/confirm-modal";
-import MDEditor from "@uiw/react-md-editor";
+import {
+  CreatePostMutation,
+  CreatePostMutationVariables,
+  GetCategoriesQuery,
+  GetCategoriesQueryVariables,
+} from "@/gql/graphql";
 
 const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
@@ -21,18 +25,29 @@ const CREATE_POST_MUTATION = gql`
   }
 `;
 
+const GET_CATEGORIES = gql`
+  query getCategories {
+    getCategories {
+      ok
+      categories {
+        id
+        categoryTitle
+      }
+    }
+  }
+`;
+
 type postingProps = {
   title: string;
   categoryId: number;
 };
 
-// const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
-//   ssr: false,
-// });
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+});
 
 function PostWrite() {
   const [open, setOpen] = useState(false);
-  const [confirm, setConfirm] = useState();
   const router = useRouter();
   const [createPostMutation, { loading: postLoading }] = useMutation<
     CreatePostMutation,
@@ -55,6 +70,10 @@ function PostWrite() {
       }
     },
   });
+
+  const { data } = useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(
+    GET_CATEGORIES
+  );
 
   const {
     register,
@@ -126,9 +145,13 @@ function PostWrite() {
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
             className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value={1}>프로그래밍</option>
-            <option value={2}>일상</option>
-            <option value={3}>취미</option>
+            {/* {data?.getCategories?.categories?.map((value) => {
+              return (
+                <option key={value.id} value={value.id}>
+                  {value.categoryTitle}
+                </option>
+              );
+            })} */}
           </select>
           <div className="flex flex-col space-y-2">
             <input
