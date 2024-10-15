@@ -3,15 +3,16 @@ import "@uiw/react-markdown-preview/markdown.css";
 import { GetServerSideProps } from "next";
 import { client } from "@/apollo"; // Apollo Client 설정 파일
 import { gql, useMutation } from "@apollo/client";
-import { GetPostByIdQuery, GetPostByIdQueryVariables } from "@/src/gql/graphql";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import {
-  UpdatePostHitsMutation,
-  UpdatePostHitsMutationVariables,
-} from "@/pages/gql/graphql";
 import Comments from "@/components/comments";
 import CommentsWrite from "@/components/comments-write";
+import {
+  GetPostByIdQuery,
+  GetPostByIdQueryVariables,
+  UpdatePostHitsMutation,
+  UpdatePostHitsMutationVariables,
+} from "@/gql/graphql";
 
 export type PostProps = {
   post: {

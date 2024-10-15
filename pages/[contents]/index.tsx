@@ -1,15 +1,15 @@
 import { client } from "@/apollo";
 import { GET_CATEGORIES_COUNTS_QUERY } from "@/components/left-navigator";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { gql } from "@apollo/client";
+import Posts from "@/components/posts";
+import { PostsProps } from "@/pages";
 import {
   GetCategoriesCountsQuery,
   GetCategoriesCountsQueryVariables,
   GetPostListByCategoryIdQuery,
   GetPostListByCategoryIdQueryVariables,
-} from "../../src/gql/graphql";
-import { gql } from "@apollo/client";
-import Posts from "@/components/posts";
-import { PostsProps } from "@/pages";
+} from "@/gql/graphql";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
   query getPostListByCategoryId($categoryId: Int!) {
