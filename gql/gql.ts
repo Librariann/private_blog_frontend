@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n": types.CreateCategoryDocument,
+    "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentId\n    }\n  }\n": types.CreateCommentDocument,
     "\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        count\n      }\n    }\n  }\n": types.GetCategoriesCountsDocument,
     "\n  query getPostById($postId: Int!) {\n    getPostById(postId: $postId) {\n      ok\n      post {\n        id\n        title\n        contents\n        hits\n        createdAt\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostByIdDocument,
     "\n  mutation updatePostHits($postId: Int!) {\n    updatePostHits(postId: $postId) {\n      ok\n    }\n  }\n": types.UpdatePostHitsDocument,
@@ -44,6 +45,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentId\n    }\n  }\n"): (typeof documents)["\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentId\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
