@@ -15,7 +15,7 @@ import {
   GetCategoriesQueryVariables,
 } from "@/gql/graphql";
 
-const CREATE_POST_MUTATION = gql`
+export const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
     createPost(input: $input, hashtags: $hashtags) {
       ok
@@ -37,7 +37,7 @@ const GET_CATEGORIES = gql`
   }
 `;
 
-type postingProps = {
+export type postingProps = {
   title: string;
   categoryId: number;
 };
@@ -145,13 +145,13 @@ function PostWrite() {
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
             className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {/* {data?.getCategories?.categories?.map((value) => {
+            {data?.getCategories?.categories?.map((value) => {
               return (
                 <option key={value.id} value={value.id}>
                   {value.categoryTitle}
                 </option>
               );
-            })} */}
+            })}
           </select>
           <div className="flex flex-col space-y-2">
             <input
