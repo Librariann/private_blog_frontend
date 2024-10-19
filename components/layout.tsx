@@ -37,8 +37,6 @@ function Layout({ children }: Props) {
 
   const isLayoutVisible = !handlePathes.includes(pathname); //레이아웃 보여줘야할때
 
-  if (authPage.includes(pathname) && !isLoggedIn)
-    return <div>권한이 없습니다!!</div>;
   return (
     <div className="p-0 font-sans flex flex-col min-h-screen">
       {isLayoutVisible ? (
