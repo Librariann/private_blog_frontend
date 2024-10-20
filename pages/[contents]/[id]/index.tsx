@@ -130,7 +130,7 @@ const PostDetail = ({ post }: PostProps) => {
     </div>
   );
 };
-
+//TODO: 현재 데이터 불러오는 부분 index.tsx처럼 맞춰서 진행할것
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
   const postId = Number(params?.id); // URL에서 postId를 추출합니다.

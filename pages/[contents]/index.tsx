@@ -86,6 +86,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
+//TODO: 현재 데이터 불러오는 부분 index.tsx처럼 맞춰서 진행할것
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { contents } = params!;
   const categories = await fetchCategories();
