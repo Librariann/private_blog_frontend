@@ -5,6 +5,9 @@ import {
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import Button from "./button";
+import { GET_POST_BY_ID_QUERY } from "@/pages/[contents]/[id]";
+import { CommentProps } from "./comments";
 
 type commentProps = {
   id: string;
@@ -22,8 +25,15 @@ export const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
-const CommentsWrite = () => {
-  const [createCommentMutation] = useMutation<
+const CommentsWrite = ({
+  commentsUpdate,
+}: {
+  commentsUpdate: (newCommentData: CommentProps) => void;
+}) => {
+  const {
+    query: { id },
+  } = useRouter();
+  const [createCommentMutation, { loading: commentLoading }] = useMutation<
     CreateCommentMutation,
     CreateCommentMutationVariables
   >(CREATE_COMMENT_MUTATION, {
@@ -31,12 +41,8 @@ const CommentsWrite = () => {
       if (mutationResult?.createComment.ok) {
         cache.modify({
           fields: {
-            getPostList(existing = {}) {
-              cache.evict({ fieldName: "getPostList" });
-              return existing;
-            },
-            getCategoriesCounts(existing = {}) {
-              cache.evict({ fieldName: "getCategoriesCounts" });
+            getPostById(existing = {}) {
+              cache.evict({ fieldName: "getPostById" });
               return existing;
             },
           },
@@ -44,11 +50,13 @@ const CommentsWrite = () => {
       }
     },
   });
-  const {
-    query: { id },
-  } = useRouter();
 
-  const { register, handleSubmit, reset } = useForm<commentProps>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = useForm<commentProps>({
     mode: "onChange",
   });
   const onSubmit = async (data: commentProps) => {
@@ -70,6 +78,12 @@ const CommentsWrite = () => {
     if (commentResult.data?.createComment.ok) {
       alert("댓글이 작성됐습니다.");
       reset();
+      commentsUpdate({ 
+        id: Date.now(), 
+        commentId: String(commentResult.data.createComment.commentId || data.id), 
+        comment: data.comment,
+        createdAt: new Date().toISOString()
+      });
     } else {
       alert("댓글 작성에 실패했습니다.");
     }
@@ -96,9 +110,11 @@ const CommentsWrite = () => {
         className="w-full p-3 border rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <div className="flex justify-end">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-          댓글 작성
-        </button>
+        <Button
+          canClick={isValid && !commentLoading}
+          loading={commentLoading}
+          actionText="댓글 작성"
+        />
       </div>
     </form>
   );
