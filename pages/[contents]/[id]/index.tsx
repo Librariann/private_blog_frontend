@@ -2,10 +2,10 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import { GetServerSideProps } from "next";
 import { client } from "@/apollo"; // Apollo Client 설정 파일
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import Comments from "@/components/comments";
+import Comments, { CommentProps } from "@/components/comments";
 import CommentsWrite from "@/components/comments-write";
 import {
   GetPostByIdQuery,
@@ -22,8 +22,11 @@ export type PostProps = {
     hits: number;
     createdAt: string;
     comments: {
+      id: number;
       comment: string;
-    };
+      commentId: string;
+      createdAt: string;
+    }[];
     category: {
       categoryTitle: string;
     };
@@ -45,6 +48,12 @@ export const GET_POST_BY_ID_QUERY = gql`
         createdAt
         hashtags {
           hashtag
+        }
+        comments {
+          id
+          commentId
+          comment
+          createdAt
         }
       }
     }
@@ -68,6 +77,7 @@ const EditerMarkdown = dynamic(
 );
 
 const PostDetail = ({ post }: PostProps) => {
+  const [comments, setComments] = useState<CommentProps[]>(post.comments);
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
@@ -94,6 +104,11 @@ const PostDetail = ({ post }: PostProps) => {
     };
     updateHits();
   }, [updatePostHitsMutation, post.id]);
+
+  const handleCreateComment = (newCommentData: CommentProps) => {
+    setComments((prev) => [...prev, newCommentData]);
+  };
+
   if (!post) {
     return <div>Post not found!</div>;
   }
@@ -122,11 +137,11 @@ const PostDetail = ({ post }: PostProps) => {
           ))}
         </div>
       </div>
-      <div className="prose prose-lg max-w-none">
+      <div className="prose prose-lg max-w-none mb-36">
         <EditerMarkdown source={post.contents} />
       </div>
-      <Comments />
-      <CommentsWrite />
+      <CommentsWrite commentsUpdate={handleCreateComment} />
+      <Comments comments={comments} />
     </div>
   );
 };
@@ -148,10 +163,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         notFound: true, // 포스트가 없으면 404 페이지로 리디렉션합니다.
       };
     }
+    console.log(client.cache.extract());
 
     return {
       props: {
         post: data.getPostById.post,
+        initialApolloState: client.cache.extract(),
       },
     };
   } catch (error) {
