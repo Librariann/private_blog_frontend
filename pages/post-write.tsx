@@ -25,7 +25,7 @@ export const CREATE_POST_MUTATION = gql`
   }
 `;
 
-const GET_CATEGORIES = gql`
+export const GET_CATEGORIES = gql`
   query getCategories {
     getCategories {
       ok
