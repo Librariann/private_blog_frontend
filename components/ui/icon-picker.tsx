@@ -38,6 +38,19 @@ import {
   Filter,
   LucideIcon,
   Braces,
+  Cat,
+  AppWindowMac,
+  Rss,
+  Library,
+  MapMinus,
+  MapPinned,
+  CalendarDays,
+  Clock5,
+  Brackets,
+  Github,
+  Gitlab,
+  Package2,
+  Slack,
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./input";
@@ -88,6 +101,19 @@ const availableIcons: { name: string; icon: LucideIcon }[] = [
   { name: "search", icon: Search },
   { name: "filter", icon: Filter },
   { name: "braces", icon: Braces },
+  { name: "cat", icon: Cat },
+  { name: "app-window-mac", icon: AppWindowMac },
+  { name: "rss", icon: Rss },
+  { name: "library", icon: Library },
+  { name: "map-minus", icon: MapMinus },
+  { name: "map-pinned", icon: MapPinned },
+  { name: "calendar-days", icon: CalendarDays },
+  { name: "clock-5", icon: Clock5 },
+  { name: "brackets", icon: Brackets },
+  { name: "github", icon: Github },
+  { name: "gitlab", icon: Gitlab },
+  { name: "package-2", icon: Package2 },
+  { name: "slack", icon: Slack },
 ];
 
 const IconPicker = ({
