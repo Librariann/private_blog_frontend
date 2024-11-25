@@ -31,7 +31,7 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
               : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300"
           }
         >
-          {post.category.categoryTitle}
+          {post.category?.categoryTitle}
         </Badge>
         <div
           className={`flex items-center space-x-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
