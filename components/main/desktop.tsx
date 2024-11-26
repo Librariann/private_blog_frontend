@@ -1,7 +1,7 @@
 import { ChevronDown, LucideProps } from "lucide-react";
 import ProfileSidebar from "./profile-side-bar";
 import { AnimatePresence, motion } from "framer-motion";
-import { CategoryCount } from "@/gql/graphql";
+import { Category, CategoryCount, GetCategoriesQuery } from "@/gql/graphql";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { popularHashTagsProps } from "@/pages";
 import { useRouter } from "next/router";
@@ -11,7 +11,7 @@ import { useUserInfoStore } from "@/stores/useUserInfoStore";
 import { DynamicIcon } from "lucide-react/dynamic";
 
 export type DesktopAndMobileProps = {
-  categories: CategoryCount[];
+  categories: NonNullable<GetCategoriesQuery["getCategories"]["categories"]>;
   expandedCategories: Set<string>;
   toggleCategoryExpand: (categoryName: string) => void;
   popularHashTags?: popularHashTagsProps[];
@@ -36,9 +36,10 @@ const Desktop = ({
           카테고리
         </h3>
         <div className="space-y-1">
-          {categories.map((parent, index) => {
+          {categories.map((parent) => {
             const isExpanded = expandedCategories.has(parent.categoryTitle);
-            const hasChildren = parent.children && parent.children.length > 0;
+            const hasChildren =
+              parent.subCategories && parent.subCategories.length > 0;
             return (
               <div key={parent.categoryTitle}>
                 {/* 상위 카테고리 */}
@@ -72,19 +73,19 @@ const Desktop = ({
                     className={isDarkMode ? "text-white/50" : "text-gray-400"}
                   >
                     {hasChildren
-                      ? parent?.children?.reduce(
-                          (sum, sub) => sum + sub?.count!,
+                      ? parent?.subCategories?.reduce(
+                          (sum, sub) => sum + sub?.post?.length!,
                           0
                         )
-                      : parent?.count}
+                      : 0}
                   </span>
                 </button>
 
                 {/* 하위 카테고리 */}
                 <AnimatePresence initial={false}>
                   {isExpanded &&
-                    parent.children &&
-                    parent.children.length > 0 && (
+                    parent.subCategories &&
+                    parent.subCategories.length > 0 && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
@@ -93,7 +94,7 @@ const Desktop = ({
                         className="overflow-hidden"
                       >
                         <div className="ml-11 mt-1 space-y-1">
-                          {parent.children.map((subCategory, index) => (
+                          {parent.subCategories.map((subCategory, index) => (
                             <span
                               key={subCategory.categoryTitle}
                               onClick={() =>
@@ -125,7 +126,7 @@ const Desktop = ({
                                         : "text-gray-400"
                                     }
                                   >
-                                    {subCategory.count}
+                                    {subCategory.post?.length}
                                   </span>
                                 </div>
                               </motion.button>
