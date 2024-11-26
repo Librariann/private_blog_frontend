@@ -4,12 +4,21 @@ import { BlogPostCard } from "../cards/blog-post-card";
 import { Post } from "@/gql/graphql";
 import { useRouter } from "next/router";
 import { GlassCardMain } from "../main/main";
+import { useFindOneCategoryById } from "@/hooks/hooks";
+import { DynamicIcon } from "lucide-react/dynamic";
 
-const CategoryDetails = ({ posts }: { posts: Post[] }) => {
+const CategoryDetails = ({
+  posts,
+  categoryId,
+}: {
+  posts: Post[];
+  categoryId: number;
+}) => {
   const { isDarkMode } = useDarkModeStore();
   const hashtagMaps = new Map<string, number>();
   const router = useRouter();
   const { slug } = router.query;
+  const category = useFindOneCategoryById({ categoryId });
 
   posts
     ?.flatMap((post) => post.hashtags)
@@ -30,9 +39,6 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
     posts.reduce((acc, post) => acc + post.readTime, 0) / posts.length
   );
 
-  const Icon = Code2;
-  const color = "from-blue-500 to-cyan-500";
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back Button */}
@@ -52,9 +58,13 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
       <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <div className="flex items-center space-x-4 mb-4">
           <div
-            className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center`}
+            className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category?.iconColor || "from-blue-500 to-cyan-500"} flex items-center justify-center`}
           >
-            <Icon className="w-8 h-8 text-white" />
+            <DynamicIcon
+              name={(category?.icon || "code-xml") as any}
+              className="w-8 h-8"
+              color="white"
+            />
           </div>
           <div>
             <h1
