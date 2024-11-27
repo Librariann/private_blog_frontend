@@ -3,11 +3,11 @@ import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { popularHashTagsProps, UserInfoType } from "@/pages";
 import { BlogPostCard, glassCardTypes } from "../cards/blog-post-card";
-import { GetPostListQuery, Post, User } from "@/gql/graphql";
+import { Post } from "@/gql/graphql";
 import Mobile from "./mobile";
 import Desktop from "./desktop";
 import { useRouter } from "next/router";
-import { useGetCategoryCounts } from "@/hooks/hooks";
+import { useGetCategories } from "@/hooks/hooks";
 import styled from "styled-components";
 
 const Main = ({
@@ -18,23 +18,19 @@ const Main = ({
   popularHashTags: popularHashTagsProps[];
 }) => {
   const router = useRouter();
-
   const { isDarkMode } = useDarkModeStore();
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     new Set()
   );
-  const [categories, setCategories] = useState<any[]>([]);
-  const { countsData, countsLoading } = useGetCategoryCounts();
+  const { categories, categoriesLoading } = useGetCategories();
 
   useEffect(() => {
-    if (!countsLoading) {
-      const categories = countsData || [];
+    if (!categoriesLoading) {
       const expandCategory = categories[0]?.categoryTitle;
 
       setExpandedCategories(new Set([expandCategory]));
-      setCategories(categories);
     }
-  }, [countsLoading, countsData]);
+  }, [categories, categoriesLoading]);
 
   const toggleCategoryExpand = (categoryName: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -80,7 +76,7 @@ const Main = ({
             <button
               onClick={() =>
                 router.push(
-                  `/post/${posts?.[0].category.parentCategoryTitle}/${posts?.[0].category.categoryTitle}/@Post-${posts?.[0].id}`
+                  `/post/${posts?.[0].category?.parentCategory?.categoryTitle}/${posts?.[0].category?.categoryTitle}/@Post-${posts?.[0].id}`
                 )
               }
               className={`px-6 py-3 rounded-lg transition-all ${
@@ -108,7 +104,7 @@ const Main = ({
                 post={post}
                 onClick={() =>
                   router.push(
-                    `/post/${post.category.parentCategoryTitle}/${post.category.categoryTitle}/@Post-${post.id}`
+                    `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
                   )
                 }
               />
