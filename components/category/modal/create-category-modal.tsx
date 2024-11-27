@@ -17,9 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CategoryCount } from "@/gql/graphql";
+import { Category, CategoryCount, GetCategoriesQuery } from "@/gql/graphql";
 import { useCreateCategory } from "@/hooks/hooks";
+import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { useLoadingStore } from "@/stores/useLoadingStore";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -27,7 +29,7 @@ import { toast } from "react-toastify";
 type CreateCategoryModalProps = {
   isAddModalOpen: boolean;
   handleAddCategoryOpen: (open: boolean) => void;
-  countsData: CategoryCount[];
+  categories: SelectedCategoryType;
 };
 
 type newCategoryTypes = {
@@ -49,13 +51,14 @@ const newCategoryBaseData: newCategoryTypes = {
 const CreateCategoryModal = ({
   isAddModalOpen,
   handleAddCategoryOpen,
-  countsData,
+  categories,
 }: CreateCategoryModalProps) => {
   const [newCategory, setNewCategory] =
     useState<newCategoryTypes>(newCategoryBaseData);
 
-  const { createCategoryMutation, categoryLoading } = useCreateCategory();
+  const { createCategoryMutation } = useCreateCategory();
   const { isDarkMode } = useDarkModeStore();
+  const { setGlobalLoading } = useLoadingStore();
 
   const handleNewCategory = (name: string, value: string) => {
     setNewCategory({
@@ -65,27 +68,34 @@ const CreateCategoryModal = ({
   };
 
   const handleAddCategory = async () => {
-    const input = {
-      categoryTitle: newCategory.categoryTitle,
-      icon: newCategory.icon,
-      iconColor: newCategory.color,
-      ...(newCategory.parentCategoryId && {
-        parentCategoryId: +newCategory.parentCategoryId,
-      }),
-    };
+    try {
+      setGlobalLoading(true);
+      const input = {
+        categoryTitle: newCategory.categoryTitle,
+        icon: newCategory.icon,
+        iconColor: newCategory.color,
+        ...(newCategory.parentCategoryId && {
+          parentCategoryId: +newCategory.parentCategoryId,
+        }),
+      };
 
-    const result = await createCategoryMutation({
-      variables: {
-        input: input,
-      },
-    });
-    if (result.data?.createCategory.ok) {
-      toast.success("카테고리가 성공적으로 생성되었습니다.");
-    } else {
-      toast.error(result.data?.createCategory.error);
+      const result = await createCategoryMutation({
+        variables: {
+          input: input,
+        },
+      });
+      if (result.data?.createCategory.ok) {
+        toast.success("카테고리가 성공적으로 생성되었습니다.");
+      } else {
+        toast.error(result.data?.createCategory.error);
+      }
+      handleAddCategoryOpen(false);
+      setNewCategory(newCategoryBaseData);
+    } catch {
+      toast.error("카테고리 생성 실패!");
+    } finally {
+      setGlobalLoading(false);
     }
-    handleAddCategoryOpen(false);
-    setNewCategory(newCategoryBaseData);
   };
 
   return (
@@ -158,7 +168,7 @@ const CreateCategoryModal = ({
                   <SelectValue placeholder="선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
-                  {countsData?.map((category) => (
+                  {categories?.map((category) => (
                     <SelectItem
                       key={category.categoryTitle}
                       value={category.id.toString()}
