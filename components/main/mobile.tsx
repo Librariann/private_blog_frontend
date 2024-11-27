@@ -66,8 +66,8 @@ const Mobile = ({
                 {/* 하위 카테고리 */}
                 <AnimatePresence initial={false}>
                   {isExpanded &&
-                    parent.children &&
-                    parent.children.length > 0 && (
+                    parent.subCategories &&
+                    parent.subCategories.length > 0 && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
@@ -76,9 +76,9 @@ const Mobile = ({
                         className="overflow-hidden"
                       >
                         <div className="ml-11 mt-1 space-y-1">
-                          {parent.children.map((subCat, index) => (
+                          {parent.subCategories.map((subCatecory, index) => (
                             <motion.button
-                              key={subCat.categoryTitle}
+                              key={subCatecory.categoryTitle}
                               initial={{ x: -10, opacity: 0 }}
                               animate={{ x: 0, opacity: 1 }}
                               transition={{
@@ -93,7 +93,7 @@ const Mobile = ({
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                <span>{subCat.categoryTitle}</span>
+                                <span>{subCatecory.categoryTitle}</span>
                                 <span
                                   className={
                                     isDarkMode
@@ -101,7 +101,7 @@ const Mobile = ({
                                       : "text-gray-400"
                                   }
                                 >
-                                  {subCat.count}
+                                  {subCatecory.post?.length}
                                 </span>
                               </div>
                             </motion.button>
