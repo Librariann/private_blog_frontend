@@ -10,9 +10,10 @@ import {
 import IconPicker from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CategoryCount } from "@/gql/graphql";
 import { useEditCategory } from "@/hooks/hooks";
+import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { useLoadingStore } from "@/stores/useLoadingStore";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -20,54 +21,69 @@ import { toast } from "react-toastify";
 type EditCategoryModalProps = {
   isEditModalOpen: boolean;
   handleEditModalOpen: (open: boolean) => void;
-  isParent: boolean;
-  selectedCategory: CategoryCount;
+  selectedCategory: SelectedCategoryType[0];
+};
+
+type EditCategoryType = {
+  id: number;
+  categoryTitle: string;
+  icon: string;
+  iconColor: string;
 };
 
 const EditCategoryModal = ({
   isEditModalOpen,
   handleEditModalOpen,
-  isParent,
   selectedCategory,
 }: EditCategoryModalProps) => {
   const { isDarkMode } = useDarkModeStore();
   const { editCategoryMutation } = useEditCategory();
+  const { setGlobalLoading } = useLoadingStore();
 
-  const [editCategory, setEditCategory] = useState<CategoryCount>({
+  const [editCategory, setEditCategory] = useState<EditCategoryType>({
     id: 0,
     categoryTitle: "",
     icon: "",
     iconColor: "",
   });
-
   useEffect(() => {
     setEditCategory({
-      ...selectedCategory,
+      id: selectedCategory.id,
+      categoryTitle: selectedCategory.categoryTitle,
+      icon: selectedCategory.icon || "",
+      iconColor: selectedCategory.iconColor || "",
     });
   }, [selectedCategory]);
 
   const handleEditCategory = async () => {
-    const input = {
-      id: editCategory.id,
-      categoryTitle: editCategory.categoryTitle,
-      icon: editCategory.icon,
-      iconColor: editCategory.iconColor,
-      ...(editCategory.parentCategoryId && {
-        parentCategoryId: +editCategory.parentCategoryId,
-      }),
-    };
+    try {
+      setGlobalLoading(true);
+      const input = {
+        id: editCategory.id,
+        categoryTitle: editCategory.categoryTitle,
+        icon: editCategory.icon,
+        iconColor: editCategory.iconColor,
+        ...(editCategory?.id && {
+          parentCategoryId: +editCategory.id,
+        }),
+      };
 
-    const result = await editCategoryMutation({
-      variables: {
-        input: input,
-      },
-    });
-    if (result.data?.editCategory.ok) {
-      toast.success("카테고리가 성공적으로 수정되었습니다.");
-    } else {
-      toast.error(result.data?.editCategory.error);
+      const result = await editCategoryMutation({
+        variables: {
+          input: input,
+        },
+      });
+      if (result.data?.editCategory.ok) {
+        toast.success("카테고리가 성공적으로 수정되었습니다.");
+      } else {
+        toast.error(result.data?.editCategory.error);
+      }
+    } catch {
+      toast.error("카테고리 수정 실패!");
+    } finally {
+      setGlobalLoading(false);
+      handleEditModalOpen(false);
     }
-    handleEditModalOpen(false);
   };
 
   return (
@@ -114,81 +130,79 @@ const EditCategoryModal = ({
             />
           </div>
 
-          {isParent && (
-            <>
-              <div className="space-y-2">
-                <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  아이콘 선택
-                </Label>
-                <div
-                  className={`p-4 rounded-lg border ${
-                    isDarkMode
-                      ? "bg-white/5 border-white/20"
-                      : "bg-gray-50 border-gray-200"
-                  }`}
-                >
-                  {/* Selected Icon Preview */}
-                  {editCategory?.icon &&
-                    (() => {
-                      const IconComponent: any = editCategory.icon || "code";
-                      return (
-                        IconComponent && (
-                          <div className="mb-4 flex items-center gap-3">
-                            <div
-                              className={`w-10 h-10 rounded-lg bg-gradient-to-br ${editCategory.iconColor} flex items-center justify-center`}
-                            >
-                              <DynamicIcon
-                                name={IconComponent}
-                                className="w-5 h-5"
-                                color="white"
-                              />
-                            </div>
-                            <div>
-                              <p
-                                className={`text-sm ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
-                              >
-                                선택된 아이콘
-                              </p>
-                              <p
-                                className={`text-xs ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
-                              >
-                                {editCategory?.icon}
-                              </p>
-                            </div>
+          <>
+            <div className="space-y-2">
+              <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
+                아이콘 선택
+              </Label>
+              <div
+                className={`p-4 rounded-lg border ${
+                  isDarkMode
+                    ? "bg-white/5 border-white/20"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                {/* Selected Icon Preview */}
+                {editCategory?.icon &&
+                  (() => {
+                    const IconComponent: any = editCategory.icon || "code";
+                    return (
+                      IconComponent && (
+                        <div className="mb-4 flex items-center gap-3">
+                          <div
+                            className={`w-10 h-10 rounded-lg bg-gradient-to-br ${editCategory.iconColor} flex items-center justify-center`}
+                          >
+                            <DynamicIcon
+                              name={IconComponent}
+                              className="w-5 h-5"
+                              color="white"
+                            />
                           </div>
-                        )
-                      );
-                    })()}
-                  <IconPicker
-                    selectedIcon={editCategory?.icon || "code"}
-                    onSelect={(icon) =>
-                      setEditCategory({
-                        ...editCategory,
-                        icon: icon,
-                      })
-                    }
-                    isDarkMode={isDarkMode}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  그라디언트 색상
-                </Label>
-                <ColorPicker
-                  selectedColor={editCategory?.iconColor || ""}
-                  onSelect={(color) =>
+                          <div>
+                            <p
+                              className={`text-sm ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
+                            >
+                              선택된 아이콘
+                            </p>
+                            <p
+                              className={`text-xs ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+                            >
+                              {editCategory?.icon}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    );
+                  })()}
+                <IconPicker
+                  selectedIcon={editCategory?.icon || "code"}
+                  onSelect={(icon) =>
                     setEditCategory({
                       ...editCategory,
-                      iconColor: color,
+                      icon: icon,
                     })
                   }
                   isDarkMode={isDarkMode}
                 />
               </div>
-            </>
-          )}
+            </div>
+
+            <div className="space-y-2">
+              <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
+                그라디언트 색상
+              </Label>
+              <ColorPicker
+                selectedColor={editCategory?.iconColor || ""}
+                onSelect={(color) =>
+                  setEditCategory({
+                    ...editCategory,
+                    iconColor: color,
+                  })
+                }
+                isDarkMode={isDarkMode}
+              />
+            </div>
+          </>
 
           <div className="flex gap-3 pt-4">
             <NewButton
