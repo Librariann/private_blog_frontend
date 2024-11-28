@@ -10,6 +10,7 @@ import { MeType } from "@/hooks/useMe";
 import { useUpdateUserProfile } from "@/hooks/hooks";
 import { toast } from "react-toastify";
 import { uploadImageToServer } from "@/utils/utils";
+import { useLoadingStore } from "@/stores/useLoadingStore";
 
 interface ProfileEditModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ const ProfileEditModal = ({ isOpen, onClose, data }: ProfileEditModalProps) => {
   const { isDarkMode } = useDarkModeStore();
   const { updateUserProfileMutation, profileUpdateLoading } =
     useUpdateUserProfile();
+  const { setGlobalLoading } = useLoadingStore();
 
   const [formData, setFormData] = useState({
     nickname: "",
@@ -68,16 +70,25 @@ const ProfileEditModal = ({ isOpen, onClose, data }: ProfileEditModalProps) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadProfileImage = async (file: File) => {
-    const profileImage = await uploadImageToServer(file, "profile");
-    updateUserProfileMutation({
-      variables: {
-        input: {
-          profileImage: profileImage,
+    try {
+      setGlobalLoading(true);
+      const profileImage = await uploadImageToServer(file, "profile");
+      const result = await updateUserProfileMutation({
+        variables: {
+          input: {
+            profileImage: profileImage,
+          },
         },
-      },
-    });
-    if (!profileUpdateLoading) {
-      toast.success("프로필 이미지 변경 완료!");
+      });
+      if (result.data?.updateUserProfile.ok) {
+        toast.success("프로필 이미지 변경 완료!");
+      } else {
+        toast.error(result.data?.updateUserProfile.error);
+      }
+    } catch (e) {
+      toast.error("프로필 이미지 변경 실패!");
+    } finally {
+      setGlobalLoading(false);
     }
   };
   return (
