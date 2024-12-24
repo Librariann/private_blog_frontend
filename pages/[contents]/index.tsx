@@ -1,6 +1,6 @@
 import { client } from "@/apollo";
 import { GET_CATEGORIES_COUNTS_QUERY } from "@/components/left-navigator";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { gql } from "@apollo/client";
 import Posts from "@/components/posts";
 import { PostsProps } from "@/pages";
@@ -68,26 +68,7 @@ const fetchSomeDataById = async (categoryId: number) => {
   return data.getPostListByCategoryId?.posts;
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  // 데이터 소스에서 모든 카테고리 가져오기
-  const categories = await fetchCategories();
-  if (!categories) {
-    throw new Error("category error!");
-  }
-
-  // 카테고리마다 경로 생성
-  const paths = categories.map((category) => ({
-    params: { contents: category.categoryTitle },
-  }));
-
-  return {
-    paths,
-    fallback: true, // 없는 경로에 대해 404 반환
-  };
-};
-
-//TODO: 현재 데이터 불러오는 부분 index.tsx처럼 맞춰서 진행할것
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { contents } = params!;
   const categories = await fetchCategories();
   const category = categories?.find(
@@ -103,7 +84,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const posts = await fetchSomeDataById(category.id);
   return {
     props: {
-      posts,
+      posts: posts || [],
     },
   };
 };
