@@ -5,6 +5,7 @@ import {
 } from "@/gql/graphql";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export const GET_CATEGORIES_COUNTS_QUERY = gql`
@@ -40,7 +41,6 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   }
 
   const handleClick = (categoryTitle: string) => {
-    router.push(`/${encodeURIComponent(categoryTitle)}`);
     onClose(); // 모바일에서 카테고리 선택 시 메뉴 닫기
   };
 
@@ -69,31 +69,39 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
         ) : (
           <ul className="space-y-3">
             <li
-              onClick={() => router.push("/")}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 cursor-pointer ${
+              className={`hover:bg-gray-600 transition-colors duration-200 ${
                 isHome ? "bg-gray-700" : "hover:bg-gray-700"
               }`}
             >
-              <span className="font-medium">전체 보기</span>
-              <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                {sumAllCategoryCounts}
-              </span>
+              <Link 
+                href="/" 
+                className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+              >
+                <span className="font-medium">전체 보기</span>
+                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                  {sumAllCategoryCounts}
+                </span>
+              </Link>
             </li>
             {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
               <li
                 key={categories.categoryTitle}
-                onClick={() => handleClick(categories.categoryTitle)}
-                className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${
+                className={`hover:bg-gray-700 transition-colors duration-200 ${
                   decodeURIComponent(currentCategory) ===
                   categories.categoryTitle
                     ? "bg-gray-700"
                     : ""
                 }`}
               >
-                <span>{categories.categoryTitle}</span>
-                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                  {categories.count}
-                </span>
+                <Link
+                  href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                  className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+                >
+                  <span>{categories.categoryTitle}</span>
+                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                    {categories.count}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
@@ -140,34 +148,41 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
           ) : (
             <ul className="space-y-3">
               <li
-                onClick={() => {
-                  router.push("/");
-                  onClose();
-                }}
-                className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 cursor-pointer ${
+                className={`hover:bg-gray-600 transition-colors duration-200 ${
                   isHome ? "bg-gray-700" : "hover:bg-gray-700"
                 }`}
               >
-                <span className="font-medium">전체 보기</span>
-                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                  {sumAllCategoryCounts}
-                </span>
+                <Link
+                  href="/"
+                  onClick={onClose}
+                  className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+                >
+                  <span className="font-medium">전체 보기</span>
+                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                    {sumAllCategoryCounts}
+                  </span>
+                </Link>
               </li>
               {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
                 <li
                   key={categories.categoryTitle}
-                  onClick={() => handleClick(categories.categoryTitle)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer ${
+                  className={`hover:bg-gray-700 transition-colors duration-200 ${
                     decodeURIComponent(currentCategory) ===
                     categories.categoryTitle
                       ? "bg-gray-700"
                       : ""
                   }`}
                 >
-                  <span>{categories.categoryTitle}</span>
-                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                    {categories.count}
-                  </span>
+                  <Link
+                    href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                    onClick={() => handleClick(categories.categoryTitle)}
+                    className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+                  >
+                    <span>{categories.categoryTitle}</span>
+                    <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                      {categories.count}
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
