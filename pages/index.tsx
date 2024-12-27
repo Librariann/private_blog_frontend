@@ -1,7 +1,8 @@
 import { client } from "@/apollo";
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Posts from "@/components/posts";
+import { GetPostListQuery, GetPostListQueryVariables } from "@/gql/graphql";
 
 export const GET_POST_LIST_QUERY = gql`
   query getPostList {
@@ -41,7 +42,28 @@ export type PostsProps = {
   }[]; // 배열 타입으로 수정
 };
 
-const Home = ({ posts }: { posts: PostsProps[] }) => {
+const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
+  const { data, loading, error } = useQuery<GetPostListQuery, GetPostListQueryVariables>(
+    GET_POST_LIST_QUERY,
+    {
+      errorPolicy: "all",
+    }
+  );
+
+  const posts = data?.getPostList?.posts || initialPosts;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (error && !initialPosts?.length) {
+    return <div className="p-10 text-center">게시물을 불러오는 중 오류가 발생했습니다.</div>;
+  }
+
   return (
     <div className="p-10">
       <ul className="flex flex-wrap justify-start">
@@ -61,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     });
     return {
       props: {
-        posts: data.getPostList.posts,
+        initialPosts: data.getPostList.posts,
         initialApolloState: apolloClient.cache.extract(),
       },
     };
