@@ -47,6 +47,8 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
     GET_POST_LIST_QUERY,
     {
       errorPolicy: "all",
+      fetchPolicy: "cache-first",
+      notifyOnNetworkStatusChange: true,
     }
   );
 
