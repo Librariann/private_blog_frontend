@@ -81,7 +81,14 @@ const PostDetail = ({ post }: PostProps) => {
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
-  >(UPDATE_POST_HITS_MUTATION);
+  >(UPDATE_POST_HITS_MUTATION, {
+    update(cache) {
+      // 메인 페이지와 카테고리 페이지의 캐시 무효화
+      cache.evict({ fieldName: "getPostList" });
+      cache.evict({ fieldName: "getPostListByCategoryId" });
+      cache.gc();
+    },
+  });
   useEffect(() => {
     const updateHits = async () => {
       //마지막 조회시간 확인
