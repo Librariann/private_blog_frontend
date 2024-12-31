@@ -7,6 +7,20 @@ const nextConfig = {
   experimental: {
     esmExternals: "loose",
   },
+  // Vercel caching 설정
+  headers: async () => {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = removeImports({ ...nextConfig });
