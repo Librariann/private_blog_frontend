@@ -42,6 +42,15 @@ export function createApolloClient(initialState = null) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
+    defaultOptions: {
+      watchQuery: {
+        errorPolicy: 'all',
+        notifyOnNetworkStatusChange: true,
+      },
+      query: {
+        errorPolicy: 'all',
+      },
+    },
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
@@ -55,6 +64,12 @@ export function createApolloClient(initialState = null) {
               read() {
                 return authTokenVar();
               },
+            },
+            getPostList: {
+              merge: false, // 항상 새로운 데이터로 교체
+            },
+            getPostListByCategoryId: {
+              merge: false, // 항상 새로운 데이터로 교체
             },
           },
         },
