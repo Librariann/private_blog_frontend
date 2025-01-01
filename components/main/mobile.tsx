@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence } from "motion/react";
+import { DesktopAndMobileProps } from "./desktop";
 
 const Mobile = ({
   isDarkMode,
@@ -8,7 +9,7 @@ const Mobile = ({
   iconList,
   expandedCategories,
   toggleCategoryExpand,
-}: any) => {
+}: DesktopAndMobileProps) => {
   return (
     <>
       {/* Categories Section - Mobile Only */}
@@ -49,62 +50,61 @@ const Mobile = ({
                     >
                       <Icon className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm">{parent.name}</span>
+                    <span className="text-sm">{parent.categoryTitle}</span>
                   </div>
                   <span
                     className={`text-sm ${
                       isDarkMode ? "text-white/50" : "text-gray-400"
                     }`}
-                  >
-                    {/* {parent.subCategories.reduce(
-              (sum, sub) => sum + sub.count,
-              0
-            )} */}
-                  </span>
+                  ></span>
                 </button>
 
                 {/* 하위 카테고리 */}
                 <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="ml-11 mt-1 space-y-1">
-                        {parent.children.map((subCat, index) => (
-                          <motion.button
-                            key={subCat.categoryTitle}
-                            initial={{ x: -10, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{
-                              duration: 0.2,
-                              delay: index * 0.05,
-                              ease: "easeOut",
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded-lg transition-all text-sm ${
-                              isDarkMode
-                                ? "text-white/70 hover:bg-white/10 hover:text-white"
-                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span>{subCat.name}</span>
-                              <span
-                                className={
-                                  isDarkMode ? "text-white/50" : "text-gray-400"
-                                }
-                              >
-                                {subCat.count}
-                              </span>
-                            </div>
-                          </motion.button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
+                  {isExpanded &&
+                    parent.children &&
+                    parent.children.length > 0 && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="ml-11 mt-1 space-y-1">
+                          {parent.children.map((subCat, index) => (
+                            <motion.button
+                              key={subCat.categoryTitle}
+                              initial={{ x: -10, opacity: 0 }}
+                              animate={{ x: 0, opacity: 1 }}
+                              transition={{
+                                duration: 0.2,
+                                delay: index * 0.05,
+                                ease: "easeOut",
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-lg transition-all text-sm ${
+                                isDarkMode
+                                  ? "text-white/70 hover:bg-white/10 hover:text-white"
+                                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{subCat.categoryTitle}</span>
+                                <span
+                                  className={
+                                    isDarkMode
+                                      ? "text-white/50"
+                                      : "text-gray-400"
+                                  }
+                                >
+                                  {subCat.count}
+                                </span>
+                              </div>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
                 </AnimatePresence>
               </div>
             );

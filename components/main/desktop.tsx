@@ -1,6 +1,21 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LucideProps } from "lucide-react";
 import ProfileSidebar from "../sidebar/profile-side-bar";
 import { AnimatePresence, motion } from "framer-motion";
+import { CategoryCount } from "@/gql/graphql";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
+
+export type DesktopAndMobileProps = {
+  isDarkMode: boolean;
+  categories: CategoryCount[];
+  iconList: {
+    icon: ForwardRefExoticComponent<
+      Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+    >;
+    color: string;
+  }[];
+  expandedCategories: Set<string>;
+  toggleCategoryExpand: (categoryName: string) => void;
+};
 
 const Desktop = ({
   isDarkMode,
@@ -8,7 +23,7 @@ const Desktop = ({
   iconList,
   expandedCategories,
   toggleCategoryExpand,
-}: any) => {
+}: DesktopAndMobileProps) => {
   return (
     <aside className="hidden lg:block lg:col-span-4 space-y-6">
       <ProfileSidebar isDarkMode={isDarkMode} />
@@ -26,6 +41,7 @@ const Desktop = ({
           {categories.map((parent, index) => {
             const Icon = iconList[index].icon;
             const isExpanded = expandedCategories.has(parent.categoryTitle);
+            const hasChildren = parent.children && parent.children.length > 0;
             return (
               <div key={parent.categoryTitle}>
                 {/* 상위 카테고리 */}
@@ -54,52 +70,61 @@ const Desktop = ({
                   <span
                     className={isDarkMode ? "text-white/50" : "text-gray-400"}
                   >
-                    {parent.children.reduce((sum, sub) => sum + sub.count, 0)}
+                    {hasChildren
+                      ? parent.children!.reduce(
+                          (sum, sub) => sum + sub.count,
+                          0
+                        )
+                      : parent.count}
                   </span>
                 </button>
 
                 {/* 하위 카테고리 */}
                 <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="ml-11 mt-1 space-y-1">
-                        {parent.children.map((subCat, index) => (
-                          <motion.button
-                            key={subCat.categoryTitle}
-                            initial={{ x: -10, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{
-                              duration: 0.2,
-                              delay: index * 0.05,
-                              ease: "easeOut",
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
-                              isDarkMode
-                                ? "text-white/70 hover:bg-white/10 hover:text-white"
-                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span>{subCat.categoryTitle}</span>
-                              <span
-                                className={
-                                  isDarkMode ? "text-white/50" : "text-gray-400"
-                                }
-                              >
-                                {subCat.count}
-                              </span>
-                            </div>
-                          </motion.button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
+                  {isExpanded &&
+                    parent.children &&
+                    parent.children.length > 0 && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="ml-11 mt-1 space-y-1">
+                          {parent.children.map((subCat, index) => (
+                            <motion.button
+                              key={subCat.categoryTitle}
+                              initial={{ x: -10, opacity: 0 }}
+                              animate={{ x: 0, opacity: 1 }}
+                              transition={{
+                                duration: 0.2,
+                                delay: index * 0.05,
+                                ease: "easeOut",
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
+                                isDarkMode
+                                  ? "text-white/70 hover:bg-white/10 hover:text-white"
+                                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{subCat.categoryTitle}</span>
+                                <span
+                                  className={
+                                    isDarkMode
+                                      ? "text-white/50"
+                                      : "text-gray-400"
+                                  }
+                                >
+                                  {subCat.count}
+                                </span>
+                              </div>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
                 </AnimatePresence>
               </div>
             );

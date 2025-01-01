@@ -52,31 +52,50 @@ function Layout({ children }: Props) {
       {isLayoutVisible ? (
         <>
           {globalLoading && <GlobalLoading />}
-          <Header
-            isDarkMode={isDarkMode}
-            onMenuToggle={handleMobileMenuClose}
-            onToggleTheme={onToggleTheme}
-          />
-          <div className="grow" style={{ height: "calc(100vh - 64px)" }}>
-            <div className="flex flex-row h-full">
-              {/* <div className="xl:block xl:w-64 p-4">
+          <div
+            className={`min-h-screen relative overflow-hidden ${
+              isDarkMode ? "dark" : "light"
+            }`}
+          >
+            {/* Animated gradient background */}
+            <div className="fixed inset-0 -z-10">
+              {isDarkMode ? (
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-slate-900 to-black"></div>
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1604781109199-ced99b89b0f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2RpbmclMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYyOTcxMjYyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')] bg-cover bg-center opacity-5"></div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/20 via-transparent to-purple-950/20"></div>
+                </>
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50 to-slate-100"></div>
+              )}
+            </div>
+
+            <Header
+              isDarkMode={isDarkMode}
+              onMenuToggle={handleMobileMenuClose}
+              onToggleTheme={onToggleTheme}
+            />
+            <div className="grow" style={{ height: "calc(100vh - 64px)" }}>
+              <div className="flex flex-row h-full">
+                {/* <div className="xl:block xl:w-64 p-4">
                 <LeftNavigator
                   isOpen={isMobileMenuOpen}
                   onClose={handleMobileMenuClose}
                 />
               </div> */}
-              <div className="w-full overflow-y-auto">{children}</div>
-            </div>
-            {mounted && isLoggedIn && (
-              <div className="fixed bottom-6 right-6">
-                <Link href="/post-write">
-                  <PostWriteButton />
-                </Link>
+                <div className="w-full overflow-y-auto">{children}</div>
               </div>
-            )}
-          </div>
+              {mounted && isLoggedIn && (
+                <div className="fixed bottom-6 right-6">
+                  <Link href="/post-write">
+                    <PostWriteButton />
+                  </Link>
+                </div>
+              )}
+            </div>
 
-          <Footer />
+            <Footer />
+          </div>
         </>
       ) : (
         <div className="w-full">{children}</div>
