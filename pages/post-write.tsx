@@ -119,7 +119,12 @@ function PostWrite() {
 
       if (postResult.data?.createPost.ok) {
         alert("게시물이 성공적으로 작성되었습니다.");
-        router.push("/");
+        // 프로덕션 환경에서 확실한 업데이트를 위해 새로고침 추가
+        if (process.env.NODE_ENV === 'production') {
+          window.location.href = '/';
+        } else {
+          router.push("/");
+        }
       } else {
         alert(postResult.data?.createPost.error);
       }
