@@ -54,19 +54,27 @@ function PostWrite() {
     CreatePostMutationVariables
   >(CREATE_POST_MUTATION, {
     update(cache, { data: mutationResult }) {
+      console.log('🔄 Post creation mutation update called:', mutationResult);
       if (mutationResult?.createPost.ok) {
+        console.log('✅ Post created successfully, invalidating cache...');
         cache.modify({
           fields: {
             getPostList(existing = {}) {
+              console.log('🗑️ Evicting getPostList cache');
               cache.evict({ fieldName: "getPostList" });
               return existing;
             },
             getCategoriesCounts(existing = {}) {
+              console.log('🗑️ Evicting getCategoriesCounts cache');
               cache.evict({ fieldName: "getCategoriesCounts" });
               return existing;
             },
           },
         });
+        cache.gc();
+        console.log('♻️ Cache garbage collection completed');
+      } else {
+        console.log('❌ Post creation failed:', mutationResult?.createPost.error);
       }
     },
   });
@@ -118,11 +126,18 @@ function PostWrite() {
       });
 
       if (postResult.data?.createPost.ok) {
+        console.log('🎉 Post creation successful:', {
+          environment: process.env.NODE_ENV,
+          postId: postResult.data.createPost.postId,
+          backendUrl: process.env.NEXT_PUBLIC_GRAPHQL_URI
+        });
         alert("게시물이 성공적으로 작성되었습니다.");
         // 프로덕션 환경에서 확실한 업데이트를 위해 새로고침 추가
         if (process.env.NODE_ENV === 'production') {
+          console.log('🔄 Production: Using window.location.href');
           window.location.href = '/';
         } else {
+          console.log('🔄 Development: Using router.push');
           router.push("/");
         }
       } else {
