@@ -6,7 +6,7 @@ import { gql } from "@apollo/client";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { GET_POST_BY_ID_QUERY } from "./post-detail";
+import { GET_POST_BY_ID_QUERY } from "@/lib/queries";
 
 const CommentListForm = ({ comment }: { comment: CommentProps }) => {
   const router = useRouter();

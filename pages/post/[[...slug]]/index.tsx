@@ -7,7 +7,7 @@ import {
   getPostsByParentCategoryId,
 } from "@/lib/posts";
 import PostList from "@/components/post-list";
-import PostDetail from "@/components/post-detail";
+import PostDetail from "@/components/posts/post-detail";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {

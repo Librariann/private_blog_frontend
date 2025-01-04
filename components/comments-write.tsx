@@ -10,7 +10,7 @@ import ConfirmModal from "./modal/confirm-modal";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { GET_POST_BY_ID_QUERY } from "./post-detail";
+import { GET_POST_BY_ID_QUERY } from "./posts/post-detail";
 
 type commentProps = {
   id: string;
@@ -18,19 +18,7 @@ type commentProps = {
   comment: string;
 };
 
-export const CREATE_COMMENT_MUTATION = gql`
-  mutation createComment($input: CreateCommentInput!) {
-    createComment(input: $input) {
-      ok
-      error
-      commentId
-    }
-  }
-`;
-
 const CommentsWrite = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { setGlobalLoading } = useLoadingStore();
   const {
     query: { id },
   } = useRouter();
@@ -60,39 +48,6 @@ const CommentsWrite = () => {
       comment: "",
     },
   });
-  const onSubmit = async () => {
-    if (!id) {
-      toast.error("댓글 내용이 없습니다! 다시 확인해주세요!");
-      return;
-    }
-    setIsModalOpen(false);
-    setGlobalLoading(true);
-
-    const data = getValues();
-    const commentResult = await createCommentMutation({
-      variables: {
-        input: {
-          commentId: data.id,
-          commentPassword: data.password,
-          comment: data.comment,
-          postId: +id,
-        },
-      },
-    });
-
-    if (commentResult.data?.createComment.ok) {
-      toast.success("댓글이 작성됐습니다.");
-      reset({
-        id: "",
-        password: "",
-        comment: "",
-      });
-    } else {
-      toast.error("댓글 작성에 실패했습니다.");
-    }
-    setIsModalOpen(false);
-    setGlobalLoading(false);
-  };
 
   const handleCommentConfirm = () => {
     if (!id) {

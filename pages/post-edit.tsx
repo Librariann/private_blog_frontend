@@ -15,7 +15,7 @@ import {
 } from "@/gql/graphql";
 import WritingAnimation from "@/components/loading/writing-animation";
 import { uploadImageToServer } from "@/utils/utils";
-import { GET_POST_BY_ID_QUERY } from "@/components/post-detail";
+import { GET_POST_BY_ID_QUERY } from "@/components/posts/post-detail";
 import { GET_CATEGORIES } from "@/lib/queries";
 import { toast } from "react-toastify";
 
