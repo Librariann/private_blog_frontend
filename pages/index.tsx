@@ -43,7 +43,7 @@ export type PostsProps = {
 };
 
 const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
-  const { data, loading, error } = useQuery<GetPostListQuery, GetPostListQueryVariables>(
+  const { data, loading, error, networkStatus } = useQuery<GetPostListQuery, GetPostListQueryVariables>(
     GET_POST_LIST_QUERY,
     {
       errorPolicy: "all",
@@ -53,6 +53,15 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
   );
 
   const posts = data?.getPostList?.posts || initialPosts;
+
+  console.log('🏠 Home page render:', {
+    hasData: !!data,
+    dataPostsCount: data?.getPostList?.posts?.length || 0,
+    initialPostsCount: initialPosts?.length || 0,
+    loading,
+    networkStatus,
+    error: error?.message
+  });
 
   if (loading) {
     return (
