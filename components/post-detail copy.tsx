@@ -41,38 +41,6 @@ export type PostProps = {
   };
 };
 
-export const GET_POST_BY_ID_QUERY = gql`
-  query getPostById($postId: Int!) {
-    getPostById(postId: $postId) {
-      ok
-      post {
-        id
-        title
-        contents
-        hits
-        createdAt
-        thumbnailUrl
-        user {
-          id
-        }
-        category {
-          id
-          categoryTitle
-        }
-        hashtags {
-          hashtag
-        }
-        comments {
-          id
-          commentId
-          comment
-          createdAt
-        }
-      }
-    }
-  }
-`;
-
 const UPDATE_POST_HITS_MUTATION = gql`
   mutation updatePostHits($postId: Int!) {
     updatePostHits(postId: $postId) {
@@ -97,7 +65,7 @@ const EditerMarkdown = dynamic(
   { ssr: false }
 );
 
-const PostDetail = ({ post }: PostProps) => {
+const PostDetail_OLD = ({ post }: PostProps) => {
   const [mounted, setMounted] = useState(false);
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
   const [deleteCheckConfirmModal, setDeleteCheckConfirmModal] = useState(false);
@@ -290,4 +258,4 @@ const PostDetail = ({ post }: PostProps) => {
   );
 };
 
-export default PostDetail;
+export default PostDetail_OLD;
