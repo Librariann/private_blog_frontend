@@ -1,4 +1,4 @@
-import { client } from "@/apollo";
+import { createApolloClient } from "@/apollo";
 import { gql, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Posts from "@/components/posts";
@@ -88,9 +88,11 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const apolloClient = client;
+    // 서버에서 새로운 Apollo Client 인스턴스 생성
+    const apolloClient = createApolloClient();
     const { data } = await apolloClient.query({
       query: GET_POST_LIST_QUERY,
+      fetchPolicy: "network-only", // 항상 최신 데이터
     });
     return {
       props: {
@@ -99,8 +101,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     };
   } catch (error) {
+    console.error('SSR Error:', error);
     return {
-      notFound: true, // 에러 발생 시 404 페이지로 리디렉션
+      props: {
+        initialPosts: [],
+        initialApolloState: {},
+      },
     };
   }
 };
