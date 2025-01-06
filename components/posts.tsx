@@ -4,13 +4,6 @@ import Link from "next/link";
 import styled from "styled-components";
 import Card from "./cards/blog-post-card";
 
-const PostTitle = styled.div`
-  font-size: 1.2rem;
-  font-weight: bold;
-`;
-
-const PostBottom = styled.div``;
-
 const Posts = ({ post }: { post: PostsProps }) => {
   return (
     <li className="p-4">

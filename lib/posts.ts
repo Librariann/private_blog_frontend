@@ -3,6 +3,7 @@ import {
   GET_CATEGORIES,
   GET_CATEGORIES_COUNTS_QUERY,
   GET_POST_BY_CATEGORYID_QUERY,
+  GET_POST_BY_ID_QUERY,
   GET_POST_BY_PARENT_CATEGORY_ID_QUERY,
 } from "./queries";
 import {
@@ -17,7 +18,6 @@ import {
   GetPostListByParentCategoryIdQuery,
   GetPostListByParentCategoryIdQueryVariables,
 } from "@/gql/graphql";
-import { GET_POST_BY_ID_QUERY } from "@/components/post-detail";
 
 export async function getPostsByCategoryId(categoryId: number) {
   const apolloClient = createApolloClient();

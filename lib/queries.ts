@@ -89,3 +89,45 @@ export const GET_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_POST_BY_ID_QUERY = gql`
+  query getPostById($postId: Int!) {
+    getPostById(postId: $postId) {
+      ok
+      post {
+        id
+        title
+        contents
+        hits
+        createdAt
+        thumbnailUrl
+        user {
+          id
+        }
+        category {
+          id
+          categoryTitle
+        }
+        hashtags {
+          hashtag
+        }
+        comments {
+          id
+          commentId
+          comment
+          createdAt
+        }
+      }
+    }
+  }
+`;
+
+export const CREATE_COMMENT_MUTATION = gql`
+  mutation createComment($input: CreateCommentInput!) {
+    createComment(input: $input) {
+      ok
+      error
+      commentId
+    }
+  }
+`;
