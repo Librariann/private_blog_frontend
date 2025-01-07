@@ -1,4 +1,4 @@
-import { client } from "@/apollo";
+import { createApolloClient } from "@/apollo";
 import { GET_CATEGORIES_COUNTS_QUERY } from "@/components/left-navigator";
 import { GetServerSideProps } from "next";
 import { gql, useQuery } from "@apollo/client";
@@ -36,60 +36,55 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
   }
 `;
 
-const fetchCategories = async () => {
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { contents } = params!;
+  
   try {
-    const { data } = await client.query<
+    // 서버에서 새로운 Apollo Client 인스턴스 생성
+    const apolloClient = createApolloClient();
+    
+    const { data: categoryData } = await apolloClient.query<
       GetCategoriesCountsQuery,
       GetCategoriesCountsQueryVariables
     >({
       query: GET_CATEGORIES_COUNTS_QUERY,
-      fetchPolicy: "cache-first", // 캐시 우선 정책 적용
+      fetchPolicy: "network-only",
     });
 
-    if (!data?.getCategoriesCounts?.categoryCounts) {
-      throw new Error("카테고리 데이터를 가져오는데 실패했습니다.");
+    const categories = categoryData?.getCategoriesCounts?.categoryCounts;
+    const category = categories?.find(
+      (category) => category.categoryTitle === contents
+    );
+
+    if (!category) {
+      return {
+        notFound: true,
+      };
     }
 
-    return data.getCategoriesCounts.categoryCounts;
+    const { data: postsData } = await apolloClient.query<
+      GetPostListByCategoryIdQuery,
+      GetPostListByCategoryIdQueryVariables
+    >({
+      query: GET_POST_BY_CATEGORYID_QUERY,
+      variables: { categoryId: category.id },
+      fetchPolicy: "network-only",
+    });
+
+    return {
+      props: {
+        initialPosts: postsData.getPostListByCategoryId?.posts || [],
+        categoryId: category.id,
+        initialApolloState: apolloClient.cache.extract(),
+      },
+    };
   } catch (error) {
-    console.error("카테고리 조회 중 오류 발생:", error);
-    return [];
-  }
-};
-
-const fetchSomeDataById = async (categoryId: number) => {
-  const { data } = await client.query<
-    GetPostListByCategoryIdQuery,
-    GetPostListByCategoryIdQueryVariables
-  >({
-    query: GET_POST_BY_CATEGORYID_QUERY,
-    variables: { categoryId },
-  });
-
-  return data.getPostListByCategoryId?.posts;
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { contents } = params!;
-  const categories = await fetchCategories();
-  const category = categories?.find(
-    (category) => category.categoryTitle === contents
-  );
-
-  if (!category) {
+    console.error('SSR Error (Category):', error);
     return {
       notFound: true,
     };
   }
-
-  const posts = await fetchSomeDataById(category.id);
-  return {
-    props: {
-      initialPosts: posts || [],
-      categoryId: category.id,
-      initialApolloState: client.cache.extract(),
-    },
-  };
 };
 
 const Contents = ({ initialPosts, categoryId }: { initialPosts: PostsProps[]; categoryId: number }) => {
