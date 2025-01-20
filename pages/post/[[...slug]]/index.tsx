@@ -13,17 +13,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
   try {
     const data = await getCategoriesCounts();
 
-    const categories = data;
-    const paths = categories.map((category) => ({
-      params: { slug: [category.categoryTitle] },
-    }));
+    // 데이터가 없거나 배열이 아닌 경우 빈 배열로 처리
+    const categories = Array.isArray(data) ? data : [];
+
+    const paths = categories
+      .filter((category) => category && category.categoryTitle) // null/undefined 필터링
+      .map((category) => ({
+        params: { slug: [category.categoryTitle] },
+      }));
+
+    // 빌드 시점에 경로 생성 완료
 
     return {
       paths,
       fallback: "blocking", // 새 카테고리는 on-demand로 생성
     };
   } catch (error) {
-    console.error("getStaticPaths Error:", error);
+    // 빌드 시점에는 GraphQL 서버가 없는 것이 정상이므로 에러 로그 제거
+    // 에러 발생 시 빈 경로로 fallback 처리
     return {
       paths: [],
       fallback: "blocking",
@@ -41,12 +48,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const categories = await getCategories();
 
     //블로그 상세페이지
-    if (slug[slugLength - 1].startsWith("@Post-")) {
-      const getPostId = slug[slugLength - 1].split("-")[1];
-      postsData = await getPostById(+getPostId);
-      return { props: { type: "detail", post: postsData } };
+    if (slugLength > 0 && slug[slugLength - 1]?.startsWith("@Post-")) {
+      const lastSlug = slug[slugLength - 1];
+      const postIdPart = lastSlug.split("-")[1];
+      if (postIdPart) {
+        postsData = await getPostById(+postIdPart);
+        return { props: { type: "detail", post: postsData } };
+      }
       //그 외 리스트 페이지
-    } else {
+    } else if (slugLength > 0 && slug[slugLength - 1]) {
       category = categories?.find(
         (category) => category.categoryTitle === slug[slugLength - 1]
       );
@@ -74,7 +84,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 60, // 60초마다 재생성
     };
   } catch (error) {
-    console.error("getStaticProps Error:", error);
+    // 빌드 시점에는 GraphQL 서버가 없는 것이 정상이므로 에러 로그 제거
     return {
       notFound: true,
       revalidate: 60,
