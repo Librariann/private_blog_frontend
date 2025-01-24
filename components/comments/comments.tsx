@@ -8,11 +8,11 @@ import { Comment } from "@/gql/graphql";
 
 const COMMENTS_PER_LOAD = 5;
 
-type comment = {
+export type CommentType = {
   comments: Comment[];
 };
 
-const Comments = ({ comments }: comment) => {
+const Comments = ({ comments }: CommentType) => {
   const { isDarkMode } = useDarkModeStore();
   const [commentsList, setCommentsList] = useState<Comment[]>(
     [...comments].reverse()
@@ -52,10 +52,7 @@ const Comments = ({ comments }: comment) => {
       />
 
       {/* Comments List */}
-      <CommentsList
-        comments={commentsList}
-        displayedComments={displayedComments}
-      />
+      <CommentsList comments={displayedComments} />
 
       {/* Load More Button */}
       {hasMoreComments && (

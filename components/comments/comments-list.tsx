@@ -3,13 +3,14 @@ import { AnimatePresence } from "motion/react";
 import { motion } from "motion/react";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
+import { CommentType } from "./comments";
 
-const CommentsList = ({ displayedComments }: any) => {
+const CommentsList = ({ comments }: CommentType) => {
   const { isDarkMode } = useDarkModeStore();
   return (
     <div className="space-y-4">
       <AnimatePresence>
-        {displayedComments.map((comment, index) => (
+        {comments.map((comment, index) => (
           <motion.div
             key={comment.id}
             initial={{ opacity: 0, y: 10 }}

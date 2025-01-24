@@ -4,10 +4,10 @@ import { Send } from "lucide-react";
 import { ReadMoreButton } from "../buttons/read-more-button";
 import ConfirmModal from "../modal/confirm-modal";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { createComment } from "@/lib/comments";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { Comment } from "@/gql/graphql";
+import { useCreateComment } from "@/hooks/hooks";
 
 const CommentsWriteForm = ({
   comments,
@@ -21,7 +21,7 @@ const CommentsWriteForm = ({
   const [commentPassword, setCommentPassword] = useState("");
   const { isDarkMode } = useDarkModeStore();
   const { setGlobalLoading } = useLoadingStore();
-  const { createCommentMutation } = createComment({ id: 1 });
+  const { createCommentMutation } = useCreateComment({ id: 1 });
 
   const router = useRouter();
   const { slug } = router.query;

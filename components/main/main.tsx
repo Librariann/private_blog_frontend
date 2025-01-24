@@ -50,7 +50,7 @@ const Main = ({ posts }: { posts: PostsProps[] }) => {
     if (!loading) {
       const categories =
         getCategoryDatas?.getCategoriesCounts?.categoryCounts || [];
-      const expandCategory = categories[0].categoryTitle;
+      const expandCategory = categories[0]?.categoryTitle;
 
       setExpandedCategories(new Set([expandCategory]));
       setCategories(categories);
@@ -92,7 +92,7 @@ const Main = ({ posts }: { posts: PostsProps[] }) => {
             <h2
               className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
             >
-              {posts[0].title}
+              {posts[0]?.title}
             </h2>
             <p
               className={`mb-6 ${
