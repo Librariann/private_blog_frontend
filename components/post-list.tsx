@@ -1,5 +1,4 @@
 import { PostsProps } from "@/pages";
-import Posts from "./posts";
 
 const PostList = ({ posts }: { posts: PostsProps[] }) => {
   if (!posts || posts.length === 0) {
@@ -10,11 +9,7 @@ const PostList = ({ posts }: { posts: PostsProps[] }) => {
 
   return (
     <div className="p-10">
-      <ul className="flex flex-wrap justify-center gap-4 max-w-7xl mx-auto">
-        {posts.map((post) => {
-          return <Posts key={post.id} post={post} />;
-        })}
-      </ul>
+      <ul className="flex flex-wrap justify-center gap-4 max-w-7xl mx-auto"></ul>
     </div>
   );
 };
