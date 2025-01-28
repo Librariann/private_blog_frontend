@@ -78,7 +78,7 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
         className="font-bold text-xl md:text-3xl text-white cursor-pointer"
         onClick={() => navigate.push("/")}
       >
-        Librarian.blog
+        Librarian&apos;s.blog
       </div>
       <div className="flex ml-auto pr-5 text-white cursor-pointer">
         <div onClick={() => navigate.push("/setting")}>설정</div>
