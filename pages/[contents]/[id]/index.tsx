@@ -44,7 +44,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         id
         title
         contents
-        hits
+        # hits
         createdAt
         hashtags {
           hashtag
@@ -77,7 +77,9 @@ const EditerMarkdown = dynamic(
 );
 
 const PostDetail = ({ post }: PostProps) => {
-  const [comments, setComments] = useState<CommentProps[]>(post.comments);
+  const [comments, setComments] = useState<CommentProps[]>(
+    post?.comments || []
+  );
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
@@ -89,28 +91,28 @@ const PostDetail = ({ post }: PostProps) => {
       cache.gc();
     },
   });
-  useEffect(() => {
-    const updateHits = async () => {
-      //마지막 조회시간 확인
-      const lastViewTime = localStorage.getItem(`post-${post.id}-lastView`);
-      const now = new Date().getTime();
-      // 마지막 조회시간이 1일 이상 지났으면 조회수 증가
-      if (!lastViewTime || now - parseInt(lastViewTime) > 24 * 60 * 60 * 1000) {
-        try {
-          await updatePostHitsMutation({
-            variables: {
-              postId: post.id,
-            },
-          });
-          // 현재 시간을 저장
-          localStorage.setItem(`post-${post.id}-lastView`, now.toString());
-        } catch (error) {
-          console.error("조회수 업데이트 실패:", error);
-        }
-      }
-    };
-    updateHits();
-  }, [updatePostHitsMutation, post.id]);
+  // useEffect(() => {
+  //   const updateHits = async () => {
+  //     //마지막 조회시간 확인
+  //     const lastViewTime = localStorage.getItem(`post-${post?.id}-lastView`);
+  //     const now = new Date().getTime();
+  //     // 마지막 조회시간이 1일 이상 지났으면 조회수 증가
+  //     if (!lastViewTime || now - parseInt(lastViewTime) > 24 * 60 * 60 * 1000) {
+  //       try {
+  //         await updatePostHitsMutation({
+  //           variables: {
+  //             postId: post?.id,
+  //           },
+  //         });
+  //         // 현재 시간을 저장
+  //         localStorage.setItem(`post-${post?.id}-lastView`, now.toString());
+  //       } catch (error) {
+  //         console.error("조회수 업데이트 실패:", error);
+  //       }
+  //     }
+  //   };
+  //   // updateHits();
+  // }, [updatePostHitsMutation, post?.id]);
 
   const handleCreateComment = (newCommentData: CommentProps) => {
     setComments((prev) => [...prev, newCommentData]);
