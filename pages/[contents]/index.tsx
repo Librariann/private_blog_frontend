@@ -21,7 +21,7 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         id
         title
         contents
-        hits
+        # hits
         category {
           categoryTitle
         }
@@ -36,14 +36,13 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
   }
 `;
 
-
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { contents } = params!;
-  
+
   try {
     // 서버에서 새로운 Apollo Client 인스턴스 생성
     const apolloClient = createApolloClient();
-    
+
     const { data: categoryData } = await apolloClient.query<
       GetCategoriesCountsQuery,
       GetCategoriesCountsQueryVariables
@@ -63,6 +62,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       };
     }
 
+    console.log("🚀 SSR: Fetching posts for categoryId:", category.id);
+    console.log("🏷️ SSR: Category object:", category);
     const { data: postsData } = await apolloClient.query<
       GetPostListByCategoryIdQuery,
       GetPostListByCategoryIdQueryVariables
@@ -71,6 +72,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       variables: { categoryId: category.id },
       fetchPolicy: "network-only",
     });
+    console.log("📥 SSR: Posts data received:", postsData);
+    console.log(
+      "📊 SSR: Posts array:",
+      postsData.getPostListByCategoryId?.posts
+    );
+    console.log("✅ SSR: OK status:", postsData.getPostListByCategoryId?.ok);
 
     return {
       props: {
@@ -80,14 +87,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       },
     };
   } catch (error) {
-    console.error('SSR Error (Category):', error);
+    console.error("SSR Error (Category):", error);
     return {
       notFound: true,
     };
   }
 };
 
-const Contents = ({ initialPosts, categoryId }: { initialPosts: PostsProps[]; categoryId: number }) => {
+const Contents = ({
+  initialPosts,
+  categoryId,
+}: {
+  initialPosts: PostsProps[];
+  categoryId: number;
+}) => {
   const { data, loading, error } = useQuery<
     GetPostListByCategoryIdQuery,
     GetPostListByCategoryIdQueryVariables
@@ -96,10 +109,13 @@ const Contents = ({ initialPosts, categoryId }: { initialPosts: PostsProps[]; ca
     fetchPolicy: "cache-first",
     errorPolicy: "all",
     notifyOnNetworkStatusChange: true,
+    onError: (error) => {
+      console.error("❌ Query error:", error);
+    },
   });
-
   const posts = data?.getPostListByCategoryId?.posts || initialPosts;
 
+  console.log(posts);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -109,13 +125,17 @@ const Contents = ({ initialPosts, categoryId }: { initialPosts: PostsProps[]; ca
   }
 
   if (error && !initialPosts?.length) {
-    return <div className="p-10 text-center">게시물을 불러오는 중 오류가 발생했습니다.</div>;
+    return (
+      <div className="p-10 text-center">
+        게시물을 불러오는 중 오류가 발생했습니다.111
+      </div>
+    );
   }
 
   if (posts !== undefined && posts.length === 0) {
     return <p>No posts available.</p>;
   }
-  
+
   return (
     <>
       <div className="p-10">
