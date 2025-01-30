@@ -1,14 +1,14 @@
-import Button from "@/components/button";
+import Button from "@/components/buttons/button";
 import UserInfo from "@/components/user-info";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import {
   UpdatePasswordMutation,
   UpdatePasswordMutationVariables,
 } from "@/gql/graphql";
-import { CategoryAddForm } from "@/components/category-add-form";
+import { CategoryAddForm } from "@/components/category/category-add-form";
 
 interface IUpdatePasswordForm {
   password: string;

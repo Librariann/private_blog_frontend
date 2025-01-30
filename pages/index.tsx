@@ -1,7 +1,6 @@
 import { createApolloClient } from "@/apollo";
 import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
-import Posts from "@/components/posts";
 import { GetPostListQuery, GetPostListQueryVariables } from "@/gql/graphql";
 import Main from "@/components/main/main";
 

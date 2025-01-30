@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { commands } from "@uiw/react-md-editor";
 import dynamic from "next/dynamic";
 import ConfirmModal from "@/components/modal/confirm-modal";
-import Button from "@/components/button";
+import Button from "@/components/buttons/button";
 import {
   GetCategoriesQuery,
   GetCategoriesQueryVariables,
@@ -15,8 +15,7 @@ import {
 } from "@/gql/graphql";
 import WritingAnimation from "@/components/loading/writing-animation";
 import { uploadImageToServer } from "@/utils/utils";
-import { GET_POST_BY_ID_QUERY } from "@/components/posts/post-detail";
-import { GET_CATEGORIES } from "@/lib/queries";
+import { GET_CATEGORIES, GET_POST_BY_ID_QUERY } from "@/lib/queries";
 import { toast } from "react-toastify";
 
 const EDIT_POST_MUTATION = gql`

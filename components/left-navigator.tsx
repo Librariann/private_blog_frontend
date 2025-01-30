@@ -7,7 +7,6 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import CategorySkeleton from "./skeleton/category-skeleton";
 import { GET_CATEGORIES_COUNTS_QUERY } from "@/lib/queries";
 
 type LeftNavigatorProps = {
@@ -69,7 +68,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
         {categories.length === 0 ? (
-          <CategorySkeleton />
+          <></>
         ) : (
           <ul className="space-y-3">
             {/* 전체보기 필요없어서 삭제 */}
@@ -167,7 +166,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
             </button>
           </div>
           {categories.length === 0 ? (
-            <CategorySkeleton />
+            <></>
           ) : (
             <ul className="space-y-3">
               <li

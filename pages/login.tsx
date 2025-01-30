@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import FormError from "@/components/form-error";
 import { gql, useMutation } from "@apollo/client";
-import Button from "@/components/button";
+import Button from "@/components/buttons/button";
 import { useRouter } from "next/navigation";
 import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
 import { authTokenVar, isLoggedInVar } from "@/apollo";

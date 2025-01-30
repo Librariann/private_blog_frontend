@@ -2,7 +2,7 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-import Button from "@/components/button";
+import Button from "@/components/buttons/button";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { gql, useMutation, useQuery } from "@apollo/client";
