@@ -43,26 +43,15 @@ export type PostsProps = {
 };
 
 const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
-  const { data, loading, error, networkStatus } = useQuery<GetPostListQuery, GetPostListQueryVariables>(
-    GET_POST_LIST_QUERY,
-    {
-      errorPolicy: "all",
-      fetchPolicy: "cache-first",
-      notifyOnNetworkStatusChange: true,
-    }
-  );
-
-  const posts = data?.getPostList?.posts || initialPosts;
-
-  console.log('🏠 Home page render:', {
-    hasData: !!data,
-    dataPostsCount: data?.getPostList?.posts?.length || 0,
-    initialPostsCount: initialPosts?.length || 0,
-    loading,
-    networkStatus,
-    error: error?.message
+  const { data, loading, error, networkStatus } = useQuery<
+    GetPostListQuery,
+    GetPostListQueryVariables
+  >(GET_POST_LIST_QUERY, {
+    errorPolicy: "all",
+    fetchPolicy: "cache-first",
+    notifyOnNetworkStatusChange: true,
   });
-
+  const posts = data?.getPostList?.posts || initialPosts;
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -71,8 +60,16 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
     );
   }
 
-  if (error && !initialPosts?.length) {
-    return <div className="p-10 text-center">게시물을 불러오는 중 오류가 발생했습니다.</div>;
+  if (error) {
+    return (
+      <div className="p-10 text-center">
+        게시물을 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
+  }
+
+  if (posts.length === 0) {
+    return <div className="p-10 text-center">게시물이 없습니다.</div>;
   }
 
   return (
@@ -101,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     };
   } catch (error) {
-    console.error('SSR Error:', error);
+    console.error("SSR Error:", error);
     return {
       props: {
         initialPosts: [],
