@@ -17,7 +17,6 @@ export const ME_QUERY = gql`
 export const useMe = () => {
   const { data, error } = useQuery(ME_QUERY);
   if (error?.message === "Token has expired") {
-    console.log(error.message);
     return { data: "Token has expired" };
   }
   return {
