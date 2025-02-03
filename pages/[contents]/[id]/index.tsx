@@ -172,8 +172,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         notFound: true, // 포스트가 없으면 404 페이지로 리디렉션합니다.
       };
     }
-    console.log(client.cache.extract());
-
     return {
       props: {
         post: data.getPostById.post,
