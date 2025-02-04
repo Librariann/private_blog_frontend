@@ -7,6 +7,8 @@ import {
   DeletePostMutationVariables,
   EditCategoryMutation,
   EditCategoryMutationVariables,
+  FindOneCategoryByIdQuery,
+  FindOneCategoryByIdQueryVariables,
   GetAllPopularHashTagsQuery,
   GetAllPopularHashTagsQueryVariables,
   GetAllPostListQuery,
@@ -41,6 +43,7 @@ import {
   EDIT_POST_MUTATION,
   CREATE_CATEGORY_MUTATION,
   EDIT_CATEGORY_MUTATION,
+  FIND_ONE_CATEGORY_BY_ID_QUERY,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -51,16 +54,19 @@ import { useMutation } from "@apollo/client";
 import { ME_QUERY } from "./useMe";
 
 export function useGetCategories() {
-  const { data } = useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(
-    GET_CATEGORIES,
-    {
-      fetchPolicy: "cache-and-network",
-      nextFetchPolicy: "cache-first",
-      ssr: false, // SSR 비활성화
-    }
-  );
+  const { data, loading } = useQuery<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >(GET_CATEGORIES, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+    ssr: false, // SSR 비활성화
+  });
 
-  return data;
+  return {
+    categories: data?.getCategories.categories || [],
+    categoriesLoading: loading,
+  };
 }
 
 export function useGetCategoryCounts() {
@@ -202,6 +208,15 @@ export const useCreatePost = () => {
     CreatePostMutation,
     CreatePostMutationVariables
   >(CREATE_POST_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_POST_LIST_QUERY,
+      },
+      {
+        query: GET_CATEGORIES_COUNTS_QUERY,
+      },
+    ],
+    awaitRefetchQueries: true,
     update(cache, { data: mutationResult }) {
       if (mutationResult?.createPost.ok) {
         cache.modify({
@@ -239,14 +254,6 @@ export const useEditPost = ({ postId }: { postId: number }) => {
         },
       ],
       awaitRefetchQueries: true,
-      // 캐시도 함께 업데이트
-      update(cache, { data }) {
-        if (data?.editPost.ok) {
-          cache.evict({ fieldName: "getPostList" });
-          cache.evict({ fieldName: "getPostListByCategoryId" });
-          cache.gc();
-        }
-      },
     }
   );
   return { editPostMutation, editLoading };
@@ -286,4 +293,21 @@ export const useEditCategory = () => {
     awaitRefetchQueries: true,
   });
   return { editCategoryMutation, categoryLoading };
+};
+
+export const useFindOneCategoryById = ({
+  categoryId,
+}: {
+  categoryId: number;
+}) => {
+  const { data } = useQuery<
+    FindOneCategoryByIdQuery,
+    FindOneCategoryByIdQueryVariables
+  >(FIND_ONE_CATEGORY_BY_ID_QUERY, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+    ssr: false, // SSR 비활성화
+    variables: { categoryId },
+  });
+  return data?.findOneCategoryById?.category || null;
 };
