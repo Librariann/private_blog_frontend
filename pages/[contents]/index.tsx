@@ -62,8 +62,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       };
     }
 
-    console.log("🚀 SSR: Fetching posts for categoryId:", category.id);
-    console.log("🏷️ SSR: Category object:", category);
     const { data: postsData } = await apolloClient.query<
       GetPostListByCategoryIdQuery,
       GetPostListByCategoryIdQueryVariables
@@ -72,12 +70,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       variables: { categoryId: category.id },
       fetchPolicy: "network-only",
     });
-    console.log("📥 SSR: Posts data received:", postsData);
-    console.log(
-      "📊 SSR: Posts array:",
-      postsData.getPostListByCategoryId?.posts
-    );
-    console.log("✅ SSR: OK status:", postsData.getPostListByCategoryId?.ok);
 
     return {
       props: {
@@ -115,7 +107,6 @@ const Contents = ({
   });
   const posts = data?.getPostListByCategoryId?.posts || initialPosts;
 
-  console.log(posts);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -124,16 +115,16 @@ const Contents = ({
     );
   }
 
-  if (error && !initialPosts?.length) {
+  if (error) {
     return (
       <div className="p-10 text-center">
-        게시물을 불러오는 중 오류가 발생했습니다.111
+        게시물을 불러오는 중 오류가 발생했습니다.
       </div>
     );
   }
 
   if (posts !== undefined && posts.length === 0) {
-    return <p>No posts available.</p>;
+    return <p>해당 카테고리에 게시물이 없습니다.</p>;
   }
 
   return (
