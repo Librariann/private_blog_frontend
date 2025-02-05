@@ -20,10 +20,10 @@ import {
   GetPostByIdQueryVariables,
   GetPostListByCategoryIdQuery,
   GetPostListByCategoryIdQueryVariables,
-  GetPostListByParentCategoryIdQuery,
-  GetPostListByParentCategoryIdQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  GetPostsByParentCategoryIdQuery,
+  GetPostsByParentCategoryIdQueryVariables,
   UserProfileByNickNameQuery,
   UserProfileByNickNameQueryVariables,
 } from "@/gql/graphql";
@@ -50,15 +50,15 @@ export async function getPostsByCategoryId(categoryId: number) {
 export async function getPostsByParentCategoryId(categoryId: number) {
   try {
     const { data } = await apolloClient.query<
-      GetPostListByParentCategoryIdQuery,
-      GetPostListByParentCategoryIdQueryVariables
+      GetPostsByParentCategoryIdQuery,
+      GetPostsByParentCategoryIdQueryVariables
     >({
       query: GET_POST_BY_PARENT_CATEGORY_ID_QUERY,
       variables: { categoryId },
       fetchPolicy: "cache-first",
     });
 
-    return data.getPostListByParentCategoryId?.posts || [];
+    return data.getPostsByParentCategoryId?.posts || [];
   } catch (error) {
     return [];
   }
