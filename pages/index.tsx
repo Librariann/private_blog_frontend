@@ -68,7 +68,7 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
     );
   }
 
-  if (posts.length === 0) {
+  if (posts.length === 0 || !posts) {
     return <div className="p-10 text-center">게시물이 없습니다.</div>;
   }
 
