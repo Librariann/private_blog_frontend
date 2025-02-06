@@ -50,7 +50,6 @@ export type postingProps = {
 
 // 이미지를 서버에 업로드하는 함수
 async function uploadImageToServer(file: File): Promise<string> {
-  // TODO: 당신의 업로드 API에 맞게 구현
   // 예시: presigned URL 있으면 PUT 후 그 URL 반환, 아니면 POST 후 JSON으로 URL 받기
   const form = new FormData();
   form.append("file", file);
@@ -101,7 +100,6 @@ const imageUploadCommand: ICommand = {
 
       try {
         const url = await uploadImageToServer(file);
-        console.log(url);
         // 플레이스홀더를 실제 마크다운으로 교체
         const alt = file.name.replace(/\.(png|jpe?g|gif|webp|svg)$/i, "");
         const md = `![${alt}](${url})`;
@@ -137,25 +135,20 @@ function PostWrite() {
     CreatePostMutationVariables
   >(CREATE_POST_MUTATION, {
     update(cache, { data: mutationResult }) {
-      console.log("🔄 Post creation mutation update called:", mutationResult);
       if (mutationResult?.createPost.ok) {
-        console.log("✅ Post created successfully, invalidating cache...");
         cache.modify({
           fields: {
             getPostList(existing = {}) {
-              console.log("🗑️ Evicting getPostList cache");
               cache.evict({ fieldName: "getPostList" });
               return existing;
             },
             getCategoriesCounts(existing = {}) {
-              console.log("🗑️ Evicting getCategoriesCounts cache");
               cache.evict({ fieldName: "getCategoriesCounts" });
               return existing;
             },
           },
         });
         cache.gc();
-        console.log("♻️ Cache garbage collection completed");
       } else {
         console.log(
           "❌ Post creation failed:",
@@ -207,7 +200,6 @@ function PostWrite() {
     // setOpen(true);
     try {
       const { title } = data;
-      console.log(md);
       // 이미지가 있는 경우 먼저 업로드하고 URL 교체
 
       const postResult = await createPostMutation({
@@ -221,21 +213,12 @@ function PostWrite() {
         },
       });
 
-      console.log(postResult);
-
       if (postResult.data?.createPost.ok) {
-        console.log("🎉 Post creation successful:", {
-          environment: process.env.NODE_ENV,
-          postId: postResult.data.createPost.postId,
-          backendUrl: process.env.NEXT_PUBLIC_GRAPHQL_URI,
-        });
         alert("게시물이 성공적으로 작성되었습니다.");
         // 프로덕션 환경에서 확실한 업데이트를 위해 새로고침 추가
         if (process.env.NODE_ENV === "production") {
-          console.log("🔄 Production: Using window.location.href");
           window.location.href = "/";
         } else {
-          console.log("🔄 Development: Using router.push");
           router.push("/");
         }
       } else {
