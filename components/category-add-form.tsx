@@ -19,12 +19,7 @@ export const CREATE_CATEGORY_MUTATION = gql`
   }
 `;
 export const CategoryAddForm = () => {
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<CreateCategoryForm>({
+  const { register, getValues, handleSubmit } = useForm<CreateCategoryForm>({
     mode: "onChange",
   });
 
@@ -59,14 +54,24 @@ export const CategoryAddForm = () => {
     });
   };
   return (
-    <form onSubmit={handleSubmit(onSubmitCategory)}>
-      <input
-        {...register("categoryTitle")}
-        type="text"
-        className="input-new"
-        placeholder="추가할 카테고리 명"
-      />
-      <Button canClick={true} loading={false} actionText="추가" />
+    <form
+      onSubmit={handleSubmit(onSubmitCategory)}
+      className="flex gap-3 items-end"
+    >
+      <div className="flex-1">
+        <input
+          {...register("categoryTitle", {
+            required: "카테고리명을 입력해주세요",
+          })}
+          type="text"
+          id="categoryTitle"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+          placeholder="추가할 카테고리명을 입력하세요"
+        />
+      </div>
+      <div className="flex-shrink-0">
+        <Button canClick={true} loading={loading} actionText="추가" />
+      </div>
     </form>
   );
 };
