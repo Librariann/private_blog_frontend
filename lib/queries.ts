@@ -17,8 +17,6 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         category {
           id
           categoryTitle
-          parentCategoryId
-          parentCategoryTitle
         }
         comments {
           comment
@@ -32,8 +30,8 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
 `;
 
 export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
-  query getPostListByParentCategoryId($categoryId: Int!) {
-    getPostListByParentCategoryId(categoryId: $categoryId) {
+  query getPostsByParentCategoryId($categoryId: Int!) {
+    getPostsByParentCategoryId(categoryId: $categoryId) {
       ok
       error
       posts {
@@ -47,8 +45,6 @@ export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
         category {
           id
           categoryTitle
-          parentCategoryId
-          parentCategoryTitle
         }
         comments {
           comment
@@ -68,14 +64,11 @@ export const GET_CATEGORIES_COUNTS_QUERY = gql`
       categoryCounts {
         id
         categoryTitle
-        parentCategoryId
-        count
         icon
         iconColor
-        children {
+        subCategories {
           id
           categoryTitle
-          count
         }
       }
     }
@@ -86,17 +79,24 @@ export const GET_CATEGORIES = gql`
   query getCategories {
     getCategories {
       ok
+      error
       categories {
         id
         categoryTitle
-        depth
-        parentCategoryId
-        parentCategoryTitle
         sortOrder
+        icon
+        iconColor
         subCategories {
           id
           categoryTitle
+          icon
+          iconColor
           sortOrder
+          post {
+            id
+            title
+            createdAt
+          }
         }
       }
     }
@@ -286,6 +286,21 @@ export const EDIT_CATEGORY_MUTATION = gql`
     editCategory(input: $input) {
       ok
       error
+    }
+  }
+`;
+
+export const FIND_ONE_CATEGORY_BY_ID_QUERY = gql`
+  query findOneCategoryById($categoryId: Int!) {
+    findOneCategoryById(categoryId: $categoryId) {
+      ok
+      error
+      category {
+        id
+        categoryTitle
+        icon
+        iconColor
+      }
     }
   }
 `;
