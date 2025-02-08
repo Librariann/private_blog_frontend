@@ -78,11 +78,11 @@ const CommentsWrite = ({
     if (commentResult.data?.createComment.ok) {
       alert("댓글이 작성됐습니다.");
       reset();
-      commentsUpdate({ 
-        id: Date.now(), 
-        commentId: String(commentResult.data.createComment.commentId || data.id), 
+      commentsUpdate({
+        id: Date.now(),
+        commentId: data.id,
         comment: data.comment,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
     } else {
       alert("댓글 작성에 실패했습니다.");
