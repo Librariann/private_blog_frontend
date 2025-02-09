@@ -12,9 +12,12 @@ const Comments = ({ comments }: { comments: CommentProps[] }) => {
     <div className="mt-16 pt-8">
       <h2 className="text-2xl font-bold mb-6">댓글 {comments.length}개</h2>
       {/* 댓글 목록 */}
-      {comments.map((comment) => {
-        return <CommentListForm key={comment.id} comment={comment} />;
-      })}
+      {comments
+        .slice()
+        .reverse()
+        .map((comment) => {
+          return <CommentListForm key={comment.id} comment={comment} />;
+        })}
     </div>
   );
 };
