@@ -81,14 +81,15 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
         Librarian&apos;s.blog
       </div>
       <div className="flex ml-auto pr-5 text-white cursor-pointer">
-        <div onClick={() => navigate.push("/setting")}>설정</div>
+        {/* <div onClick={() => navigate.push("/setting")}>설정</div> */}
         &nbsp;&nbsp;&nbsp;
         {isToken && <div onClick={myPage}>유저 정보</div>}
         &nbsp;&nbsp;&nbsp;
         {isToken ? (
           <div onClick={logout}>로그아웃</div>
         ) : (
-          <div onClick={login}>로그인</div>
+          <div></div>
+          // <div onClick={login}>로그인</div>
         )}
       </div>
       <ConfirmModal
@@ -97,6 +98,7 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
         onConfirm={handleLogoutConfirm}
         title="로그아웃"
         message="정말 로그아웃 하시겠습니까?"
+        isCancel={false}
       />
     </div>
   );
