@@ -1,6 +1,6 @@
 import { GlassCardMain } from "@/components/main/main";
 import {
-  useGetCategoryCounts,
+  useGetCategories,
   useGetPopularHashTagList,
   useGetPostList,
 } from "@/hooks/hooks";
@@ -12,30 +12,24 @@ import { useRouter } from "next/router";
 const AllCategoriesPage = () => {
   const router = useRouter();
   const { isDarkMode } = useDarkModeStore();
-  const posts = useGetPostList();
-  const categories = useGetCategoryCounts();
+  const { categories } = useGetCategories();
   const popularHashTags = useGetPopularHashTagList();
-  const totalSubCategories = categories?.countsData?.reduce(
+  const totalSubCategories = categories?.reduce(
     (sum, category) =>
       sum +
-      (category?.children?.length === undefined ? 0 : category.children.length),
+      (category?.subCategories?.length === undefined
+        ? 0
+        : category.subCategories.length),
     0
   );
-
-  // // 각 상위 카테고리별 총 포스트 수 계산
-  const getParentCategoryStats = (parentCategoryTitle: string) => {
-    return posts.filter(
-      (post) => post.category.parentCategoryTitle === parentCategoryTitle
-    ).length;
-  };
-
-  // // 최근 포스트 가져오기
-  const getLatestPost = (parentCategoryTitle: string) => {
-    const categoryPosts = posts.filter(
-      (post) => post.category.parentCategoryTitle === parentCategoryTitle
-    );
-    return categoryPosts.length > 0 ? categoryPosts[0].title : "포스트 없음";
-  };
+  const totalPostLength = categories
+    ?.map((category) => {
+      return category.subCategories?.reduce(
+        (sum, subCategory) => sum + (subCategory.post?.length || 0),
+        0
+      );
+    })
+    .reduce((sum, count) => (sum || 0) + (count || 0), 0);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -58,7 +52,7 @@ const AllCategoriesPage = () => {
             상위 카테고리
           </div>
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-            {categories.countsData?.length}개
+            {categories.length}개
           </div>
         </GlassCardMain>
         <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
@@ -78,18 +72,19 @@ const AllCategoriesPage = () => {
             총 포스트
           </div>
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-            {posts.length}개
+            {totalPostLength}개
           </div>
         </GlassCardMain>
       </div>
 
       {/* Category Hierarchy */}
       <div className="space-y-6">
-        {categories?.countsData?.map((parentCategory) => {
-          const parentPostCount = getParentCategoryStats(
-            parentCategory.categoryTitle
-          );
-          const latestPost = getLatestPost(parentCategory.categoryTitle);
+        {categories?.map((parentCategory) => {
+          const parentPostCount =
+            parentCategory.subCategories?.reduce(
+              (acc, category) => acc + (category.post?.length || 0),
+              0
+            ) || 0;
 
           return (
             <GlassCardMain
@@ -119,7 +114,7 @@ const AllCategoriesPage = () => {
                     <div
                       className={isDarkMode ? "text-white/60" : "text-gray-500"}
                     >
-                      {parentCategory?.children?.length}개 하위 카테고리 ·{" "}
+                      {parentCategory?.subCategories?.length}개 하위 카테고리 ·{" "}
                       {parentPostCount}개 포스트
                     </div>
                   </div>
@@ -150,13 +145,22 @@ const AllCategoriesPage = () => {
                   <div
                     className={isDarkMode ? "text-white/80" : "text-gray-700"}
                   >
-                    {latestPost}
+                    {parentCategory.subCategories?.map((subCategory) => {
+                      const sortedPost = subCategory.post?.toSorted((a, b) => {
+                        return (
+                          new Date(b.createdAt).getTime() -
+                          new Date(a.createdAt).getTime()
+                        );
+                      });
+
+                      return sortedPost?.[0].title;
+                    })}
                   </div>
                 </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {parentCategory?.children?.map((subCategory) => (
+                {parentCategory?.subCategories?.map((subCategory) => (
                   <button
                     key={subCategory.categoryTitle}
                     onClick={() =>
@@ -188,9 +192,9 @@ const AllCategoriesPage = () => {
                           isDarkMode ? "text-white/60" : "text-gray-500"
                         }
                       >
-                        {subCategory?.count}개 포스트
+                        {subCategory?.post?.length}개 포스트
                       </span>
-                      {subCategory?.count! > 0 && (
+                      {subCategory?.post?.length! > 0 && (
                         <span
                           className={`px-2 py-1 rounded text-xs ${
                             isDarkMode
