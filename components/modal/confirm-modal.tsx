@@ -4,6 +4,7 @@ type ConfirmModalProps = {
   onConfirm: () => void;
   title: string;
   message: string;
+  isCancel: boolean;
 };
 
 const ConfirmModal = ({
@@ -12,6 +13,7 @@ const ConfirmModal = ({
   onConfirm,
   title,
   message,
+  isCancel = false,
 }: ConfirmModalProps) => {
   if (!isOpen) return null;
 
@@ -20,13 +22,16 @@ const ConfirmModal = ({
       <div className="bg-white rounded-lg p-6 w-96 shadow-xl text-center">
         <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
         <p className="text-gray-600 mb-6 text-center">{message}</p>
+
         <div className="flex justify-center space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-          >
-            취소
-          </button>
+          {!isCancel && (
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+            >
+              취소
+            </button>
+          )}
           <button
             onClick={() => {
               onConfirm();
