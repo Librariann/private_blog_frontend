@@ -1,4 +1,5 @@
 import {
+  useGetCategories,
   useGetCategoryCounts,
   useGetPopularHashTagList,
   useGetPostList,
@@ -21,7 +22,7 @@ const AllPostsPage = () => {
   const posts = useGetPostList();
   const popularHashTags = useGetPopularHashTagList();
 
-  const { countsData } = useGetCategoryCounts();
+  const { categories } = useGetCategories();
   const { isDarkMode } = useDarkModeStore();
 
   const filteredPosts = posts.filter((post) => {
@@ -30,7 +31,7 @@ const AllPostsPage = () => {
       post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
       selectedCategory === "all" ||
-      post.category.categoryTitle === selectedCategory;
+      post.category?.categoryTitle === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -125,7 +126,7 @@ const AllPostsPage = () => {
                 </div>
               </button>
 
-              {countsData?.map((parent) => (
+              {categories?.map((parent) => (
                 <div key={parent.categoryTitle} className="mt-2">
                   <button
                     onClick={() => toggleParentCategory(parent.categoryTitle)}
@@ -151,7 +152,10 @@ const AllPostsPage = () => {
                     <span
                       className={isDarkMode ? "text-white/50" : "text-gray-400"}
                     >
-                      {parent.count}
+                      {parent.subCategories?.reduce(
+                        (acc, category) => acc + (category.post?.length || 0),
+                        0
+                      )}
                     </span>
                   </button>
 
@@ -165,7 +169,7 @@ const AllPostsPage = () => {
                         className="overflow-hidden"
                       >
                         <div className="ml-6 mt-1 space-y-1">
-                          {parent?.children?.map((subCategory, index) => (
+                          {parent?.subCategories?.map((subCategory, index) => (
                             <motion.button
                               key={subCategory.categoryTitle}
                               initial={{ x: -10, opacity: 0 }}
@@ -197,7 +201,7 @@ const AllPostsPage = () => {
                                       : "text-gray-400"
                                   }
                                 >
-                                  {subCategory.count}
+                                  {subCategory.post?.length}
                                 </span>
                               </div>
                             </motion.button>
@@ -268,7 +272,7 @@ const AllPostsPage = () => {
                       post={post}
                       onClick={() =>
                         router.push(
-                          `/post/${post.category.parentCategoryTitle}/${post.category.categoryTitle}/@Post-${post.id}`
+                          `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
                         )
                       }
                     />
