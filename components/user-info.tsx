@@ -6,7 +6,7 @@ const UserInfo = () => {
   const { data: { me: { id = "", email = "" } = {} } = {} } = useMe();
   return (
     <>
-      <div>{id}</div>
+      {/* <div>{id}</div> */}
       <div>{email}</div>
     </>
   );
