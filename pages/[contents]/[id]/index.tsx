@@ -44,7 +44,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         id
         title
         contents
-        # hits
+        hits
         createdAt
         hashtags {
           hashtag
@@ -91,28 +91,28 @@ const PostDetail = ({ post }: PostProps) => {
       cache.gc();
     },
   });
-  // useEffect(() => {
-  //   const updateHits = async () => {
-  //     //마지막 조회시간 확인
-  //     const lastViewTime = localStorage.getItem(`post-${post?.id}-lastView`);
-  //     const now = new Date().getTime();
-  //     // 마지막 조회시간이 1일 이상 지났으면 조회수 증가
-  //     if (!lastViewTime || now - parseInt(lastViewTime) > 24 * 60 * 60 * 1000) {
-  //       try {
-  //         await updatePostHitsMutation({
-  //           variables: {
-  //             postId: post?.id,
-  //           },
-  //         });
-  //         // 현재 시간을 저장
-  //         localStorage.setItem(`post-${post?.id}-lastView`, now.toString());
-  //       } catch (error) {
-  //         console.error("조회수 업데이트 실패:", error);
-  //       }
-  //     }
-  //   };
-  //   // updateHits();
-  // }, [updatePostHitsMutation, post?.id]);
+  useEffect(() => {
+    const updateHits = async () => {
+      //마지막 조회시간 확인
+      const lastViewTime = localStorage.getItem(`post-${post?.id}-lastView`);
+      const now = new Date().getTime();
+      // 마지막 조회시간이 1일 이상 지났으면 조회수 증가
+      if (!lastViewTime || now - parseInt(lastViewTime) > 24 * 60 * 60 * 1000) {
+        try {
+          await updatePostHitsMutation({
+            variables: {
+              postId: post?.id,
+            },
+          });
+          // 현재 시간을 저장
+          localStorage.setItem(`post-${post?.id}-lastView`, now.toString());
+        } catch (error) {
+          console.error("조회수 업데이트 실패:", error);
+        }
+      }
+    };
+    updateHits();
+  }, [updatePostHitsMutation, post?.id]);
 
   const handleCreateComment = (newCommentData: CommentProps) => {
     setComments((prev) => [...prev, newCommentData]);
@@ -131,7 +131,7 @@ const PostDetail = ({ post }: PostProps) => {
         <div className="flex items-center justify-between text-gray-600 mb-4">
           <div className="flex items-center space-x-4">
             <span>조회수: {post.hits}</span>
-            <span>작성일: {new Date(post.createdAt).toLocaleDateString()}</span>
+            {/* <span>작성일: {new Date(post.createdAt).toLocaleDateString()}</span> */}
           </div>
         </div>
         {/* 해시태그 */}
@@ -154,7 +154,6 @@ const PostDetail = ({ post }: PostProps) => {
     </div>
   );
 };
-//TODO: 현재 데이터 불러오는 부분 index.tsx처럼 맞춰서 진행할것
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
   const postId = Number(params?.id); // URL에서 postId를 추출합니다.
