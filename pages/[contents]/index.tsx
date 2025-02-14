@@ -21,7 +21,7 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         id
         title
         contents
-        # hits
+        hits
         category {
           categoryTitle
         }
