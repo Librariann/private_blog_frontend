@@ -7,6 +7,8 @@ import {
   CreateAccountMutationVariables,
 } from "@/gql/graphql";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import ConfirmModal from "@/components/modal/confirm-modal";
 interface ICreateAccountForm {
   email: string;
   password: string;
@@ -32,6 +34,11 @@ function CreateAccount() {
   });
 
   const navigate = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
   const onCompleted = (data: CreateAccountMutation) => {
     const {
       createAccount: { ok, error },
@@ -66,6 +73,16 @@ function CreateAccount() {
 
   const redirectLogin = () => {
     navigate.push("/login");
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    navigate.push("/");
+  };
+
+  const handleAccessConfirm = () => {
+    setIsModalOpen(false);
+    navigate.push("/");
   };
 
   return (
@@ -124,6 +141,14 @@ function CreateAccount() {
         </span>
         를 클릭해주세요
       </div>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onConfirm={handleAccessConfirm}
+        title="접근 권한 없음"
+        message="현재 회원가입은 관리자만 가능합니다. 메인 페이지로 이동합니다."
+        isCancel={true}
+      />
     </div>
   );
 }
