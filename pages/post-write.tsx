@@ -1,12 +1,6 @@
 import { NewButton } from "@/components/buttons/new-button";
 import { GlassCardMain } from "@/components/main/main";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -20,14 +14,11 @@ import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import {
   ArrowLeft,
   Save,
-  Eye,
   Send,
   Image as ImageIcon,
   X,
   Plus,
-  Code,
   ArrowLeftIcon,
-  SplitSquareHorizontal,
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -107,8 +98,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 
 const PostWrite = () => {
   const { back } = useRouter();
-  const getCategories = useGetCategories();
-  const getCategoriesData = getCategories?.getCategories.categories;
+  const { categories } = useGetCategories();
 
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
@@ -126,27 +116,25 @@ const PostWrite = () => {
 
   const { isDarkMode } = useDarkModeStore();
   const { editingPost, editingMode } = usePostEditStore();
-  const { createPostMutation, postLoading } = useCreatePost();
-  const { editPostMutation, editLoading } = useEditPost({ postId });
-
+  const { createPostMutation } = useCreatePost();
+  const { editPostMutation } = useEditPost({ postId });
   useEffect(() => {
-    if (editingPost) {
+    //수정 모드 일때
+    if (editingMode && editingPost) {
       setPostId(editingPost.id);
       setTitle(editingPost.title);
       setExcerpt(editingPost?.excerpt || "");
       setMd(editingPost?.contents || "");
       setThumbnailUrl(editingPost?.thumbnailUrl || "");
       setTags(editingPost?.hashtags?.map((tag) => tag.hashtag) || []);
-      const parentCategory = getCategoriesData?.find(
-        (category) =>
-          category.categoryTitle === editingPost.category.parentCategoryTitle
-      );
-      setParentCategory(parentCategory);
-      setSubCategory(editingPost.category.id.toString());
+      if (editingPost.category?.parentCategory) {
+        setParentCategory(editingPost.category?.parentCategory);
+      }
+      setSubCategory(String(editingPost.category?.id));
       setStatus(editingPost?.postStatus);
       setStep(1);
     }
-  }, [editingPost, getCategoriesData]);
+  }, [editingPost, categories, editingMode]);
 
   const handleAddCategoryOpen = (open: boolean) => {
     setIsAddCategoryOpen(open);
@@ -483,10 +471,10 @@ const PostWrite = () => {
                 <Select
                   value={parentCategory?.categoryTitle}
                   onValueChange={(value: string) => {
-                    const category = getCategoriesData?.find(
+                    const category = categories?.find(
                       (category) => category.categoryTitle === value
                     );
-                    setParentCategory(category);
+                    setParentCategory(category as Category);
                   }}
                 >
                   <SelectTrigger
@@ -499,7 +487,7 @@ const PostWrite = () => {
                     <SelectValue placeholder="선택하세요" />
                   </SelectTrigger>
                   <SelectContent>
-                    {getCategoriesData?.map((category) => (
+                    {categories?.map((category) => (
                       <SelectItem
                         key={category.categoryTitle}
                         value={category.categoryTitle}
