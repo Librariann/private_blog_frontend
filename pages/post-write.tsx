@@ -321,6 +321,7 @@ function PostWrite() {
         }}
         title="게시물 작성"
         message="게시물을 작성하시겠습니까?"
+        isCancel={false}
       />
     </div>
   );
