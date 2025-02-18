@@ -25,7 +25,7 @@ export type ContentsProps = DetailProps | ListProps;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const data = await getCategoriesCounts();
+    const data = await getCategories();
     const categories = Array.isArray(data) ? data : [];
     const paths = categories
       .filter((category) => category && category.categoryTitle)
@@ -84,7 +84,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     } else if (slugLength === 2) {
       postsData = await getPostsByCategoryId(category.id);
     }
-    console.log(postsData);
+
     return {
       props: {
         posts: postsData || [],
@@ -104,7 +104,7 @@ const Contents = (props: ContentsProps) => {
   if (props.type === "detail") {
     return <PostDetail post={props.post} />;
   }
-  return <CategoryDetails posts={props.posts} />;
+  return <CategoryDetails posts={props.posts} categoryId={props.categoryId} />;
 };
 
 export default Contents;
