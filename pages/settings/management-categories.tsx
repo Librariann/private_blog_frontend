@@ -6,36 +6,38 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { useCreateCategory, useGetCategoryCounts } from "@/hooks/hooks";
+import { useGetCategories } from "@/hooks/hooks";
 import { useRouter } from "next/router";
 import { NewButton } from "@/components/buttons/new-button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { GlassCardMain } from "@/components/main/main";
 import CreateCategoryModal from "@/components/category/modal/create-category-modal";
 import { DynamicIcon } from "lucide-react/dynamic";
 import EditCategoryModal from "@/components/category/modal/edit-category-modal";
-import { CategoryCount } from "@/gql/graphql";
+import { GetCategoriesQuery } from "@/gql/graphql";
+import DeleteCategoryModal from "@/components/category/modal/delete-category-modal";
+
+export type SelectedCategoryType = NonNullable<
+  GetCategoriesQuery["getCategories"]["categories"]
+>;
 
 const ManagementCategories = () => {
   const { isDarkMode } = useDarkModeStore();
-  const { countsData } = useGetCategoryCounts();
+  const { categories } = useGetCategories();
   const { back } = useRouter();
 
-  const firstCategory = countsData?.[0]?.categoryTitle || "";
+  const firstCategory = useMemo(
+    () => categories?.[0]?.categoryTitle || "",
+    [categories]
+  );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>();
-  const [selectedCategory, setSelectedCategory] = useState<CategoryCount>();
+  const [selectedCategory, setSelectedCategory] =
+    useState<SelectedCategoryType[0]>();
   const [isParent, setIsParent] = useState<boolean>(false);
   const handleAddCategoryOpen = (open: boolean) => {
     setIsAddModalOpen(open);
@@ -45,9 +47,14 @@ const ManagementCategories = () => {
     setIsEditModalOpen(open);
   };
 
+  const handleDeleteDialogOpen = (open: boolean) => {
+    setIsDeleteDialogOpen(open);
+  };
+
   useEffect(() => {
+    if (!categories || categories.length === 0) return;
     setExpandedCategories(new Set([firstCategory]));
-  }, [countsData, firstCategory]);
+  }, [categories]);
 
   const toggleCategoryExpand = (categoryName: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -57,12 +64,6 @@ const ManagementCategories = () => {
       newExpanded.add(categoryName);
     }
     setExpandedCategories(newExpanded);
-  };
-
-  const handleDeleteCategory = () => {
-    // TODO: 실제 카테고리 삭제 로직
-    console.log("Deleting category:", selectedCategory);
-    setIsDeleteDialogOpen(false);
   };
 
   return (
@@ -109,7 +110,7 @@ const ManagementCategories = () => {
       {/* Category List */}
       <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
         <div className="space-y-2">
-          {countsData?.map((parentCategory) => {
+          {categories?.map((parentCategory) => {
             const isExpanded = expandedCategories?.has(
               parentCategory.categoryTitle
             );
@@ -161,8 +162,9 @@ const ManagementCategories = () => {
                           className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
                         >
                           (
-                          {parentCategory?.children?.reduce(
-                            (sum: number, sub: any) => sum + sub.count,
+                          {parentCategory?.subCategories?.reduce(
+                            (sum: number, sub) =>
+                              sum + (sub?.post?.length || 0),
                             0
                           )}
                           개 포스트)
@@ -180,22 +182,31 @@ const ManagementCategories = () => {
                         setSelectedCategory(parentCategory);
                         setIsParent(true);
                       }}
-                      className={
-                        isDarkMode
-                          ? "text-white/70 hover:text-white hover:bg-white/10"
-                          : ""
-                      }
+                      className={`
+                        cursor-pointer
+                        ${
+                          isDarkMode
+                            ? "text-white/70 hover:text-white hover:bg-white/10"
+                            : ""
+                        }`}
                     >
                       <Edit className="w-4 h-4" />
                     </NewButton>
                     <NewButton
                       variant="ghost"
                       size="sm"
-                      className={
-                        isDarkMode
-                          ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                          : "text-red-600"
-                      }
+                      onClick={() => {
+                        handleDeleteDialogOpen(true);
+                        setSelectedCategory(parentCategory);
+                        setIsParent(true);
+                      }}
+                      className={`
+                        cursor-pointer
+                        ${
+                          isDarkMode
+                            ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                            : "text-red-600"
+                        }`}
                     >
                       <Trash2 className="w-4 h-4" />
                     </NewButton>
@@ -213,7 +224,7 @@ const ManagementCategories = () => {
                       className="overflow-hidden"
                     >
                       <div className="ml-16 mt-1 space-y-1">
-                        {parentCategory.children?.map((subCategory) => (
+                        {parentCategory.subCategories?.map((subCategory) => (
                           <div
                             key={subCategory.categoryTitle}
                             className={`flex items-center justify-between px-4 py-2 rounded-lg ${
@@ -236,7 +247,7 @@ const ManagementCategories = () => {
                               <span
                                 className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
                               >
-                                ({subCategory.count}개 포스트)
+                                ({subCategory?.post?.length || 0}개 포스트)
                               </span>
                             </div>
 
@@ -249,22 +260,31 @@ const ManagementCategories = () => {
                                   setSelectedCategory(subCategory);
                                   setIsParent(false);
                                 }}
-                                className={
-                                  isDarkMode
-                                    ? "text-white/70 hover:text-white hover:bg-white/10"
-                                    : ""
-                                }
+                                className={`
+                                  cursor-pointer
+                                  ${
+                                    isDarkMode
+                                      ? "text-white/70 hover:text-white hover:bg-white/10"
+                                      : ""
+                                  }`}
                               >
                                 <Edit className="w-4 h-4" />
                               </NewButton>
                               <NewButton
                                 variant="ghost"
                                 size="sm"
-                                className={
-                                  isDarkMode
-                                    ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                                    : "text-red-600"
-                                }
+                                onClick={() => {
+                                  handleDeleteDialogOpen(true);
+                                  setSelectedCategory(subCategory);
+                                  setIsParent(false);
+                                }}
+                                className={`
+                                  cursor-pointer
+                                  ${
+                                    isDarkMode
+                                      ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                      : "text-red-600"
+                                  }`}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </NewButton>
@@ -285,7 +305,7 @@ const ManagementCategories = () => {
       <CreateCategoryModal
         isAddModalOpen={isAddModalOpen}
         handleAddCategoryOpen={handleAddCategoryOpen}
-        countsData={countsData || []}
+        categories={categories || []}
       />
 
       {/* Edit Category Modal */}
@@ -293,59 +313,19 @@ const ManagementCategories = () => {
         <EditCategoryModal
           isEditModalOpen={isEditModalOpen}
           handleEditModalOpen={handleEditModalOpen}
-          isParent={isParent}
           selectedCategory={selectedCategory}
         />
       )}
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent
-          className={`max-w-md ${
-            isDarkMode
-              ? "glass-card border-white/20"
-              : "glass-card-light border-gray-200"
-          }`}
-        >
-          <DialogHeader>
-            <DialogTitle
-              className={isDarkMode ? "text-white" : "text-gray-900"}
-            >
-              카테고리 삭제
-            </DialogTitle>
-            <DialogDescription
-              className={isDarkMode ? "text-white/60" : "text-gray-600"}
-            >
-              정말로 {selectedCategory?.categoryTitle} 카테고리를
-              삭제하시겠습니까?
-              {isParent && (
-                <span className="block mt-2 text-red-400">
-                  ⚠️ 상위 카테고리를 삭제하면 하위 카테고리도 함께 삭제됩니다.
-                </span>
-              )}
-            </DialogDescription>
-          </DialogHeader>
 
-          <div className="flex gap-3 pt-4">
-            <NewButton
-              onClick={handleDeleteCategory}
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white"
-            >
-              삭제
-            </NewButton>
-            <NewButton
-              variant="outline"
-              onClick={() => setIsDeleteDialogOpen(false)}
-              className={`flex-1 ${
-                isDarkMode
-                  ? "border-white/20 text-white hover:bg-white/10"
-                  : "border-gray-300"
-              }`}
-            >
-              취소
-            </NewButton>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Delete Confirmation Dialog */}
+      {selectedCategory && (
+        <DeleteCategoryModal
+          isDeleteDialogOpen={isDeleteDialogOpen}
+          handleDeleteDialogOpen={handleDeleteDialogOpen}
+          selectedCategory={selectedCategory}
+          isParent={isParent}
+        />
+      )}
     </div>
   );
 };
