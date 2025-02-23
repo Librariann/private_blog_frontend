@@ -26,6 +26,7 @@ import { PostStatus } from "@/gql/graphql";
 import {
   useDeletePost,
   useGetAllPostList,
+  useGetCategories,
   useGetCategoryCounts,
   useTogglePostStatus,
 } from "@/hooks/hooks";
@@ -40,6 +41,8 @@ import { formatDateShort } from "@/utils/utils";
 import { useRouter } from "next/router";
 import { POST_STATUS_OBJECTS } from "@/common/constants";
 import { usePostEditStore } from "@/stores/usePostEditStore";
+import { useLoadingStore } from "@/stores/useLoadingStore";
+import { toast } from "react-toastify";
 
 const tableColumns = [
   { title: "제목", className: "px-6 py-4 text-left" },
@@ -64,19 +67,45 @@ const ManagementPosts = () => {
   const { setEditingPost, setEditingMode } = usePostEditStore();
 
   const posts = useGetAllPostList();
-  const { countsData, countsLoading } = useGetCategoryCounts();
+  const { categories, categoriesLoading } = useGetCategories();
   const { togglePostStatusMutation, postStatusToggleLoading } =
     useTogglePostStatus();
-
   const { deletePostMutation, postDeleteLoading } = useDeletePost();
+  const { setGlobalLoading } = useLoadingStore();
 
-  const handleDeletePost = () => {
-    deletePostMutation({ variables: { postId: selectedPostId! } });
-    setIsDeleteDialogOpen(false);
+  const handleDeletePost = async () => {
+    try {
+      setGlobalLoading(true);
+      const result = await deletePostMutation({
+        variables: { postId: selectedPostId! },
+      });
+      if (result.data?.deletePost.ok) {
+        toast.success("포스트 삭제 완료!");
+      } else {
+        toast.error(result.data?.deletePost.error);
+      }
+      setIsDeleteDialogOpen(false);
+    } catch {
+      toast.error("포스트 삭제 실패!");
+    } finally {
+      setGlobalLoading(false);
+    }
   };
 
-  const togglePostStatus = (postId: number) => {
-    togglePostStatusMutation({ variables: { postId } });
+  const togglePostStatus = async (postId: number) => {
+    try {
+      setGlobalLoading(true);
+      const result = await togglePostStatusMutation({ variables: { postId } });
+      if (result.data?.togglePostStatus.ok) {
+        toast.success("포스트 상태 변경 완료!");
+      } else {
+        toast.error(result.data?.togglePostStatus.error);
+      }
+    } catch {
+      toast.error("포스트 상태 변경 실패!");
+    } finally {
+      setGlobalLoading(false);
+    }
   };
 
   const openDeleteDialog = (postTitle: string, postId: number) => {
@@ -95,7 +124,7 @@ const ManagementPosts = () => {
       post?.postStatus.toLowerCase() === filterStatus.toLowerCase();
     const matchesCategory =
       filterCategory === "all" ||
-      post?.category?.parentCategoryTitle?.toLowerCase() ===
+      post?.category?.categoryTitle?.toLowerCase() ===
         filterCategory.toLowerCase();
     return matchesSearch && matchesStatus && matchesCategory;
   });
@@ -223,9 +252,9 @@ const ManagementPosts = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">모든 카테고리</SelectItem>
-              {!countsLoading && (
+              {!categoriesLoading && (
                 <>
-                  {countsData?.map((category) => (
+                  {categories?.map((category) => (
                     <SelectItem
                       key={category.categoryTitle}
                       value={category.categoryTitle}
@@ -271,7 +300,7 @@ const ManagementPosts = () => {
                     className={`px-6 py-4 cursor-pointer ${isDarkMode ? "text-white" : "text-gray-900"}`}
                     onClick={() =>
                       router.push(
-                        `/post/${post.category.parentCategoryTitle}/${post.category.categoryTitle}/@Post-${post.id}`
+                        `/post/${post.category?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
                       )
                     }
                   >
@@ -281,13 +310,13 @@ const ManagementPosts = () => {
                     className={`px-6 py-4 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
                   >
                     <div className="text-sm">
-                      <div>{post.category.parentCategoryTitle}</div>
+                      <div>{post.category?.categoryTitle}</div>
                       <div
                         className={
                           isDarkMode ? "text-white/50" : "text-gray-500"
                         }
                       >
-                        {post.category.categoryTitle}
+                        {post.category?.categoryTitle}
                       </div>
                     </div>
                   </td>
