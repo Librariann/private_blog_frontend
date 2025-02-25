@@ -165,6 +165,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     >({
       query: GET_POST_BY_ID_QUERY,
       variables: { postId },
+      fetchPolicy: "network-only", // 항상 최신 데이터
     });
     if (!data.getPostById?.ok) {
       return {
