@@ -25,11 +25,7 @@ export const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
-const CommentsWrite = ({
-  commentsUpdate,
-}: {
-  commentsUpdate: (newCommentData: CommentProps) => void;
-}) => {
+const CommentsWrite = () => {
   const {
     query: { id },
   } = useRouter();
@@ -37,18 +33,13 @@ const CommentsWrite = ({
     CreateCommentMutation,
     CreateCommentMutationVariables
   >(CREATE_COMMENT_MUTATION, {
-    update(cache, { data: mutationResult }) {
-      if (mutationResult?.createComment.ok) {
-        cache.modify({
-          fields: {
-            getPostById(existing = {}) {
-              cache.evict({ fieldName: "getPostById" });
-              return existing;
-            },
-          },
-        });
-      }
-    },
+    refetchQueries: [
+      {
+        query: GET_POST_BY_ID_QUERY,
+        variables: { postId: Number(id) },
+      },
+    ],
+    awaitRefetchQueries: true,
   });
 
   const {
@@ -78,12 +69,6 @@ const CommentsWrite = ({
     if (commentResult.data?.createComment.ok) {
       alert("댓글이 작성됐습니다.");
       reset();
-      commentsUpdate({
-        id: Date.now(),
-        commentId: data.id,
-        comment: data.comment,
-        createdAt: new Date().toISOString(),
-      });
     } else {
       alert("댓글 작성에 실패했습니다.");
     }
