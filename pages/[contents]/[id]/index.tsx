@@ -77,9 +77,16 @@ const EditerMarkdown = dynamic(
 );
 
 const PostDetail = ({ post }: PostProps) => {
-  const [comments, setComments] = useState<CommentProps[]>(
-    post?.comments || []
-  );
+  const { data: postData } = useQuery<
+    GetPostByIdQuery,
+    GetPostByIdQueryVariables
+  >(GET_POST_BY_ID_QUERY, {
+    variables: { postId: post?.id },
+    fetchPolicy: "cache-first",
+    skip: !post?.id,
+  });
+
+  const currentPost = postData?.getPostById?.post || post;
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
@@ -114,11 +121,7 @@ const PostDetail = ({ post }: PostProps) => {
     updateHits();
   }, [updatePostHitsMutation, post?.id]);
 
-  const handleCreateComment = (newCommentData: CommentProps) => {
-    setComments((prev) => [...prev, newCommentData]);
-  };
-
-  if (!post) {
+  if (!currentPost) {
     return <div>Post not found!</div>;
   }
 
@@ -126,17 +129,17 @@ const PostDetail = ({ post }: PostProps) => {
     <div className="max-w-4xl mx-auto p-8" data-color-mode="light">
       <div className="mb-6">
         {/* 타이틀 */}
-        <h1 className="text-6xl font-bold mb-4">{post.title}</h1>
+        <h1 className="text-6xl font-bold mb-4">{currentPost.title}</h1>
         {/* 조회수, 작성일 */}
         <div className="flex items-center justify-between text-gray-600 mb-4">
           <div className="flex items-center space-x-4">
-            <span>조회수: {post.hits}</span>
-            {/* <span>작성일: {new Date(post.createdAt).toLocaleDateString()}</span> */}
+            <span>조회수: {currentPost.hits}</span>
+            {/* <span>작성일: {new Date(currentPost.createdAt).toLocaleDateString()}</span> */}
           </div>
         </div>
         {/* 해시태그 */}
         <div className="flex flex-wrap gap-2 mb-6">
-          {post.hashtags.map((tag, index) => (
+          {currentPost.hashtags.map((tag, index) => (
             <span
               key={index}
               className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -147,10 +150,10 @@ const PostDetail = ({ post }: PostProps) => {
         </div>
       </div>
       <div className="prose prose-lg max-w-none mb-36">
-        <EditerMarkdown source={post.contents} />
+        <EditerMarkdown source={currentPost.contents} />
       </div>
-      <CommentsWrite commentsUpdate={handleCreateComment} />
-      <Comments comments={comments} />
+      <CommentsWrite />
+      <Comments comments={currentPost.comments || []} />
     </div>
   );
 };
