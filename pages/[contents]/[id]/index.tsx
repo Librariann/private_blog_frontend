@@ -82,7 +82,7 @@ const PostDetail = ({ post }: PostProps) => {
     GetPostByIdQueryVariables
   >(GET_POST_BY_ID_QUERY, {
     variables: { postId: post?.id },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
     skip: !post?.id,
   });
 
