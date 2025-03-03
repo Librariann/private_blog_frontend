@@ -18,29 +18,75 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryCount } from "@/gql/graphql";
-import { newCategoryTypes } from "@/pages/settings/management-categories";
+import { useCreateCategory } from "@/hooks/hooks";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import * as LucideIcons from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 type CreateCategoryModalProps = {
   isAddModalOpen: boolean;
   handleAddCategoryOpen: (open: boolean) => void;
-  newCategory: newCategoryTypes;
-  handleNewCategory: (name: string, value: string) => void;
   countsData: CategoryCount[];
-  handleAddCategory: () => void;
+};
+
+type newCategoryTypes = {
+  categoryTitle: string;
+  type: "parent" | "child";
+  parentCategoryId: string;
+  icon: string;
+  color: string;
+};
+
+const newCategoryBaseData: newCategoryTypes = {
+  categoryTitle: "",
+  type: "parent", // 'parent' or 'child'
+  parentCategoryId: "",
+  icon: "code",
+  color: "from-blue-500 to-blue-600",
 };
 
 const CreateCategoryModal = ({
   isAddModalOpen,
   handleAddCategoryOpen,
-  newCategory,
-  handleNewCategory,
   countsData,
-  handleAddCategory,
 }: CreateCategoryModalProps) => {
+  const [newCategory, setNewCategory] =
+    useState<newCategoryTypes>(newCategoryBaseData);
+
+  const { createCategoryMutation, categoryLoading } = useCreateCategory();
   const { isDarkMode } = useDarkModeStore();
+
+  const handleNewCategory = (name: string, value: string) => {
+    setNewCategory({
+      ...newCategory,
+      [name]: value,
+    });
+  };
+
+  const handleAddCategory = async () => {
+    const input = {
+      categoryTitle: newCategory.categoryTitle,
+      icon: newCategory.icon,
+      iconColor: newCategory.color,
+      ...(newCategory.parentCategoryId && {
+        parentCategoryId: +newCategory.parentCategoryId,
+      }),
+    };
+
+    const result = await createCategoryMutation({
+      variables: {
+        input: input,
+      },
+    });
+    if (result.data?.createCategory.ok) {
+      toast.success("카테고리가 성공적으로 생성되었습니다.");
+    } else {
+      toast.error(result.data?.createCategory.error);
+    }
+    handleAddCategoryOpen(false);
+    setNewCategory(newCategoryBaseData);
+  };
 
   return (
     <Dialog
@@ -213,7 +259,7 @@ const CreateCategoryModal = ({
           <div className="flex gap-3 pt-4">
             <NewButton
               onClick={handleAddCategory}
-              className={`flex-1 ${
+              className={`flex-1 cursor-pointer ${
                 isDarkMode
                   ? "bg-blue-500 hover:bg-blue-600 text-white"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
@@ -222,11 +268,12 @@ const CreateCategoryModal = ({
               추가
             </NewButton>
             <NewButton
-              variant="outline"
+              type="button"
+              variant="default"
               onClick={() => handleAddCategoryOpen(false)}
-              className={`flex-1 ${
+              className={`flex-1 cursor-pointer ${
                 isDarkMode
-                  ? "border-white/20 text-white hover:bg-white/10"
+                  ? "bg-white/10 hover:bg-white/20 border-white/20 text-white"
                   : "border-gray-300"
               }`}
             >
