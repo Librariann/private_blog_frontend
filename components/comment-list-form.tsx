@@ -6,7 +6,15 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
       <div className="bg-gray-50 p-4 rounded-lg">
         <div className="flex justify-between items-center mb-2">
           <div className="font-semibold">{comment.commentId}</div>
-          <div className="text-sm text-gray-500">{comment.createdAt}</div>
+          <div className="text-sm text-gray-500">
+            {new Date(comment.createdAt).toLocaleString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </div>
         </div>
         <p className="text-gray-700">{comment.comment}</p>
         <div className="flex justify-end gap-2 mt-2">
