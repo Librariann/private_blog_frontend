@@ -49,14 +49,6 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
     navigate.push("/my-page");
   };
 
-  const login = () => {
-    navigate.push("/login");
-  };
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   return (
     <div className="w-full h-16 flex items-center bg-header-color pl-5">
       <button className="md:hidden mr-3 text-white" onClick={onMenuToggle}>
