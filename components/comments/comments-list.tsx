@@ -27,7 +27,7 @@ const CommentsList = ({ comments }: CommentType) => {
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className={isDarkMode ? "text-white" : "text-gray-900"}>
-                    {comment.commentId}
+                    {comment.annonymousId}
                   </h4>
                   <span
                     className={isDarkMode ? "text-white/50" : "text-gray-400"}
