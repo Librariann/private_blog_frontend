@@ -37,9 +37,9 @@ const Posts = ({ post }: { post: PostsProps }) => {
             <PostTitle className="text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
               {post.title}
             </PostTitle>
-            <PostContents className="header-color text-gray-100 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
+            {/* <PostContents className="header-color text-gray-100 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
               {post.contents}
-            </PostContents>
+            </PostContents> */}
             <PostBottom className="text-gray-100 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
               <span className="line-clamp-3 mr-4">
                 댓글 수:{commentsArray.length}
