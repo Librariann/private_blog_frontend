@@ -17,10 +17,6 @@ export const POST_FIELDS_FRAGMENT = gql`
       parentCategory {
         id
         categoryTitle
-        subCategories {
-          id
-          categoryTitle
-        }
       }
     }
     comments {
