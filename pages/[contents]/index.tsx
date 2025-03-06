@@ -131,8 +131,10 @@ const Contents = ({
     <>
       <div className="p-10">
         <ul className="flex flex-wrap justify-start">
-          {posts !== undefined &&
-            posts.map((post) => {
+          {posts
+            ?.slice()
+            .reverse()
+            .map((post) => {
               return <Posts key={post.id} post={post} />;
             })}
         </ul>
