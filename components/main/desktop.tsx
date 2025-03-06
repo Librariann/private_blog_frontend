@@ -8,15 +8,10 @@ import { useRouter } from "next/router";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { GlassCardMain } from "./main";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
+import { DynamicIcon } from "lucide-react/dynamic";
 
 export type DesktopAndMobileProps = {
   categories: CategoryCount[];
-  iconList: {
-    icon: ForwardRefExoticComponent<
-      Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-    >;
-    color: string;
-  }[];
   expandedCategories: Set<string>;
   toggleCategoryExpand: (categoryName: string) => void;
   popularHashTags?: popularHashTagsProps[];
@@ -24,7 +19,6 @@ export type DesktopAndMobileProps = {
 
 const Desktop = ({
   categories,
-  iconList,
   expandedCategories,
   toggleCategoryExpand,
   popularHashTags,
@@ -43,7 +37,6 @@ const Desktop = ({
         </h3>
         <div className="space-y-1">
           {categories.map((parent, index) => {
-            const Icon = iconList[index].icon;
             const isExpanded = expandedCategories.has(parent.categoryTitle);
             const hasChildren = parent.children && parent.children.length > 0;
             return (
@@ -65,9 +58,13 @@ const Desktop = ({
                       <ChevronDown className="w-4 h-4" />
                     </motion.div>
                     <div
-                      className={`w-8 h-8 rounded-lg bg-gradient-to-br ${iconList[index].color} flex items-center justify-center`}
+                      className={`w-8 h-8 rounded-lg bg-gradient-to-br ${parent.iconColor} flex items-center justify-center`}
                     >
-                      <Icon className="w-4 h-4 text-white" />
+                      <DynamicIcon
+                        className="w-4 h-4"
+                        color="white"
+                        name={(parent.icon as any) || "code"}
+                      />
                     </div>
                     <span>{parent.categoryTitle}</span>
                   </div>
@@ -75,11 +72,11 @@ const Desktop = ({
                     className={isDarkMode ? "text-white/50" : "text-gray-400"}
                   >
                     {hasChildren
-                      ? parent.children!.reduce(
-                          (sum, sub) => sum + sub.count,
+                      ? parent?.children?.reduce(
+                          (sum, sub) => sum + sub?.count!,
                           0
                         )
-                      : parent.count}
+                      : parent?.count}
                   </span>
                 </button>
 

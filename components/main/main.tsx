@@ -18,24 +18,6 @@ const Main = ({
   popularHashTags: popularHashTagsProps[];
 }) => {
   const router = useRouter();
-  const iconList = [
-    {
-      icon: Code,
-      color: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Code2,
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      icon: Database,
-      color: "from-green-500 to-emerald-500",
-    },
-    {
-      icon: Globe,
-      color: "from-yellow-500 to-amber-500",
-    },
-  ];
 
   const { isDarkMode } = useDarkModeStore();
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
@@ -114,7 +96,6 @@ const Main = ({
           {/* Sidebar - Mobile Only */}
           <Mobile
             categories={categories}
-            iconList={iconList}
             expandedCategories={expandedCategories}
             toggleCategoryExpand={toggleCategoryExpand}
           />
@@ -151,7 +132,6 @@ const Main = ({
         {/* Sidebar - Desktop Only */}
         <Desktop
           categories={categories}
-          iconList={iconList}
           expandedCategories={expandedCategories}
           toggleCategoryExpand={toggleCategoryExpand}
           popularHashTags={popularHashTags}

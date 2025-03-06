@@ -3,10 +3,10 @@ import { ChevronDown } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { DesktopAndMobileProps } from "./desktop";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { DynamicIcon } from "lucide-react/dynamic";
 
 const Mobile = ({
   categories,
-  iconList,
   expandedCategories,
   toggleCategoryExpand,
 }: DesktopAndMobileProps) => {
@@ -25,7 +25,6 @@ const Mobile = ({
 
         <div className="space-y-2">
           {categories.map((parent, index) => {
-            const Icon = iconList[index].icon;
             const isExpanded = expandedCategories.has(parent.categoryTitle);
 
             return (
@@ -33,7 +32,7 @@ const Mobile = ({
                 {/* 상위 카테고리 */}
                 <button
                   onClick={() => toggleCategoryExpand(parent.categoryTitle)}
-                  className={`w-full flex items-center justify-between ${iconList[index].color} px-3 py-2 rounded-lg transition-all ${
+                  className={`w-full flex items-center justify-between ${parent.iconColor} px-3 py-2 rounded-lg transition-all ${
                     isDarkMode
                       ? "text-white/80 hover:bg-white/5"
                       : "text-gray-700 hover:bg-gray-50"
@@ -47,9 +46,13 @@ const Mobile = ({
                       <ChevronDown className="w-4 h-4" />
                     </motion.div>
                     <div
-                      className={`w-8 h-8 rounded-lg bg-gradient-to-br flex items-center justify-center`}
+                      className={`w-8 h-8 rounded-lg bg-gradient-to-br ${parent.iconColor} flex items-center justify-center`}
                     >
-                      <Icon className="w-4 h-4 text-white" />
+                      <DynamicIcon
+                        className="w-4 h-4"
+                        color="white"
+                        name={(parent.icon as any) || "code"}
+                      />
                     </div>
                     <span className="text-sm">{parent.categoryTitle}</span>
                   </div>
