@@ -75,9 +75,12 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
   return (
     <div className="p-10">
       <ul className="flex flex-wrap justify-start">
-        {posts?.map((post) => {
-          return <Posts key={post.id} post={post} />;
-        })}
+        {posts
+          ?.slice()
+          .reverse()
+          .map((post) => {
+            return <Posts key={post.id} post={post} />;
+          })}
       </ul>
     </div>
   );
