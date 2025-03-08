@@ -96,7 +96,6 @@ const IconPicker = ({
   isDarkMode,
 }: IconPickerProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-
   const filteredIcons = availableIcons.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
