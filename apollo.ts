@@ -69,12 +69,9 @@ export function createApolloClient(initialState = null) {
                 return authTokenVar();
               },
             },
-            getPostList: {
-              merge: false, // 항상 새로운 데이터로 교체
-            },
-            getPostListByCategoryId: {
-              merge: false, // 항상 새로운 데이터로 교체
-            },
+            getPostList: { merge: false }, // 항상 새로운 데이터로 교체
+            getPostListByCategoryId: { merge: false }, // 항상 새로운 데이터로 교체
+            getCategories: { merge: false }, // 항상 새로운 데이터로 교체
           },
         },
       },
