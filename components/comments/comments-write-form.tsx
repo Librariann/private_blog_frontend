@@ -60,8 +60,8 @@ const CommentsWriteForm = ({
       if (newComment.trim() && commentAuthor.trim()) {
         const comment: Comment = {
           id: comments.length + 1,
-          commentId: commentAuthor,
-          commentPassword: commentPassword,
+          annonymousId: commentAuthor,
+          annonymousPassword: commentPassword,
           comment: newComment,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
