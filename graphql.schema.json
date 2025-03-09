@@ -2382,6 +2382,18 @@
             "deprecationReason": null
           },
           {
+            "name": "nextPost",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Post",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "ok",
             "description": null,
             "args": [],
@@ -2399,6 +2411,18 @@
           },
           {
             "name": "post",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Post",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "prevPost",
             "description": null,
             "args": [],
             "type": {
