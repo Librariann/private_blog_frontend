@@ -3,7 +3,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import Button from "@/components/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -20,6 +20,7 @@ import {
   TextAreaTextApi,
   TextState,
 } from "@uiw/react-md-editor";
+import { uploadImageToServer } from "@/utils/utils";
 
 export const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
@@ -46,27 +47,6 @@ export const GET_CATEGORIES = gql`
 export type postingProps = {
   title: string;
   categoryId: number;
-};
-
-// 이미지를 서버에 업로드하는 함수
-async function uploadImageToServer(file: File): Promise<string> {
-  // 예시: presigned URL 있으면 PUT 후 그 URL 반환, 아니면 POST 후 JSON으로 URL 받기
-  const form = new FormData();
-  form.append("file", file);
-  const res = await fetch(process.env.NEXT_PUBLIC_FILE_UPLOAD_URI || "", {
-    method: "POST",
-    body: form,
-  });
-  if (!res.ok) throw new Error("upload failed");
-  const { url } = await res.json(); // 서버가 반환하는 공개 URL
-  return url as string;
-}
-
-// 임시 이미지 저장용 타입
-type TempImage = {
-  id: string;
-  file: File;
-  localUrl: string;
 };
 
 function insertAtSelection(
@@ -128,7 +108,6 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 });
 
 function PostWrite() {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const [createPostMutation, { loading: postLoading }] = useMutation<
@@ -173,11 +152,14 @@ function PostWrite() {
   } = useForm<postingProps>({
     mode: "onChange",
   });
-
+  const [open, setOpen] = useState(false);
   const [md, setMd] = useState<string | undefined>("");
   const [selectedCategory, setSelectedCategory] = useState(1);
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [hashtagInput, setHashtagInput] = useState("");
+  const [postConfirmModal, setPostConfirmModal] = useState(false);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
@@ -197,11 +179,30 @@ function PostWrite() {
     setHashtags(hashtags.filter((tag) => tag !== tagToRemove));
   };
 
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setThumbnailFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setThumbnailPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailPreview(null);
+  };
+
   const onSubmit = async (data: postingProps) => {
-    // setOpen(true);
     try {
       const { title } = data;
-      // 이미지가 있는 경우 먼저 업로드하고 URL 교체
+      let thumbnailUrl = "";
+      if (thumbnailFile) {
+        thumbnailUrl = await uploadImageToServer(thumbnailFile);
+      }
 
       const postResult = await createPostMutation({
         variables: {
@@ -209,19 +210,14 @@ function PostWrite() {
             title,
             contents: md || "",
             categoryId: selectedCategory,
+            thumbnailUrl,
           },
           hashtags,
         },
       });
 
       if (postResult.data?.createPost.ok) {
-        alert("게시물이 성공적으로 작성되었습니다.");
-        // 프로덕션 환경에서 확실한 업데이트를 위해 새로고침 추가
-        if (process.env.NODE_ENV === "production") {
-          window.location.href = "/";
-        } else {
-          router.push("/");
-        }
+        setPostConfirmModal(true);
       } else {
         alert(postResult.data?.createPost.error);
       }
@@ -231,13 +227,18 @@ function PostWrite() {
     }
   };
 
+  const redirect = () => {
+    if (process.env.NODE_ENV === "production") {
+      window.location.href = "/";
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <div className="w-full min-h-screen px-4 md:px-8 py-4 md:py-8">
       <div className="max-w-4xl mx-auto">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4 md:space-y-6"
-        >
+        <div className="space-y-4 md:space-y-6">
           <input
             {...register("title", { required: "제목을 입력해주세요" })}
             className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -303,14 +304,63 @@ function PostWrite() {
               />
             )}
           </div>
-          <div className="flex justify-end mt-4">
-            <Button
-              canClick={isValid && !postLoading}
-              loading={postLoading}
-              actionText="게시물 생성"
-            />
+
+          {/* 썸네일 업로드 섹션 */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium text-gray-700">
+              썸네일 이미지
+            </label>
+            <div className="flex items-center space-x-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              {thumbnailPreview && (
+                <button
+                  type="button"
+                  onClick={removeThumbnail}
+                  className="px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-300 rounded-lg hover:bg-red-50"
+                >
+                  제거
+                </button>
+              )}
+            </div>
+
+            {/* 썸네일 미리보기 */}
+            {thumbnailPreview && (
+              <div className="mt-3">
+                <div className="relative inline-block">
+                  <img
+                    src={thumbnailPreview}
+                    alt="썸네일 미리보기"
+                    className="w-48 h-32 object-cover rounded-lg border shadow-sm"
+                  />
+                  <div className="absolute top-2 right-2">
+                    <button
+                      type="button"
+                      onClick={removeThumbnail}
+                      className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        </form>
+
+          <div className="flex justify-end mt-4">
+            <div onClick={() => isValid && !postLoading && setOpen(true)}>
+              <Button
+                canClick={isValid && !postLoading}
+                loading={postLoading}
+                actionText="게시물 생성"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <ConfirmModal
         isOpen={open}
@@ -323,6 +373,19 @@ function PostWrite() {
         title="게시물 작성"
         message="게시물을 작성하시겠습니까?"
         isCancel={false}
+      />
+
+      <ConfirmModal
+        isOpen={postConfirmModal}
+        onClose={() => {
+          setPostConfirmModal(false);
+        }}
+        onConfirm={() => {
+          redirect();
+        }}
+        title="작성 완료"
+        message="게시물이 작성되었습니다."
+        isCancel={true}
       />
     </div>
   );
