@@ -136,7 +136,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         }
         comments {
           id
-          commentId
+          annonymousId
           comment
           createdAt
         }
@@ -318,6 +318,34 @@ export const FIND_ONE_CATEGORY_BY_ID_QUERY = gql`
         icon
         iconColor
       }
+    }
+  }
+`;
+
+export const GET_COMMENTS_QUERY = gql`
+  query getComments {
+    getComments {
+      ok
+      error
+      comments {
+        id
+        comment
+        annonymousId
+        createdAt
+        post {
+          id
+          title
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_COMMENT_MUTATION = gql`
+  mutation deleteCommentByAdmin($id: Int!) {
+    deleteCommentByAdmin(id: $id) {
+      ok
+      error
     }
   }
 `;
