@@ -5,9 +5,12 @@ import {
   ApolloClient,
   createHttpLink,
   makeVar,
+  ApolloLink,
+  Observable,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
+
 // 클라이언트에서만 사용할 수 있는 localStorage 접근
 export const getToken = () => {
   if (typeof window !== "undefined") {
@@ -44,11 +47,11 @@ export function createApolloClient(initialState = null) {
     link: authLink.concat(httpLink),
     defaultOptions: {
       watchQuery: {
-        errorPolicy: 'all',
+        errorPolicy: "all",
         notifyOnNetworkStatusChange: true,
       },
       query: {
-        errorPolicy: 'all',
+        errorPolicy: "all",
       },
     },
     cache: new InMemoryCache({
