@@ -136,6 +136,9 @@ export const GET_POST_BY_ID_QUERY = gql`
         category {
           id
           categoryTitle
+          parentCategory {
+            categoryTitle
+          }
         }
         hashtags {
           hashtag
@@ -146,6 +149,18 @@ export const GET_POST_BY_ID_QUERY = gql`
           comment
           createdAt
         }
+      }
+      prevPost {
+        id
+        title
+        createdAt
+        readTime
+      }
+      nextPost {
+        id
+        title
+        createdAt
+        readTime
       }
     }
   }
