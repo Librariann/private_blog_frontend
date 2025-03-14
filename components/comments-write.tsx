@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import Button from "./button";
 import { GET_POST_BY_ID_QUERY } from "@/pages/[contents]/[id]";
-import { CommentProps } from "./comments";
 import ConfirmModal from "./modal/confirm-modal";
 import { useState } from "react";
 
@@ -47,7 +46,6 @@ const CommentsWrite = () => {
 
   const {
     register,
-    handleSubmit,
     reset,
     formState: { isValid },
   } = useForm<commentProps>({
@@ -55,9 +53,10 @@ const CommentsWrite = () => {
   });
   const onSubmit = async (data: commentProps) => {
     if (!id) {
-      alert("포스트가 없습니다! 다시 확인해주세요!");
+      alert("댓글 내용이 없습니다! 다시 확인해주세요!");
       return;
     }
+
     const commentResult = await createCommentMutation({
       variables: {
         input: {
@@ -73,30 +72,31 @@ const CommentsWrite = () => {
       alert("댓글이 작성됐습니다.");
       reset();
     } else {
-      console.log(commentResult.data?.createComment.error);
       alert("댓글 작성에 실패했습니다.");
     }
   };
 
   const handleCommentConfirm = () => {
+    if (!id) {
+      alert("댓글 내용이 없습니다! 다시 확인해주세요!");
+      return;
+    }
+
     setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mb-8 space-y-4"
-      autoComplete="off"
-    >
-      <div className="flex gap-4">
+    <div className="mb-8 space-y-4">
+      <div className="flex gap-2">
         <input
           {...register("id", { required: "아이디를 입력해주세요" })}
           type="text"
           placeholder="아이디"
-          className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           autoComplete="new-password"
           data-lpignore="true"
         />
@@ -104,7 +104,7 @@ const CommentsWrite = () => {
           {...register("password", { required: "패스워드를 입력해주세요" })}
           type="password"
           placeholder="비밀번호"
-          className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           autoComplete="new-password"
           data-lpignore="true"
         />
@@ -119,17 +119,18 @@ const CommentsWrite = () => {
           canClick={isValid && !commentLoading}
           loading={commentLoading}
           actionText="댓글 작성"
+          onClick={handleCommentConfirm}
         />
       </div>
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onConfirm={handleCommentConfirm}
-        title="로그아웃"
-        message="정말 로그아웃 하시겠습니까?"
+        title="댓글 작성"
+        message="댓글을 작성 하시겠습니까?"
         isCancel={false}
       />
-    </form>
+    </div>
   );
 };
 
