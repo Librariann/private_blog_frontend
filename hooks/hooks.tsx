@@ -5,6 +5,8 @@ import {
   CreatePostMutationVariables,
   DeleteCategoryMutation,
   DeleteCategoryMutationVariables,
+  DeleteCommentByAdminMutation,
+  DeleteCommentByAdminMutationVariables,
   DeletePostMutation,
   DeletePostMutationVariables,
   EditCategoryMutation,
@@ -19,6 +21,8 @@ import {
   GetCategoriesCountsQueryVariables,
   GetCategoriesQuery,
   GetCategoriesQueryVariables,
+  GetCommentsQuery,
+  GetCommentsQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
   TogglePostStatusMutation,
@@ -47,6 +51,8 @@ import {
   EDIT_CATEGORY_MUTATION,
   FIND_ONE_CATEGORY_BY_ID_QUERY,
   DELETE_CATEGORY_MUTATION,
+  GET_COMMENTS_QUERY,
+  DELETE_COMMENT_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -328,4 +334,32 @@ export const useDeleteCategory = () => {
     awaitRefetchQueries: true,
   });
   return { deleteCategoryMutation, categoryLoading };
+};
+
+export const useGetComments = () => {
+  const { data } = useQuery<GetCommentsQuery, GetCommentsQueryVariables>(
+    GET_COMMENTS_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-first",
+      ssr: false, // SSR 비활성화
+    }
+  );
+  return data?.getComments?.comments;
+};
+
+export const useDeleteCommentByAdmin = () => {
+  const [deleteCommentByAdminMutation, { loading: commentLoading }] =
+    useMutation<
+      DeleteCommentByAdminMutation,
+      DeleteCommentByAdminMutationVariables
+    >(DELETE_COMMENT_MUTATION, {
+      refetchQueries: [
+        {
+          query: GET_COMMENTS_QUERY,
+        },
+      ],
+      awaitRefetchQueries: true,
+    });
+  return { deleteCommentByAdminMutation, commentLoading };
 };
