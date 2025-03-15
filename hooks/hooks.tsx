@@ -5,6 +5,8 @@ import {
   CreatePostMutationVariables,
   DeletePostMutation,
   DeletePostMutationVariables,
+  EditCategoryMutation,
+  EditCategoryMutationVariables,
   GetAllPopularHashTagsQuery,
   GetAllPopularHashTagsQueryVariables,
   GetAllPostListQuery,
@@ -38,6 +40,7 @@ import {
   CREATE_POST_MUTATION,
   EDIT_POST_MUTATION,
   CREATE_CATEGORY_MUTATION,
+  EDIT_CATEGORY_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -265,4 +268,22 @@ export const useCreateCategory = () => {
     awaitRefetchQueries: true,
   });
   return { createCategoryMutation, categoryLoading };
+};
+
+export const useEditCategory = () => {
+  const [editCategoryMutation, { loading: categoryLoading }] = useMutation<
+    EditCategoryMutation,
+    EditCategoryMutationVariables
+  >(EDIT_CATEGORY_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_CATEGORIES,
+      },
+      {
+        query: GET_CATEGORIES_COUNTS_QUERY,
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { editCategoryMutation, categoryLoading };
 };
