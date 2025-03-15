@@ -9,17 +9,22 @@ import { GlassCardMain } from "../main/main";
 
 const COMMENTS_PER_LOAD = 5;
 
-export type CommentType = {
-  comments: Comment[];
+export type CommentType = Pick<
+  Comment,
+  "id" | "comment" | "createdAt" | "annonymousId"
+>;
+
+export type CommentsProps = {
+  comments: CommentType[];
 };
 
-const Comments = ({ comments }: CommentType) => {
+const Comments = ({ comments }: CommentsProps) => {
   const { isDarkMode } = useDarkModeStore();
-  const [commentsList, setCommentsList] = useState<Comment[]>(
+  const [commentsList, setCommentsList] = useState<CommentType[]>(
     [...comments].reverse()
   );
 
-  const handleAddComments = (addComment: Comment) => {
+  const handleAddComments = (addComment: CommentType) => {
     setCommentsList([addComment, ...commentsList]);
   };
 

@@ -3,9 +3,9 @@ import { AnimatePresence } from "motion/react";
 import { motion } from "motion/react";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
-import { CommentType } from "./comments";
+import { CommentsProps } from "./comments";
 
-const CommentsList = ({ comments }: CommentType) => {
+const CommentsList = ({ comments }: CommentsProps) => {
   const { isDarkMode } = useDarkModeStore();
   return (
     <div className="space-y-4">
