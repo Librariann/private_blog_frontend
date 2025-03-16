@@ -9,7 +9,6 @@ import ConfirmModal from "./modal/confirm-modal";
 const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
   const navigate = useRouter();
   const [isToken, setIsToken] = useState<string | null>();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data } = useMe();
 
   useEffect(() => {
@@ -39,6 +38,7 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
     clearToken();
     setIsToken(null);
     setIsModalOpen(false);
+    navigate.reload();
   };
 
   const handleModalClose = () => {
@@ -83,6 +83,7 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
           <div></div>
           // <div onClick={login}>로그인</div>
         )}
+        <div onClick={() => navigate.push("/about")}>About</div>
       </div>
       <ConfirmModal
         isOpen={isModalOpen}
