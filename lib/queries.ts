@@ -280,3 +280,12 @@ export const CREATE_CATEGORY_MUTATION = gql`
     }
   }
 `;
+
+export const EDIT_CATEGORY_MUTATION = gql`
+  mutation editCategory($input: EditCategoryInput!) {
+    editCategory(input: $input) {
+      ok
+      error
+    }
+  }
+`;
