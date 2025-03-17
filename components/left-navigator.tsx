@@ -7,6 +7,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import CategorySkeleton from "./skeleton/category-skeleton";
 
 export const GET_CATEGORIES_COUNTS_QUERY = gql`
   query getCategoriesCounts {
@@ -63,9 +64,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
         {loading ? (
-          <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
-          </div>
+          <CategorySkeleton />
         ) : (
           <ul className="space-y-3">
             <li
@@ -142,9 +141,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
             </button>
           </div>
           {loading ? (
-            <div className="flex justify-center items-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
-            </div>
+            <CategorySkeleton />
           ) : (
             <ul className="space-y-3">
               <li
