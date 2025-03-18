@@ -24,14 +24,6 @@ const ConfirmModal = ({
         <p className="text-gray-600 mb-6 text-center">{message}</p>
 
         <div className="flex justify-center space-x-3">
-          {!isCancel && (
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-            >
-              취소
-            </button>
-          )}
           <button
             onClick={() => {
               onConfirm();
@@ -40,6 +32,14 @@ const ConfirmModal = ({
           >
             확인
           </button>
+          {!isCancel && (
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+            >
+              취소
+            </button>
+          )}
         </div>
       </div>
     </div>
