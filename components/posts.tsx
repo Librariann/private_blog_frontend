@@ -19,7 +19,7 @@ const Posts = ({ post }: { post: PostsProps }) => {
     ? post.comments
     : [post.comments];
   return (
-    <li className="relative w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mb-6 p-2 flex justify-center">
+    <li className="relative w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 flex justify-center">
       <Link
         href={`/${post.category.categoryTitle}/${post.id}`}
         className="w-full"
@@ -33,7 +33,7 @@ const Posts = ({ post }: { post: PostsProps }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             priority
           />
-          <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent backdrop-blur-sm">
+          <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent backdrop-blur-sm rounded-b-lg">
             <PostTitle className="text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
               {post.title}
             </PostTitle>
