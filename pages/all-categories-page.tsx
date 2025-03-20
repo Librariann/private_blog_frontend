@@ -6,6 +6,7 @@ import {
 } from "@/hooks/hooks";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { ArrowRight, TrendingUp } from "lucide-react";
+import { DynamicIcon } from "lucide-react/dynamic";
 import { useRouter } from "next/router";
 
 const AllCategoriesPage = () => {
@@ -85,7 +86,6 @@ const AllCategoriesPage = () => {
       {/* Category Hierarchy */}
       <div className="space-y-6">
         {categories?.countsData?.map((parentCategory) => {
-          // const Icon = parentCategory.icon;
           const parentPostCount = getParentCategoryStats(
             parentCategory.categoryTitle
           );
@@ -99,13 +99,14 @@ const AllCategoriesPage = () => {
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
-                  {/* <div
-                    className={`w-16 h-16 rounded-xl bg-gradient-to-br ${parentCategory.color} flex items-center justify-center`}
-                  > */}
                   <div
-                    className={`w-16 h-16 rounded-xl bg-gradient-to-br flex items-center justify-center`}
+                    className={`w-16 h-16 rounded-xl bg-gradient-to-br ${parentCategory.iconColor} flex items-center justify-center`}
                   >
-                    {/* <Icon className="w-8 h-8 text-white" /> */}
+                    <DynamicIcon
+                      name={parentCategory.icon || ("code" as any)}
+                      className="w-5 h-5"
+                      color="white"
+                    />
                   </div>
                   <div>
                     <h2
@@ -187,9 +188,9 @@ const AllCategoriesPage = () => {
                           isDarkMode ? "text-white/60" : "text-gray-500"
                         }
                       >
-                        {subCategory.count}개 포스트
+                        {subCategory?.count}개 포스트
                       </span>
-                      {subCategory.count > 0 && (
+                      {subCategory?.count! > 0 && (
                         <span
                           className={`px-2 py-1 rounded text-xs ${
                             isDarkMode
