@@ -2,7 +2,7 @@ import { ArrowLeft, Calendar, Clock, List } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "../ui/badge";
-import { Post } from "@/gql/graphql";
+import { GetPostByIdQuery, Post } from "@/gql/graphql";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import dynamic from "next/dynamic";
 import Comments from "../comments/comments";
@@ -18,7 +18,7 @@ type topicProps = {
   title: string;
 }[];
 export type PostDetailPageProps = {
-  post: Post;
+  post: GetPostByIdQuery["getPostById"];
 };
 
 const PostDetail = ({ post }: PostDetailPageProps) => {
@@ -26,14 +26,13 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   const { data } = useMe();
   const [isTocOpen, setIsTocOpen] = useState(true);
   const router = useRouter();
-
+  const postData = post?.post;
   useEffect(() => {
-    // console.log(post?.postStatus !== "PUBLISHED");
     if (
-      post?.postStatus !== "PUBLISHED" &&
+      postData?.postStatus !== "PUBLISHED" &&
       data?.me?.id &&
-      post?.user?.id &&
-      Number(data?.me?.id) !== Number(post?.user?.id)
+      postData?.user?.id &&
+      Number(data?.me?.id) !== Number(postData?.user?.id)
     ) {
       toast.error("접근 권한이 없습니다.");
       router.push("/");
@@ -42,7 +41,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
 
   // 목차 항목들
   const tocItems: topicProps = [];
-  const filterH1 = post?.contents
+  const filterH1 = postData?.contents
     ?.match(/^#\s+(.+)/gm)
     ?.map((match) => match.replace(/^#\s+/, ""));
 
@@ -69,7 +68,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   };
 
   // 포맷팅된 날짜 (클라이언트에서만)
-  const formattedDate = new Date(post?.createdAt).toLocaleString("ko-KR", {
+  const formattedDate = new Date(postData?.createdAt).toLocaleString("ko-KR", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -82,12 +81,6 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
       }),
     { ssr: false }
   );
-
-  // 이전/다음 포스트 찾기
-  // const currentIndex = allPosts.findIndex((p) => p.id === post?.id);
-  // const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
-  // const nextPost =
-  //   currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
@@ -118,11 +111,11 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                 : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300 mb-4"
             }
           >
-            {post?.category?.categoryTitle}
+            {postData?.category?.categoryTitle}
           </Badge>
 
           <h1 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
-            {post?.title}
+            {postData?.title}
           </h1>
 
           <div
@@ -134,7 +127,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="w-4 h-4" />
-              <span>{post?.readTime}분 읽기</span>
+              <span>{postData?.readTime}분 읽기</span>
             </div>
           </div>
         </div>
@@ -233,7 +226,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
           className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
         >
           <EditerMarkdown
-            source={post?.contents}
+            source={postData?.contents}
             data-color-mode={isDarkMode ? "dark" : "light"}
             style={{ backgroundColor: "transparent" }}
           />
@@ -244,10 +237,16 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
       </GlassCardMain>
 
       {/* Comments Section */}
-      <Comments comments={post?.comments || []} />
+      <Comments comments={postData?.comments || []} />
 
       {/* Previous/Next Posts Navigation */}
-      <PostNavigation />
+      {postData && (post?.prevPost || post?.nextPost) && (
+        <PostNavigation
+          post={postData}
+          prevPost={post?.prevPost ?? null}
+          nextPost={post?.nextPost ?? null}
+        />
+      )}
     </div>
   );
 };
