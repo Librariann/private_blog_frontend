@@ -83,9 +83,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       //하위 카테고리
     } else if (slugLength === 2) {
       postsData = await getPostsByCategoryId(category.id);
-      console.log(postsData);
     }
-
+    console.log(postsData);
     return {
       props: {
         posts: postsData || [],
