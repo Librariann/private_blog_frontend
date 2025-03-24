@@ -23,15 +23,13 @@ const Main = ({
     new Set()
   );
   const { categories, categoriesLoading } = useGetCategories();
-  const categoriesMemo = useMemo(() => categories, [categories]);
-
   useEffect(() => {
     if (!categoriesLoading) {
-      const expandCategory = categoriesMemo[0]?.categoryTitle;
+      const expandCategory = categories[0]?.categoryTitle;
 
       setExpandedCategories(new Set([expandCategory]));
     }
-  }, [categoriesMemo, categoriesLoading]);
+  }, [categories, categoriesLoading]);
 
   const toggleCategoryExpand = (categoryName: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -92,7 +90,7 @@ const Main = ({
 
           {/* Sidebar - Mobile Only */}
           <Mobile
-            categories={categoriesMemo}
+            categories={categories}
             expandedCategories={expandedCategories}
             toggleCategoryExpand={toggleCategoryExpand}
           />
@@ -128,7 +126,7 @@ const Main = ({
 
         {/* Sidebar - Desktop Only */}
         <Desktop
-          categories={categoriesMemo}
+          categories={categories}
           expandedCategories={expandedCategories}
           toggleCategoryExpand={toggleCategoryExpand}
           popularHashTags={popularHashTags}
