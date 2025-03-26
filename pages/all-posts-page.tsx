@@ -1,11 +1,10 @@
 import {
   useGetCategories,
-  useGetCategoryCounts,
   useGetPopularHashTagList,
   useGetPostList,
 } from "@/hooks/hooks";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { BlogPostCard } from "@/components/cards/blog-post-card";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "motion/react";
@@ -13,6 +12,8 @@ import { ChevronDown, Search } from "lucide-react";
 import { GlassCardMain } from "@/components/main/main";
 
 const AllPostsPage = () => {
+  const { categories } = useGetCategories();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedParents, setExpandedParents] = useState<Set<string>>(
@@ -22,7 +23,7 @@ const AllPostsPage = () => {
   const posts = useGetPostList();
   const popularHashTags = useGetPopularHashTagList();
 
-  const { categories } = useGetCategories();
+  console.log("render count", categories, categories?.[0]?.subCategories);
   const { isDarkMode } = useDarkModeStore();
 
   const filteredPosts = posts.filter((post) => {
