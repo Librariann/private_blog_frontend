@@ -5,8 +5,6 @@ import {
   Trash2,
   ChevronDown,
   ChevronRight,
-  icons,
-  MessageSquare,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -21,19 +19,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { GlassCardMain } from "@/components/main/main";
 import CreateCategoryModal from "@/components/category/modal/create-category-modal";
 import { DynamicIcon } from "lucide-react/dynamic";
-
-export type newCategoryTypes = {
-  categoryTitle: string;
-  type: "parent" | "child";
-  parentCategoryId: string;
-  icon: string;
-  color: string;
-};
+import EditCategoryModal from "@/components/category/modal/edit-category-modal";
+import { CategoryCount } from "@/gql/graphql";
 
 const ManagementCategories = () => {
   const { isDarkMode } = useDarkModeStore();
@@ -45,27 +35,14 @@ const ManagementCategories = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>();
-  const [selectedCategory, setSelectedCategory] = useState<any>(null);
-
-  const [newCategory, setNewCategory] = useState<newCategoryTypes>({
-    categoryTitle: "",
-    type: "parent", // 'parent' or 'child'
-    parentCategoryId: "",
-    icon: "code",
-    color: "from-blue-500 to-blue-600",
-  });
-
-  const { createCategoryMutation, categoryLoading } = useCreateCategory();
-
-  const handleNewCategory = (name: string, value: string) => {
-    setNewCategory({
-      ...newCategory,
-      [name]: value,
-    });
-  };
-
+  const [selectedCategory, setSelectedCategory] = useState<CategoryCount>();
+  const [isParent, setIsParent] = useState<boolean>(false);
   const handleAddCategoryOpen = (open: boolean) => {
     setIsAddModalOpen(open);
+  };
+
+  const handleEditModalOpen = (open: boolean) => {
+    setIsEditModalOpen(open);
   };
 
   useEffect(() => {
@@ -82,44 +59,10 @@ const ManagementCategories = () => {
     setExpandedCategories(newExpanded);
   };
 
-  const handleAddCategory = async () => {
-    const input = {
-      categoryTitle: newCategory.categoryTitle,
-      icon: newCategory.icon,
-      iconColor: newCategory.color,
-      ...(newCategory.parentCategoryId && {
-        parentCategoryId: +newCategory.parentCategoryId,
-      }),
-    };
-
-    const result = await createCategoryMutation({
-      variables: {
-        input: input,
-      },
-    });
-    console.log(result);
-  };
-
-  const handleEditCategory = () => {
-    // TODO: 실제 카테고리 수정 로직
-    console.log("Editing category:", selectedCategory);
-    setIsEditModalOpen(false);
-  };
-
   const handleDeleteCategory = () => {
     // TODO: 실제 카테고리 삭제 로직
     console.log("Deleting category:", selectedCategory);
     setIsDeleteDialogOpen(false);
-  };
-
-  const openEditModal = (category: any) => {
-    setSelectedCategory(category);
-    setIsEditModalOpen(true);
-  };
-
-  const openDeleteDialog = (category: any) => {
-    setSelectedCategory(category);
-    setIsDeleteDialogOpen(true);
   };
 
   return (
@@ -167,7 +110,6 @@ const ManagementCategories = () => {
       <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
         <div className="space-y-2">
           {countsData?.map((parentCategory) => {
-            const Icon = parentCategory.icon;
             const isExpanded = expandedCategories?.has(
               parentCategory.categoryTitle
             );
@@ -185,7 +127,7 @@ const ManagementCategories = () => {
                       onClick={() =>
                         toggleCategoryExpand(parentCategory.categoryTitle)
                       }
-                      className="p-1"
+                      className="p-1  cursor-pointer"
                     >
                       <motion.div
                         animate={{ rotate: isExpanded ? 0 : -90 }}
@@ -209,7 +151,10 @@ const ManagementCategories = () => {
 
                     <div className="flex-1">
                       <div
-                        className={`flex items-center gap-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                        onClick={() =>
+                          toggleCategoryExpand(parentCategory.categoryTitle)
+                        }
+                        className={`flex items-center gap-3 cursor-pointer ${isDarkMode ? "text-white" : "text-gray-900"}`}
                       >
                         <span>{parentCategory.categoryTitle}</span>
                         <span
@@ -230,9 +175,11 @@ const ManagementCategories = () => {
                     <NewButton
                       variant="ghost"
                       size="sm"
-                      onClick={() =>
-                        openEditModal({ ...parentCategory, type: "parent" })
-                      }
+                      onClick={() => {
+                        handleEditModalOpen(true);
+                        setSelectedCategory(parentCategory);
+                        setIsParent(true);
+                      }}
                       className={
                         isDarkMode
                           ? "text-white/70 hover:text-white hover:bg-white/10"
@@ -244,9 +191,6 @@ const ManagementCategories = () => {
                     <NewButton
                       variant="ghost"
                       size="sm"
-                      onClick={() =>
-                        openDeleteDialog({ ...parentCategory, type: "parent" })
-                      }
                       className={
                         isDarkMode
                           ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
@@ -300,13 +244,11 @@ const ManagementCategories = () => {
                               <NewButton
                                 variant="ghost"
                                 size="sm"
-                                onClick={() =>
-                                  openEditModal({
-                                    ...subCategory,
-                                    type: "child",
-                                    parent: parentCategory.categoryTitle,
-                                  })
-                                }
+                                onClick={() => {
+                                  handleEditModalOpen(true);
+                                  setSelectedCategory(subCategory);
+                                  setIsParent(false);
+                                }}
                                 className={
                                   isDarkMode
                                     ? "text-white/70 hover:text-white hover:bg-white/10"
@@ -318,13 +260,6 @@ const ManagementCategories = () => {
                               <NewButton
                                 variant="ghost"
                                 size="sm"
-                                onClick={() =>
-                                  openDeleteDialog({
-                                    ...subCategory,
-                                    type: "child",
-                                    parent: parentCategory.categoryTitle,
-                                  })
-                                }
                                 className={
                                   isDarkMode
                                     ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
@@ -350,82 +285,18 @@ const ManagementCategories = () => {
       <CreateCategoryModal
         isAddModalOpen={isAddModalOpen}
         handleAddCategoryOpen={handleAddCategoryOpen}
-        newCategory={newCategory}
-        handleNewCategory={handleNewCategory}
         countsData={countsData || []}
-        handleAddCategory={handleAddCategory}
       />
 
       {/* Edit Category Modal */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent
-          className={`max-w-md ${
-            isDarkMode
-              ? "glass-card border-white/20"
-              : "glass-card-light border-gray-200"
-          }`}
-        >
-          <DialogHeader>
-            <DialogTitle
-              className={isDarkMode ? "text-white" : "text-gray-900"}
-            >
-              카테고리 수정
-            </DialogTitle>
-            <DialogDescription
-              className={isDarkMode ? "text-white/60" : "text-gray-600"}
-            >
-              카테고리 정보를 수정합니다
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
-                카테고리 이름
-              </Label>
-              <Input
-                value={selectedCategory?.name || ""}
-                onChange={(e) =>
-                  setSelectedCategory({
-                    ...selectedCategory,
-                    name: e.target.value,
-                  })
-                }
-                className={
-                  isDarkMode
-                    ? "bg-white/5 border-white/20 text-white"
-                    : "bg-white border-gray-200"
-                }
-              />
-            </div>
-
-            <div className="flex gap-3 pt-4">
-              <NewButton
-                onClick={handleEditCategory}
-                className={`flex-1 ${
-                  isDarkMode
-                    ? "bg-blue-500 hover:bg-blue-600 text-white"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
-              >
-                저장
-              </NewButton>
-              <NewButton
-                variant="outline"
-                onClick={() => setIsEditModalOpen(false)}
-                className={`flex-1 ${
-                  isDarkMode
-                    ? "border-white/20 text-white hover:bg-white/10"
-                    : "border-gray-300"
-                }`}
-              >
-                취소
-              </NewButton>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
+      {selectedCategory && (
+        <EditCategoryModal
+          isEditModalOpen={isEditModalOpen}
+          handleEditModalOpen={handleEditModalOpen}
+          isParent={isParent}
+          selectedCategory={selectedCategory}
+        />
+      )}
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent
@@ -446,7 +317,7 @@ const ManagementCategories = () => {
             >
               정말로 {selectedCategory?.categoryTitle} 카테고리를
               삭제하시겠습니까?
-              {selectedCategory?.type === "parent" && (
+              {isParent && (
                 <span className="block mt-2 text-red-400">
                   ⚠️ 상위 카테고리를 삭제하면 하위 카테고리도 함께 삭제됩니다.
                 </span>
