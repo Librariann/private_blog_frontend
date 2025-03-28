@@ -13,6 +13,16 @@ import {
   UpdatePostHitsMutation,
   UpdatePostHitsMutationVariables,
 } from "@/gql/graphql";
+import { useMe } from "@/hooks/useMe";
+
+type me = {
+  data: {
+    me: {
+      id?: string;
+      email?: string;
+    };
+  };
+};
 
 export type PostProps = {
   post: {
@@ -21,6 +31,9 @@ export type PostProps = {
     contents: string;
     hits: number;
     createdAt: string;
+    user: {
+      id: number;
+    };
     comments: {
       id: number;
       comment: string;
@@ -46,6 +59,9 @@ export const GET_POST_BY_ID_QUERY = gql`
         contents
         hits
         createdAt
+        user {
+          id
+        }
         hashtags {
           hashtag
         }
@@ -98,6 +114,7 @@ const PostDetail = ({ post }: PostProps) => {
       cache.gc();
     },
   });
+
   useEffect(() => {
     const updateHits = async () => {
       //마지막 조회시간 확인
@@ -121,6 +138,10 @@ const PostDetail = ({ post }: PostProps) => {
     updateHits();
   }, [updatePostHitsMutation, post?.id]);
 
+  const { data } = useMe();
+
+  const userId = data?.me?.id;
+
   if (!currentPost) {
     return <div>Post not found!</div>;
   }
@@ -134,14 +155,22 @@ const PostDetail = ({ post }: PostProps) => {
         <div className="flex items-center justify-between text-gray-600 mb-4">
           <div className="flex items-center space-x-4">
             <span>조회수: {currentPost.hits}</span>
-            <span>작성일: {new Date(currentPost.createdAt).toLocaleString('ko-KR', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}</span>
+            <span>
+              작성일:
+              {new Date(currentPost.createdAt).toLocaleString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
           </div>
+          {userId === currentPost.user?.id && (
+            <div className="cursor-pointer text-blue-600 hover:text-blue-800">
+              수정
+            </div>
+          )}
         </div>
         {/* 해시태그 */}
         <div className="flex flex-wrap gap-2 mb-6">
