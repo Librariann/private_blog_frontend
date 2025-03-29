@@ -271,8 +271,8 @@ const MyPage = () => {
             </span>
           </button>
           <button
-            // onClick={onNavigateToCategoryManagement}
-            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors ${
+            onClick={() => router.push("/settings/management-categories")}
+            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer ${
               isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
             }`}
           >
