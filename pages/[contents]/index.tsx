@@ -3,6 +3,7 @@ import { GET_CATEGORIES_COUNTS_QUERY } from "@/components/left-navigator";
 import { GetServerSideProps } from "next";
 import { gql, useQuery } from "@apollo/client";
 import Posts from "@/components/posts";
+import PostListSkeleton from "@/components/skeleton/post-list-skeleton";
 import { PostsProps } from "@/pages";
 import { useRouter } from "next/router";
 import {
@@ -11,6 +12,7 @@ import {
   GetPostListByCategoryIdQuery,
   GetPostListByCategoryIdQueryVariables,
 } from "@/gql/graphql";
+import { useMe } from "@/hooks/useMe";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
   query getPostListByCategoryId($categoryId: Int!) {
@@ -79,7 +81,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       },
     };
   } catch (error) {
-    console.error("SSR Error (Category):", error);
     return {
       notFound: true,
     };
@@ -105,14 +106,12 @@ const Contents = ({
       console.error("❌ Query error:", error);
     },
   });
+
   const posts = data?.getPostListByCategoryId?.posts || initialPosts;
 
+  const router = useRouter();
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <PostListSkeleton count={4} />;
   }
 
   if (error) {
