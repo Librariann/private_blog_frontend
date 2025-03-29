@@ -1,18 +1,17 @@
 import { GetServerSideProps } from "next";
 import {
   getCategories,
-  getCategoriesCounts,
   getPostById,
   getPostsByCategoryId,
   getPostsByParentCategoryId,
 } from "@/lib/posts";
 import PostDetail from "@/components/posts/post-detail";
 import CategoryDetails from "@/components/category/category-details";
-import { Post } from "@/gql/graphql";
+import { GetPostByIdQuery, Post } from "@/gql/graphql";
 
 type DetailProps = {
   type: "detail";
-  post: Post;
+  post: GetPostByIdQuery["getPostById"];
 };
 
 type ListProps = {

@@ -27,7 +27,6 @@ import {
   useDeletePost,
   useGetAllPostList,
   useGetCategories,
-  useGetCategoryCounts,
   useTogglePostStatus,
 } from "@/hooks/hooks";
 import {

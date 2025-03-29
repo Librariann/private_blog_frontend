@@ -48,7 +48,7 @@ const Home = ({
   userInfo: UserInfoType;
 }) => {
   // Apollo로 클라이언트에서 데이터 가져오기
-  const { data } = useQuery(GET_POST_LIST_QUERY, {});
+  const { data } = useQuery(GET_POST_LIST_QUERY);
 
   const postsDatas = data?.getPostList?.posts || posts;
 

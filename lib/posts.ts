@@ -108,7 +108,7 @@ export async function getPostById(postId: number) {
       fetchPolicy: "cache-first",
     });
 
-    return data.getPostById?.post || null;
+    return data.getPostById || null;
   } catch (error) {
     return null;
   }
