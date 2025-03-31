@@ -2,6 +2,7 @@ import { createApolloClient } from "@/apollo";
 import { gql, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Posts from "@/components/posts";
+import PostListSkeleton from "@/components/skeleton/post-list-skeleton";
 import { GetPostListQuery, GetPostListQueryVariables } from "@/gql/graphql";
 
 export const GET_POST_LIST_QUERY = gql`
@@ -43,7 +44,7 @@ export type PostsProps = {
 };
 
 const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
-  const { data, loading, error, networkStatus } = useQuery<
+  const { data, loading, error } = useQuery<
     GetPostListQuery,
     GetPostListQueryVariables
   >(GET_POST_LIST_QUERY, {
@@ -52,12 +53,9 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
     notifyOnNetworkStatusChange: true,
   });
   const posts = data?.getPostList?.posts || initialPosts;
+
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <PostListSkeleton count={6} />;
   }
 
   if (error) {
