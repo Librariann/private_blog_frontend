@@ -25,6 +25,30 @@ import { useRouter } from "next/router";
 import { POST_STATUS_OBJECTS } from "@/common/constants";
 import { PostStatus } from "@/gql/graphql";
 
+type managementListType = {
+  title: string;
+  label: string;
+  href: string;
+};
+
+const managementList: managementListType[] = [
+  {
+    title: "포스트관리",
+    label: "글 작성, 수정, 삭제",
+    href: "/settings/management-posts",
+  },
+  {
+    title: "카테고리관리",
+    label: "카테고리 추가, 수정, 삭제",
+    href: "/settings/management-categories",
+  },
+  {
+    title: "댓글관리",
+    label: "댓글 관리",
+    href: "/settings/management-comments",
+  },
+];
+
 const userStats = [
   { label: "작성한 포스트", value: "42", icon: Edit },
   { label: "총 조회수", value: "1.2K", icon: Eye },
@@ -55,6 +79,32 @@ const MyPage = () => {
   userStats[0].value = allPostLength?.toString() || "0"; //작성한 포스트 갯수
   userStats[1].value = formatNumberConvertK(allPostViews || 0); //총 조회수
   userStats[2].value = allCommentsLength?.toString() || "0"; //총 댓글 갯수
+
+  const managementButton = (props: managementListType) => (
+    <button
+      onClick={() => router.push(`${props.href}`)}
+      className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer ${
+        isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
+      }`}
+    >
+      <div className="flex items-center space-x-3">
+        <FileText
+          className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
+        />
+        <div className="text-left">
+          <div className={isDarkMode ? "text-white" : "text-gray-900"}>
+            {props.title}
+          </div>
+          <div
+            className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+          >
+            {props.label}
+          </div>
+        </div>
+      </div>
+      <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>›</span>
+    </button>
+  );
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
@@ -247,81 +297,7 @@ const MyPage = () => {
           블로그 관리
         </h2>
         <div className="space-y-2">
-          <button
-            onClick={() => router.push("/settings/management-posts")}
-            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer ${
-              isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
-            }`}
-          >
-            <div className="flex items-center space-x-3">
-              <FileText
-                className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-              />
-              <div className="text-left">
-                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  포스트 관리
-                </div>
-                <div
-                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
-                >
-                  글 작성, 수정, 삭제
-                </div>
-              </div>
-            </div>
-            <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>
-              ›
-            </span>
-          </button>
-          <button
-            onClick={() => router.push("/settings/management-categories")}
-            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer ${
-              isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
-            }`}
-          >
-            <div className="flex items-center space-x-3">
-              <FolderTree
-                className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-              />
-              <div className="text-left">
-                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  카테고리 관리
-                </div>
-                <div
-                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
-                >
-                  카테고리 추가, 수정, 삭제
-                </div>
-              </div>
-            </div>
-            <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>
-              ›
-            </span>
-          </button>
-          <button
-            // onClick={onNavigateToCommentManagement}
-            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors ${
-              isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
-            }`}
-          >
-            <div className="flex items-center space-x-3">
-              <MessageSquare
-                className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-              />
-              <div className="text-left">
-                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  댓글 관리
-                </div>
-                <div
-                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
-                >
-                  댓글 승인, 삭제, 스팸 관리
-                </div>
-              </div>
-            </div>
-            <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>
-              ›
-            </span>
-          </button>
+          {managementList.map((item) => managementButton(item))}
         </div>
       </GlassCardMain>
 
