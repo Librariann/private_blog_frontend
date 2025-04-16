@@ -7,15 +7,23 @@ const nextConfig = {
   experimental: {
     esmExternals: "loose",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "gopfkmlgdpxbqjxftuin.supabase.co",
+      },
+    ],
+  },
   // Vercel caching 설정
   headers: async () => {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
           },
         ],
       },
