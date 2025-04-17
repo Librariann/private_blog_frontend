@@ -8,10 +8,6 @@ const PostTitle = styled.div`
   font-weight: bold;
 `;
 
-const PostContents = styled.div`
-  margin-top: 2px;
-`;
-
 const PostBottom = styled.div``;
 
 const Posts = ({ post }: { post: PostsProps }) => {
@@ -24,9 +20,9 @@ const Posts = ({ post }: { post: PostsProps }) => {
         href={`/${post.category.categoryTitle}/${post.id}`}
         className="w-full"
       >
-        <div className="relative w-full h-72">
+        <div className="relative w-full h-72 border-2 border-gray-200 rounded-lg">
           <Image
-            src="/images/noimage.webp"
+            src={post.thumbnailUrl || `/images/noimage.webp`}
             fill
             alt="No image available"
             className="object-cover rounded-lg"
