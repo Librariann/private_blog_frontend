@@ -13,6 +13,7 @@ export const GET_POST_LIST_QUERY = gql`
         title
         contents
         hits
+        thumbnailUrl
         category {
           categoryTitle
         }
@@ -32,14 +33,15 @@ export type PostsProps = {
   title: string;
   contents: string;
   hits: number;
+  thumbnailUrl?: string | null;
   category: {
     categoryTitle: string;
   };
   comments: {
-    comment: string;
+    comment?: string | null;
   }[]; // 배열 타입으로 수정
   hashtags: {
-    hashtag: string;
+    hashtag?: string | null;
   }[]; // 배열 타입으로 수정
 };
 
@@ -73,12 +75,9 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
   return (
     <div className="p-10">
       <ul className="flex flex-wrap justify-start">
-        {posts
-          ?.slice()
-          .reverse()
-          .map((post) => {
-            return <Posts key={post.id} post={post} />;
-          })}
+        {posts?.map((post) => {
+          return <Posts key={post.id} post={post} />;
+        })}
       </ul>
     </div>
   );
