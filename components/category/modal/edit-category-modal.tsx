@@ -18,17 +18,17 @@ import { DynamicIcon } from "lucide-react/dynamic";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-type EditCategoryModalProps = {
-  isEditModalOpen: boolean;
-  handleEditModalOpen: (open: boolean) => void;
-  selectedCategory: SelectedCategoryType[0];
-};
-
 type EditCategoryType = {
   id: number;
   categoryTitle: string;
   icon: string;
   iconColor: string;
+};
+
+type EditCategoryModalProps = {
+  isEditModalOpen: boolean;
+  handleEditModalOpen: (open: boolean) => void;
+  selectedCategory: SelectedCategoryType[0];
 };
 
 const EditCategoryModal = ({
@@ -39,7 +39,6 @@ const EditCategoryModal = ({
   const { isDarkMode } = useDarkModeStore();
   const { editCategoryMutation } = useEditCategory();
   const { setGlobalLoading } = useLoadingStore();
-
   const [editCategory, setEditCategory] = useState<EditCategoryType>({
     id: 0,
     categoryTitle: "",
@@ -63,9 +62,6 @@ const EditCategoryModal = ({
         categoryTitle: editCategory.categoryTitle,
         icon: editCategory.icon,
         iconColor: editCategory.iconColor,
-        ...(editCategory?.id && {
-          parentCategoryId: +editCategory.id,
-        }),
       };
 
       const result = await editCategoryMutation({
