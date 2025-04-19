@@ -5,14 +5,12 @@ import { gql, useQuery } from "@apollo/client";
 import Posts from "@/components/posts";
 import PostListSkeleton from "@/components/skeleton/post-list-skeleton";
 import { PostsProps } from "@/pages";
-import { useRouter } from "next/router";
 import {
   GetCategoriesCountsQuery,
   GetCategoriesCountsQueryVariables,
   GetPostListByCategoryIdQuery,
   GetPostListByCategoryIdQueryVariables,
 } from "@/gql/graphql";
-import { useMe } from "@/hooks/useMe";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
   query getPostListByCategoryId($categoryId: Int!) {
@@ -24,6 +22,7 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         title
         contents
         hits
+        thumbnailUrl
         category {
           categoryTitle
         }
@@ -130,12 +129,9 @@ const Contents = ({
     <>
       <div className="p-10">
         <ul className="flex flex-wrap justify-start">
-          {posts
-            ?.slice()
-            .reverse()
-            .map((post) => {
-              return <Posts key={post.id} post={post} />;
-            })}
+          {posts?.map((post) => {
+            return <Posts key={post.id} post={post} />;
+          })}
         </ul>
       </div>
     </>
