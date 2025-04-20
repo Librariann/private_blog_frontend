@@ -108,7 +108,6 @@ const Contents = ({
 
   const posts = data?.getPostListByCategoryId?.posts || initialPosts;
 
-  const router = useRouter();
   if (loading) {
     return <PostListSkeleton count={4} />;
   }
