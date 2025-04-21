@@ -34,4 +34,5 @@
 - Increment the commit date by exactly one day for each subsequent file
 - Use --date "{date} 10:00:00 KST" to set the commit date
 - Apply this to commit date
+- Set commit date to the date I provide. If no date is given, use 1 week before current date.
 - **Other**: Don't use Contributors Name
