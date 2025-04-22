@@ -7,8 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Category, CategoryCount } from "@/gql/graphql";
+import { useDeleteCategory } from "@/hooks/hooks";
 import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { useLoadingStore } from "@/stores/useLoadingStore";
+import { toast } from "react-toastify";
 
 type DeleteCategoryModalProps = {
   isDeleteDialogOpen: boolean;
@@ -24,10 +27,24 @@ const DeleteCategoryModal = ({
   selectedCategory,
 }: DeleteCategoryModalProps) => {
   const { isDarkMode } = useDarkModeStore();
-
+  const { deleteCategoryMutation } = useDeleteCategory();
+  const { setGlobalLoading } = useLoadingStore();
   const handleDeleteCategory = () => {
-    console.log("Deleting category:", selectedCategory);
-    handleDeleteDialogOpen(false);
+    try {
+      setGlobalLoading(true);
+      deleteCategoryMutation({
+        variables: {
+          categoryId: selectedCategory?.id,
+          isParent,
+        },
+      });
+      handleDeleteDialogOpen(false);
+      toast.success("카테고리가 성공적으로 삭제되었습니다.");
+    } catch {
+      toast.error("카테고리 삭제 실패!");
+    } finally {
+      setGlobalLoading(false);
+    }
   };
 
   return (
