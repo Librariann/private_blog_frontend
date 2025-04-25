@@ -189,6 +189,8 @@ function PostWrite() {
       };
       reader.readAsDataURL(file);
     }
+    // Reset input value to allow selecting the same file again
+    e.target.value = "";
   };
 
   const removeThumbnail = () => {
@@ -311,11 +313,18 @@ function PostWrite() {
               썸네일 이미지
             </label>
             <div className="flex items-center space-x-4">
+              <label
+                htmlFor="fileInput"
+                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-lg hover:bg-blue-50 cursor-pointer"
+              >
+                썸네일 추가
+              </label>
               <input
+                id="fileInput"
                 type="file"
                 accept="image/*"
                 onChange={handleThumbnailChange}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                className="hidden"
               />
               {thumbnailPreview && (
                 <button
