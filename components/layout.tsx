@@ -6,12 +6,12 @@ import { isLoggedInVar } from "@/apollo";
 import { useReactiveVar } from "@apollo/client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { authPage, handlePathes } from "@/common/constants";
 
 type Props = {
   children: React.ReactNode;
 };
-export const handlePathes = ["/login", "/create-account", "/404"];
-const authPage = ["/my-page", "/post-write"];
+
 function Layout({ children }: Props) {
   const { pathname, push } = useRouter();
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -33,7 +33,7 @@ function Layout({ children }: Props) {
       alert("권한이 없습니다.");
       push("/");
     }
-  });
+  }, [pathname, isLoggedIn, push]);
 
   const isLayoutVisible = !handlePathes.includes(pathname); //레이아웃 보여줘야할때
 
