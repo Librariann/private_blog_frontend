@@ -41,7 +41,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
     return null;
   }
 
-  const handleClick = (categoryTitle: string) => {
+  const handleClick = () => {
     onClose(); // 모바일에서 카테고리 선택 시 메뉴 닫기
   };
 
@@ -72,8 +72,8 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
                 isHome ? "bg-gray-700" : "hover:bg-gray-700"
               }`}
             >
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
               >
                 <span className="font-medium">전체 보기</span>
@@ -172,7 +172,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
                 >
                   <Link
                     href={`/${encodeURIComponent(categories.categoryTitle)}`}
-                    onClick={() => handleClick(categories.categoryTitle)}
+                    onClick={handleClick}
                     className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
                   >
                     <span>{categories.categoryTitle}</span>
