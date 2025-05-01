@@ -8,21 +8,15 @@ import { useEffect, useState } from "react";
 import Comments, { CommentProps } from "@/components/comments";
 import CommentsWrite from "@/components/comments-write";
 import {
+  GetCategoriesQuery,
+  GetCategoriesQueryVariables,
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
   UpdatePostHitsMutation,
   UpdatePostHitsMutationVariables,
 } from "@/gql/graphql";
 import { useMe } from "@/hooks/useMe";
-
-type me = {
-  data: {
-    me: {
-      id?: string;
-      email?: string;
-    };
-  };
-};
+import { useRouter } from "next/router";
 
 export type PostProps = {
   post: {
@@ -49,6 +43,18 @@ export type PostProps = {
   };
 };
 
+export const GET_CATEGORIES = gql`
+  query getCategories {
+    getCategories {
+      ok
+      categories {
+        id
+        categoryTitle
+      }
+    }
+  }
+`;
+
 export const GET_POST_BY_ID_QUERY = gql`
   query getPostById($postId: Int!) {
     getPostById(postId: $postId) {
@@ -61,6 +67,10 @@ export const GET_POST_BY_ID_QUERY = gql`
         createdAt
         user {
           id
+        }
+        category {
+          id
+          categoryTitle
         }
         hashtags {
           hashtag
@@ -102,6 +112,13 @@ const PostDetail = ({ post }: PostProps) => {
     skip: !post?.id,
   });
 
+  const { data: categoryData } = useQuery<
+    GetCategoriesQuery,
+    GetCategoriesQueryVariables
+  >(GET_CATEGORIES, {
+    ssr: false, // SSR 비활성화
+  });
+
   const currentPost = postData?.getPostById?.post || post;
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
@@ -139,10 +156,23 @@ const PostDetail = ({ post }: PostProps) => {
   }, [updatePostHitsMutation, post?.id]);
 
   const { data } = useMe();
-
   const userId = data?.me?.id;
+  const router = useRouter();
+  const routerContentsPath = router?.query?.contents;
+  const categoryList =
+    categoryData?.getCategories?.categories?.map(
+      (value) => value.categoryTitle
+    ) || [];
 
-  if (!currentPost) {
+  const checkCategoryList =
+    typeof routerContentsPath === "string"
+      ? !categoryList.includes(routerContentsPath)
+      : true;
+  const handleEditPost = () => {
+    router.push(`/post-edit?id=${post?.id}`);
+  };
+
+  if (!currentPost || checkCategoryList) {
     return <div>Post not found!</div>;
   }
 
@@ -167,7 +197,10 @@ const PostDetail = ({ post }: PostProps) => {
             </span>
           </div>
           {userId === currentPost.user?.id && (
-            <div className="cursor-pointer text-blue-600 hover:text-blue-800">
+            <div
+              className="cursor-pointer text-blue-600 hover:text-blue-800"
+              onClick={handleEditPost}
+            >
               수정
             </div>
           )}
@@ -192,6 +225,7 @@ const PostDetail = ({ post }: PostProps) => {
     </div>
   );
 };
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
   const postId = Number(params?.id); // URL에서 postId를 추출합니다.
