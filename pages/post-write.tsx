@@ -59,7 +59,7 @@ function insertAtSelection(
   api.setSelectionRange({ start: pos, end: pos });
 }
 
-const imageUploadCommand: ICommand = {
+export const imageUploadCommand: ICommand = {
   name: "image-upload",
   keyCommand: "image-upload",
   buttonProps: { "aria-label": "Upload image" },
