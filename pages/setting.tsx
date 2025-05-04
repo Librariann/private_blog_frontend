@@ -1,5 +1,3 @@
-import Button from "@/components/button";
-
 const Setting = () => {
   return <div></div>;
 };
