@@ -7,7 +7,7 @@
         "description": "Add thumbnail preview functionality in post write page",
         "details": "Implement thumbnail preview feature when writing a post. Allow users to upload and preview thumbnail images before publishing.",
         "testStrategy": "",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "subtasks": []
@@ -18,7 +18,7 @@
         "description": "Display thumbnail images in post list on index page",
         "details": "Show thumbnail preview images in the post list on the main index page. Each post item should display its associated thumbnail.",
         "testStrategy": "",
-        "status": "pending",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "subtasks": []
@@ -51,7 +51,7 @@
         "description": "Implement post edit and delete functionality",
         "details": "Add edit and delete features for blog posts. Create edit page/modal to modify existing posts. Implement delete confirmation dialog and proper post deletion with database cleanup.",
         "testStrategy": "",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [],
         "priority": "high",
         "subtasks": []
@@ -74,7 +74,7 @@
       "lastModified": "2025-10-05T00:00:00.000Z",
       "created": "2025-10-05T11:47:02.339Z",
       "description": "Tasks for master context",
-      "updated": "2025-10-05T11:47:54.592Z"
+      "updated": "2025-10-15T08:42:03.787Z"
     }
   }
 }
