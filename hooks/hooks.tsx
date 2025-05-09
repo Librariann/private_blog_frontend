@@ -3,6 +3,8 @@ import {
   CreateCategoryMutationVariables,
   CreatePostMutation,
   CreatePostMutationVariables,
+  DeleteCategoryMutation,
+  DeleteCategoryMutationVariables,
   DeletePostMutation,
   DeletePostMutationVariables,
   EditCategoryMutation,
@@ -44,6 +46,7 @@ import {
   CREATE_CATEGORY_MUTATION,
   EDIT_CATEGORY_MUTATION,
   FIND_ONE_CATEGORY_BY_ID_QUERY,
+  DELETE_CATEGORY_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -310,4 +313,19 @@ export const useFindOneCategoryById = ({
     variables: { categoryId },
   });
   return data?.findOneCategoryById?.category || null;
+};
+
+export const useDeleteCategory = () => {
+  const [deleteCategoryMutation, { loading: categoryLoading }] = useMutation<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >(DELETE_CATEGORY_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_CATEGORIES,
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { deleteCategoryMutation, categoryLoading };
 };
