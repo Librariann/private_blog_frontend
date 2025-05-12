@@ -381,3 +381,11 @@ export const UPDATE_POST_HITS_MUTATION = gql`
     }
   }
 `;
+
+export const EDIT_SORT_CATEGORY_ORDER_MUTATION = gql`
+  mutation editSortCategory($input: EditSortCategoryInput!) {
+    editSortCategory(input: $input) {
+      ok
+    }
+  }
+`;
