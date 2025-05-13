@@ -290,6 +290,15 @@ export const EDIT_CATEGORY_MUTATION = gql`
   }
 `;
 
+export const DELETE_CATEGORY_MUTATION = gql`
+  mutation deleteCategory($categoryId: Int!, $isParent: Boolean!) {
+    deleteCategory(categoryId: $categoryId, isParent: $isParent) {
+      ok
+      error
+    }
+  }
+`;
+
 export const FIND_ONE_CATEGORY_BY_ID_QUERY = gql`
   query findOneCategoryById($categoryId: Int!) {
     findOneCategoryById(categoryId: $categoryId) {
