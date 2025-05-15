@@ -11,6 +11,8 @@ import {
   DeletePostMutationVariables,
   EditCategoryMutation,
   EditCategoryMutationVariables,
+  EditSortCategoryMutation,
+  EditSortCategoryMutationVariables,
   FindOneCategoryByIdQuery,
   FindOneCategoryByIdQueryVariables,
   GetAllPopularHashTagsQuery,
@@ -56,6 +58,7 @@ import {
   GET_COMMENTS_QUERY,
   DELETE_COMMENT_MUTATION,
   UPDATE_POST_HITS_MUTATION,
+  EDIT_SORT_CATEGORY_ORDER_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -382,4 +385,19 @@ export const useUpdatePostHits = ({
     awaitRefetchQueries: true,
   });
   return { updatePostHitsMutation };
+};
+
+export const useEditSortCategoryMutation = () => {
+  const [editSortCategory] = useMutation<
+    EditSortCategoryMutation,
+    EditSortCategoryMutationVariables
+  >(EDIT_SORT_CATEGORY_ORDER_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_CATEGORIES,
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { editSortCategory };
 };
