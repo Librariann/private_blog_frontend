@@ -1,43 +1,64 @@
-import {
-  ArrowLeft,
-  Plus,
-  Edit,
-  Trash2,
-  ChevronDown,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { useGetCategories } from "@/hooks/hooks";
+import { useEditSortCategoryMutation, useGetCategories } from "@/hooks/hooks";
 import { useRouter } from "next/router";
 import { NewButton } from "@/components/buttons/new-button";
 import { GlassCardMain } from "@/components/main/main";
 import CreateCategoryModal from "@/components/category/modal/create-category-modal";
-import { DynamicIcon } from "lucide-react/dynamic";
 import EditCategoryModal from "@/components/category/modal/edit-category-modal";
-import { GetCategoriesQuery } from "@/gql/graphql";
+import {
+  Category,
+  CategorySortInput,
+  EditSortCategoryInput,
+  GetCategoriesQuery,
+} from "@/gql/graphql";
 import DeleteCategoryModal from "@/components/category/modal/delete-category-modal";
-import Head from "next/head";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import SortableParentCategory from "@/components/category/sortable-parent-category";
+import SortableSubCategory from "@/components/category/sortable-sub-category";
+import { toast } from "react-toastify";
 
 export type SelectedCategoryType = NonNullable<
   GetCategoriesQuery["getCategories"]["categories"]
 >;
 
+type DragInfo = {
+  type: "parent" | "sub";
+  subCategories?: SelectedCategoryType | null;
+} | null;
+
 const ManagementCategories = () => {
   const { isDarkMode } = useDarkModeStore();
   const { categories } = useGetCategories();
   const { back } = useRouter();
-
-  const firstCategory = useMemo(
-    () => categories?.[0]?.categoryTitle || "",
-    [categories]
-  );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>();
   const [isParent, setIsParent] = useState(false);
+  const [localCategories, setLocalCategories] = useState<SelectedCategoryType>(
+    []
+  );
+  const [lastDragInfo, setLastDragInfo] = useState<DragInfo>(null);
+  const { editSortCategory } = useEditSortCategoryMutation();
+  const [dragApprove, setDragApprove] = useState(false);
+
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryType[0]>();
 
@@ -55,7 +76,8 @@ const ManagementCategories = () => {
 
   useEffect(() => {
     if (!categories || categories.length === 0) return;
-    setExpandedCategories(new Set([firstCategory]));
+    setLocalCategories(categories);
+    setExpandedCategories(new Set([categories?.[0]?.categoryTitle || ""]));
   }, [categories]);
 
   const toggleCategoryExpand = (categoryName: string) => {
@@ -67,6 +89,133 @@ const ManagementCategories = () => {
     }
     setExpandedCategories(newExpanded);
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px 이동해야 드래그 시작 (클릭과 구분)
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const activeId = active.id.toString();
+    const overId = over.id.toString();
+
+    // Parent 카테고리인지 Sub 카테고리인지 판단
+    setLocalCategories((prevCategories) => {
+      if (!prevCategories) return prevCategories;
+      setDragApprove(true);
+      // Parent 카테고리 드래그인 경우
+      const oldParentIndex = prevCategories.findIndex(
+        (value) => value.id.toString() === activeId
+      );
+      const newParentIndex = prevCategories.findIndex(
+        (value) => value.id.toString() === overId
+      );
+
+      const targetParent = prevCategories.find((parent) =>
+        parent.subCategories?.find((sub) => sub.id.toString() === activeId)
+      );
+
+      if (targetParent) {
+        setLastDragInfo({
+          type: "sub",
+          subCategories: targetParent?.subCategories,
+        });
+      }
+
+      if (oldParentIndex !== -1 && newParentIndex !== -1) {
+        return arrayMove(prevCategories, oldParentIndex, newParentIndex);
+      }
+
+      // Sub 카테고리 드래그인 경우
+      const newCategories = prevCategories.map((parent) => {
+        if (parent.id !== targetParent?.id) {
+          return parent;
+        }
+
+        const oldSubIndex = parent.subCategories?.findIndex(
+          (s) => s.id.toString() === activeId
+        );
+        const newSubIndex = parent.subCategories?.findIndex(
+          (s) => s.id.toString() === overId
+        );
+
+        if (
+          oldSubIndex !== undefined &&
+          oldSubIndex !== -1 &&
+          newSubIndex !== undefined &&
+          newSubIndex !== -1 &&
+          parent.subCategories
+        ) {
+          return {
+            ...parent,
+            subCategories: arrayMove(
+              parent.subCategories,
+              oldSubIndex,
+              newSubIndex
+            ),
+          };
+        }
+
+        return parent;
+      });
+
+      return newCategories;
+    });
+  };
+
+  const handleEditSortCategory = async () => {
+    let editSortCategories: {
+      id: number;
+      sortOrder: number;
+    }[] = [];
+
+    if (lastDragInfo?.type === "sub") {
+      editSortCategories =
+        lastDragInfo?.subCategories?.map((category, index) => ({
+          id: category.id,
+          sortOrder: index + 1,
+        })) || [];
+    } else {
+      editSortCategories =
+        localCategories?.map((category, index) => ({
+          id: category.id,
+          sortOrder: index + 1,
+        })) || [];
+    }
+
+    const result = await editSortCategory({
+      variables: {
+        input: {
+          editSortCategories,
+        },
+      },
+    });
+    return result.data?.editSortCategory.ok || false;
+  };
+
+  useEffect(() => {
+    if (dragApprove) {
+      handleEditSortCategory().then((success) => {
+        if (success) {
+          toast.success("순서가 바뀌었습니다!");
+        } else {
+          toast.error("데이터를 확인해주세요");
+        }
+      });
+      setLastDragInfo(null);
+      setDragApprove(false);
+    }
+  }, [dragApprove]);
 
   return (
     <>
@@ -112,196 +261,78 @@ const ManagementCategories = () => {
 
         {/* Category List */}
         <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
-          <div className="space-y-2">
-            {categories?.map((parentCategory) => {
-              const isExpanded = expandedCategories?.has(
-                parentCategory.categoryTitle
-              );
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="space-y-2">
+              <SortableContext
+                items={localCategories?.map((c) => c.id.toString()) || []}
+                strategy={verticalListSortingStrategy}
+              >
+                {localCategories?.map((parentCategory) => {
+                  const isExpanded = expandedCategories?.has(
+                    parentCategory.categoryTitle
+                  );
 
-              return (
-                <div key={parentCategory.categoryTitle}>
-                  {/* Parent Category */}
-                  <div
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg ${
-                      isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3 flex-1">
-                      <button
-                        onClick={() =>
-                          toggleCategoryExpand(parentCategory.categoryTitle)
-                        }
-                        className="p-1  cursor-pointer"
-                      >
-                        <motion.div
-                          animate={{ rotate: isExpanded ? 0 : -90 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ChevronDown
-                            className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                          />
-                        </motion.div>
-                      </button>
-
-                      <div
-                        className={`w-10 h-10 rounded-lg bg-gradient-to-br ${parentCategory.iconColor} flex items-center justify-center`}
-                      >
-                        <DynamicIcon
-                          className="w-4 h-4"
-                          color="white"
-                          name={(parentCategory.icon as any) || "code"}
-                        />
-                      </div>
-
-                      <div className="flex-1">
-                        <div
-                          onClick={() =>
-                            toggleCategoryExpand(parentCategory.categoryTitle)
-                          }
-                          className={`flex items-center gap-3 cursor-pointer ${isDarkMode ? "text-white" : "text-gray-900"}`}
-                        >
-                          <span>{parentCategory.categoryTitle}</span>
-                          <span
-                            className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+                  return (
+                    <SortableParentCategory
+                      key={parentCategory.id}
+                      parentCategory={parentCategory}
+                      isDarkMode={isDarkMode}
+                      isExpanded={isExpanded ?? false}
+                      toggleCategoryExpand={toggleCategoryExpand}
+                      handleEditModalOpen={handleEditModalOpen}
+                      handleDeleteDialogOpen={handleDeleteDialogOpen}
+                      setSelectedCategory={setSelectedCategory}
+                      setIsParent={setIsParent}
+                    >
+                      {/* Sub Categories */}
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
                           >
-                            (
-                            {parentCategory?.subCategories?.reduce(
-                              (sum: number, sub) =>
-                                sum + (sub?.post?.length || 0),
-                              0
-                            )}
-                            개 포스트)
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <NewButton
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          handleEditModalOpen(true);
-                          setSelectedCategory(parentCategory);
-                        }}
-                        className={`
-                        cursor-pointer
-                        ${
-                          isDarkMode
-                            ? "text-white/70 hover:text-white hover:bg-white/10"
-                            : ""
-                        }`}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </NewButton>
-                      <NewButton
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          handleDeleteDialogOpen(true);
-                          setSelectedCategory(parentCategory);
-                          setIsParent(true);
-                        }}
-                        className={`
-                        cursor-pointer
-                        ${
-                          isDarkMode
-                            ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                            : "text-red-600"
-                        }`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </NewButton>
-                    </div>
-                  </div>
-
-                  {/* Sub Categories */}
-                  <AnimatePresence initial={false}>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="ml-16 mt-1 space-y-1">
-                          {parentCategory.subCategories?.map((subCategory) => (
-                            <div
-                              key={subCategory.categoryTitle}
-                              className={`flex items-center justify-between px-4 py-2 rounded-lg ${
-                                isDarkMode
-                                  ? "hover:bg-white/5"
-                                  : "hover:bg-gray-50"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-3 flex-1">
-                                <ChevronRight
-                                  className={`w-4 h-4 ${isDarkMode ? "text-white/50" : "text-gray-400"}`}
-                                />
-                                <span
-                                  className={
-                                    isDarkMode
-                                      ? "text-white/80"
-                                      : "text-gray-700"
-                                  }
-                                >
-                                  {subCategory.categoryTitle}
-                                </span>
-                                <span
-                                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
-                                >
-                                  ({subCategory?.post?.length || 0}개 포스트)
-                                </span>
-                              </div>
-
-                              <div className="flex items-center space-x-2">
-                                <NewButton
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    handleEditModalOpen(true);
-                                    setSelectedCategory(subCategory);
-                                  }}
-                                  className={`
-                                  cursor-pointer
-                                  ${
-                                    isDarkMode
-                                      ? "text-white/70 hover:text-white hover:bg-white/10"
-                                      : ""
-                                  }`}
-                                >
-                                  <Edit className="w-4 h-4" />
-                                </NewButton>
-                                <NewButton
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    handleDeleteDialogOpen(true);
-                                    setSelectedCategory(subCategory);
-                                    setIsParent(false);
-                                  }}
-                                  className={`
-                                  cursor-pointer
-                                  ${
-                                    isDarkMode
-                                      ? "text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                                      : "text-red-600"
-                                  }`}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </NewButton>
-                              </div>
+                            <div className="ml-16 mt-1 space-y-1">
+                              <SortableContext
+                                items={
+                                  parentCategory.subCategories?.map((s) =>
+                                    s.id.toString()
+                                  ) || []
+                                }
+                                strategy={verticalListSortingStrategy}
+                              >
+                                {parentCategory.subCategories?.map(
+                                  (subCategory) => (
+                                    <SortableSubCategory
+                                      key={subCategory.id}
+                                      subCategory={subCategory as Category}
+                                      isDarkMode={isDarkMode}
+                                      handleEditModalOpen={handleEditModalOpen}
+                                      handleDeleteDialogOpen={
+                                        handleDeleteDialogOpen
+                                      }
+                                      setSelectedCategory={setSelectedCategory}
+                                      setIsParent={setIsParent}
+                                    />
+                                  )
+                                )}
+                              </SortableContext>
                             </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </SortableParentCategory>
+                  );
+                })}
+              </SortableContext>
+            </div>
+          </DndContext>
         </GlassCardMain>
 
         {/* Add Category Modal */}
