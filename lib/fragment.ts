@@ -9,6 +9,7 @@ export const POST_FIELDS_FRAGMENT = gql`
     hits
     thumbnailUrl
     createdAt
+    updatedAt
     readTime
     postStatus
     category {
