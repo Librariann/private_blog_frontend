@@ -1,11 +1,11 @@
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { ArrowLeft, Code2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { BlogPostCard } from "../cards/blog-post-card";
 import { Post } from "@/gql/graphql";
 import { useRouter } from "next/router";
 import { GlassCardMain } from "../main/main";
 import { useFindOneCategoryById } from "@/hooks/hooks";
-import { DynamicIcon } from "lucide-react/dynamic";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useMemo } from "react";
 
 const CategoryDetails = ({
@@ -63,7 +63,7 @@ const CategoryDetails = ({
             className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category?.iconColor || "from-blue-500 to-cyan-500"} flex items-center justify-center`}
           >
             <DynamicIcon
-              name={(category?.icon || "code-xml") as any}
+              name={category?.icon as IconName}
               className="w-8 h-8"
               color="white"
             />
