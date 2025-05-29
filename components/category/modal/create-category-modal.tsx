@@ -17,12 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Category, CategoryCount, GetCategoriesQuery } from "@/gql/graphql";
 import { useCreateCategory } from "@/hooks/hooks";
 import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { DynamicIcon } from "lucide-react/dynamic";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -234,7 +233,7 @@ const CreateCategoryModal = ({
                   {/* Selected Icon Preview */}
                   {newCategory.icon &&
                     (() => {
-                      const IconComponent: any = newCategory.icon || "code";
+                      const IconComponent: string = newCategory.icon || "code";
 
                       return (
                         IconComponent && (
@@ -243,7 +242,7 @@ const CreateCategoryModal = ({
                               className={`w-10 h-10 rounded-lg bg-gradient-to-br ${newCategory.color} flex items-center justify-center`}
                             >
                               <DynamicIcon
-                                name={IconComponent}
+                                name={IconComponent as IconName}
                                 className="w-5 h-5"
                                 color="white"
                               />
