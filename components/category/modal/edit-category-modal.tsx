@@ -21,7 +21,7 @@ import { useEditCategory, useGetCategories } from "@/hooks/hooks";
 import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { DynamicIcon } from "lucide-react/dynamic";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -223,7 +223,7 @@ const EditCategoryModal = ({
                 {/* Selected Icon Preview */}
                 {editCategory?.icon &&
                   (() => {
-                    const IconComponent: any = editCategory.icon || "code";
+                    const IconComponent: string = editCategory.icon || "code";
                     return (
                       IconComponent && (
                         <div className="mb-4 flex items-center gap-3">
@@ -231,7 +231,7 @@ const EditCategoryModal = ({
                             className={`w-10 h-10 rounded-lg bg-gradient-to-br ${editCategory.iconColor} flex items-center justify-center`}
                           >
                             <DynamicIcon
-                              name={IconComponent}
+                              name={IconComponent as IconName}
                               className="w-5 h-5"
                               color="white"
                             />
