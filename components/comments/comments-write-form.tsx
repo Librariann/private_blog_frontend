@@ -8,12 +8,19 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { Comment } from "@/gql/graphql";
 import { useCreateComment } from "@/hooks/hooks";
+import { CommentType } from "./comments";
+
+type CommentsWriteFormProps = {
+  comments: CommentType[];
+  handleAddComments: (addComment: CommentType) => void;
+  displayedCommentsCount: number;
+};
 
 const CommentsWriteForm = ({
   comments,
   handleAddComments,
   displayedCommentsCount,
-}: any) => {
+}: CommentsWriteFormProps) => {
   const [newComment, setNewComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -59,7 +66,7 @@ const CommentsWriteForm = ({
       toast.success("댓글이 작성됐습니다.");
       if (newComment.trim() && commentAuthor.trim()) {
         const comment: Comment = {
-          id: comments.length + 1,
+          id: comments?.length + 1,
           annonymousId: commentAuthor,
           annonymousPassword: commentPassword,
           comment: newComment,
