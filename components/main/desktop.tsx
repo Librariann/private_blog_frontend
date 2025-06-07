@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { GlassCardMain } from "./main";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
-import { DynamicIcon } from "lucide-react/dynamic";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
 
 export type DesktopAndMobileProps = {
   categories: NonNullable<GetCategoriesQuery["getCategories"]["categories"]>;
@@ -64,7 +64,7 @@ const Desktop = ({
                       <DynamicIcon
                         className="w-4 h-4"
                         color="white"
-                        name={(parent.icon as any) || "code"}
+                        name={(parent.icon as IconName) || "code"}
                       />
                     </div>
                     <span>{parent.categoryTitle}</span>
