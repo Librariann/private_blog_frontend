@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { DesktopAndMobileProps } from "./desktop";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { DynamicIcon } from "lucide-react/dynamic";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
 
 const Mobile = ({
   categories,
@@ -51,7 +51,7 @@ const Mobile = ({
                       <DynamicIcon
                         className="w-4 h-4"
                         color="white"
-                        name={(parent.icon as any) || "code"}
+                        name={(parent.icon || "code") as IconName}
                       />
                     </div>
                     <span className="text-sm">{parent.categoryTitle}</span>
