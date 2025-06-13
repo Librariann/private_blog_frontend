@@ -16,6 +16,7 @@ import { remark } from "remark";
 import rehypeSlug from "rehype-slug";
 import { useUpdatePostHits } from "@/hooks/hooks";
 import Head from "next/head";
+import { Heading, PhrasingContent, Root, Text } from "mdast";
 
 type topicProps = {
   id: string;
@@ -113,21 +114,35 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
     updateHits();
   }, [updatePostHitsMutation, postData?.id]);
 
-  const extractHeadings = (markdown: string) => {
-    const tree = remark().parse(markdown); // await 제거
-    const headings: any[] = [];
+  type HeadingsType = {
+    level: string | number;
+    text: string;
+    id: string;
+  };
 
-    tree.children.forEach((node: any) => {
+  const isTextNode = (node: PhrasingContent): node is Text => {
+    return node.type === "text";
+  };
+
+  const extractHeadings = (markdown: string) => {
+    const tree: Root = remark().parse(markdown); // await 제거
+    const headings: HeadingsType[] = [];
+
+    tree.children.forEach((node) => {
       if (node.type === "heading" && node.depth < 2) {
-        const text = node.children[0]?.value || "";
-        headings.push({
-          level: node.depth,
-          text: text,
-          id: text
-            .replace(/[^a-zA-Z0-9가-힣\s]/g, "")
-            .toLowerCase()
-            .replace(/\s+/g, "-"),
-        });
+        const heading = node as Heading;
+        const firstChild = heading.children[0];
+        if (firstChild && isTextNode(firstChild)) {
+          const text = firstChild.value;
+          headings.push({
+            level: heading.depth,
+            text: text,
+            id: text
+              .replace(/[^a-zA-Z0-9가-힣\s]/g, "")
+              .toLowerCase()
+              .replace(/\s+/g, "-"),
+          });
+        }
       }
     });
 
