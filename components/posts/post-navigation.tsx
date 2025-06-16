@@ -13,7 +13,7 @@ export type PostNavigationProps = {
   post: {
     id: number;
     title: string;
-    createdAt?: any;
+    createdAt?: Date;
     readTime: number;
     category?: {
       id: number;
