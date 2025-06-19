@@ -1,7 +1,11 @@
 import { GetServerSideProps } from "next";
 import { getPostDatas, getCategories } from "@/lib/posts";
+import { GetCategoriesQuery, GetPostListQuery } from "@/gql/graphql";
 
-function generateSiteMap(posts: any[], categories: any[]) {
+function generateSiteMap(
+  posts: GetPostListQuery["getPostList"]["posts"],
+  categories: GetCategoriesQuery["getCategories"]["categories"]
+) {
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <url>
@@ -29,7 +33,7 @@ function generateSiteMap(posts: any[], categories: any[]) {
        <priority>0.8</priority>
      </url>
      ${posts
-       .map((post) => {
+       ?.map((post) => {
          const parentCategory = encodeURIComponent(
            post.category?.parentCategory?.categoryTitle || ""
          );
@@ -39,7 +43,7 @@ function generateSiteMap(posts: any[], categories: any[]) {
          return `
        <url>
            <loc>${`https://librarian-blog.dev/post/${parentCategory}/${subCategory}/@Post-${post.id}`}</loc>
-           <lastmod>${new Date(post.updatedAt || post.createdAt).toISOString()}</lastmod>
+           <lastmod>${new Date(post?.updatedAt || post.createdAt).toISOString()}</lastmod>
            <changefreq>weekly</changefreq>
            <priority>0.7</priority>
        </url>
@@ -47,11 +51,11 @@ function generateSiteMap(posts: any[], categories: any[]) {
        })
        .join("")}
      ${categories
-       .map((category) => {
+       ?.map((category) => {
          const parentCategory = encodeURIComponent(category.categoryTitle);
          return (
            category.subCategories
-             ?.map((sub: any) => {
+             ?.map((sub) => {
                const subCategory = encodeURIComponent(sub.categoryTitle);
                return `
        <url>
