@@ -47,6 +47,8 @@ export function createApolloClient(initialState = null) {
     link: authLink.concat(httpLink),
     defaultOptions: {
       watchQuery: {
+        fetchPolicy: "cache-and-network",
+        nextFetchPolicy: "cache-first",
         errorPolicy: "all",
         notifyOnNetworkStatusChange: true,
       },
