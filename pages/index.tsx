@@ -51,7 +51,8 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
     GetPostListQueryVariables
   >(GET_POST_LIST_QUERY, {
     errorPolicy: "all",
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
     notifyOnNetworkStatusChange: true,
   });
   const posts = data?.getPostList?.posts || initialPosts;
