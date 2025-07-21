@@ -98,7 +98,8 @@ const Contents = ({
     GetPostListByCategoryIdQueryVariables
   >(GET_POST_BY_CATEGORYID_QUERY, {
     variables: { categoryId },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
     errorPolicy: "all",
     notifyOnNetworkStatusChange: true,
     onError: (error) => {
