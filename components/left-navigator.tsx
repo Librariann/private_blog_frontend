@@ -31,7 +31,10 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   const { loading, data } = useQuery<
     GetCategoriesCountsQuery,
     GetCategoriesCountsQueryVariables
-  >(GET_CATEGORIES_COUNTS_QUERY);
+  >(GET_CATEGORIES_COUNTS_QUERY, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+  });
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
