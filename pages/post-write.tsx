@@ -141,6 +141,8 @@ function PostWrite() {
   const { data } = useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(
     GET_CATEGORIES,
     {
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-first",
       ssr: false, // SSR 비활성화
     }
   );
