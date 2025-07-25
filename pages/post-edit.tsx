@@ -6,9 +6,6 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import {
   commands,
-  ICommand,
-  TextAreaTextApi,
-  TextState,
 } from "@uiw/react-md-editor";
 import dynamic from "next/dynamic";
 import { uploadImageToServer } from "@/utils/utils";
@@ -34,14 +31,16 @@ const PostEdit = () => {
     GetPostByIdQueryVariables
   >(GET_POST_BY_ID_QUERY, {
     variables: { postId: Number(postId) },
-    fetchPolicy: "cache-first", // 캐시 우선
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
   });
 
   useEffect(() => {
     if (data) {
       setMd(data?.getPostById?.post?.contents);
       setHashtags(
-        data?.getPostById?.post?.hashtags?.map((value: any) => value.hashtag) || []
+        data?.getPostById?.post?.hashtags?.map((value: any) => value.hashtag) ||
+          []
       );
       setSelectedCategory(data?.getPostById?.post?.category?.id || 1);
     }
@@ -144,6 +143,8 @@ const PostEdit = () => {
     GetCategoriesQuery,
     GetCategoriesQueryVariables
   >(GET_CATEGORIES, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
     ssr: false, // SSR 비활성화
   });
 
