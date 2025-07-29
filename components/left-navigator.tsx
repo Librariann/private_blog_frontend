@@ -37,9 +37,15 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   });
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
+  
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  // Prefetch category pages on hover
+  const handlePrefetch = (categoryTitle: string) => {
+    router.prefetch(`/${encodeURIComponent(categoryTitle)}`);
+  };
   if (!hydrated) {
     return null;
   }
@@ -94,9 +100,11 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
                     ? "bg-gray-700"
                     : ""
                 }`}
+                onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
               >
                 <Link
                   href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                  prefetch={true}
                   className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
                 >
                   <span>{categories.categoryTitle}</span>
@@ -172,10 +180,12 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
                       ? "bg-gray-700"
                       : ""
                   }`}
+                  onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
                 >
                   <Link
                     href={`/${encodeURIComponent(categories.categoryTitle)}`}
                     onClick={handleClick}
+                    prefetch={true}
                     className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
                   >
                     <span>{categories.categoryTitle}</span>
