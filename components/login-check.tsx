@@ -1,9 +1,8 @@
 "use client";
 
-import { LOCAL_STORAGE_TOKEN } from "@/common/constants";
+import { LOCAL_STORAGE_TOKEN, handlePathes } from "@/common/constants";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { handlePathes } from "./layout";
 
 const LoginCheck = () => {
   const router = useRouter();
