@@ -37,8 +37,14 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
   }
 `;
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
   const { contents } = params!;
+
+  // Set cache headers
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
 
   try {
     // 서버에서 새로운 Apollo Client 인스턴스 생성

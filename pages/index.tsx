@@ -84,7 +84,13 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  // Set cache headers
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
+
   try {
     // 서버에서 새로운 Apollo Client 인스턴스 생성
     const apolloClient = createApolloClient();

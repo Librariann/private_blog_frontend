@@ -229,8 +229,14 @@ const PostDetail = ({ post }: PostProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { params } = context;
+  const { params, res } = context;
   const postId = Number(params?.id); // URL에서 postId를 추출합니다.
+
+  // Set cache headers
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
 
   try {
     const { data } = await client.query<
