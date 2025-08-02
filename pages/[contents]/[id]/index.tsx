@@ -17,6 +17,7 @@ import {
 } from "@/gql/graphql";
 import { useMe } from "@/hooks/useMe";
 import { useRouter } from "next/router";
+import PostDetailSkeleton from "@/components/skeleton/post-detail-skeleton";
 
 export type PostProps = {
   post: {
@@ -103,25 +104,31 @@ const EditerMarkdown = dynamic(
 );
 
 const PostDetail = ({ post }: PostProps) => {
-  const { data: postData } = useQuery<
+  const { data: postData, loading: postLoading } = useQuery<
     GetPostByIdQuery,
     GetPostByIdQueryVariables
   >(GET_POST_BY_ID_QUERY, {
     variables: { postId: post?.id },
     fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+    errorPolicy: "all",
+    notifyOnNetworkStatusChange: true,
     skip: !post?.id,
   });
 
-  const { data: categoryData } = useQuery<
+  const { data: categoryData, loading: categoryLoading } = useQuery<
     GetCategoriesQuery,
     GetCategoriesQueryVariables
   >(GET_CATEGORIES, {
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-first",
+    errorPolicy: "all",
+    notifyOnNetworkStatusChange: true,
     ssr: false, // SSR 비활성화
   });
 
   const currentPost = postData?.getPostById?.post || post;
+  const isLoading = postLoading || categoryLoading;
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
@@ -174,8 +181,12 @@ const PostDetail = ({ post }: PostProps) => {
     router.push(`/post-edit?id=${post?.id}`);
   };
 
+  if (isLoading) {
+    return <PostDetailSkeleton />;
+  }
+
   if (!currentPost || checkCategoryList) {
-    return <div>Post not found!</div>;
+    return <PostDetailSkeleton />;
   }
 
   return (
