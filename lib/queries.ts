@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { POST_FIELDS_FRAGMENT } from "./fragment";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
   query getPostListByCategoryId($categoryId: Int!) {
@@ -106,6 +107,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         createdAt
         readTime
         thumbnailUrl
+        postStatus
         user {
           id
         }
@@ -138,28 +140,23 @@ export const CREATE_COMMENT_MUTATION = gql`
 `;
 
 export const GET_POST_LIST_QUERY = gql`
+  ${POST_FIELDS_FRAGMENT}
   query getPostList {
     getPostList {
       posts {
-        id
-        title
-        contents
-        excerpt
-        hits
-        thumbnailUrl
-        createdAt
-        readTime
-        category {
-          id
-          categoryTitle
-          parentCategoryTitle
-        }
-        comments {
-          comment
-        }
-        hashtags {
-          hashtag
-        }
+        ...PostFields
+      }
+    }
+  }
+`;
+
+export const GET_ALL_POST_LIST_QUERY = gql`
+  ${POST_FIELDS_FRAGMENT}
+  query getAllPostList {
+    getAllPostList {
+      posts {
+        ...PostFields
+        postStatus
       }
     }
   }
@@ -224,6 +221,24 @@ export const GET_USER_BY_NICKNAME_QUERY = gql`
 export const UPDATE_USER_MUTATION = gql`
   mutation updateUserProfile($input: UpdateUserProfileInput!) {
     updateUserProfile(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
+export const TOGGLE_POST_STATUS_MUTATION = gql`
+  mutation togglePostStatus($postId: Int!) {
+    togglePostStatus(postId: $postId) {
+      ok
+      error
+    }
+  }
+`;
+
+export const DELETE_POST_MUTATION = gql`
+  mutation deletePost($postId: Int!) {
+    deletePost(postId: $postId) {
       ok
       error
     }
