@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./input";
+import { DynamicIcon } from "lucide-react/dynamic";
 
 interface IconPickerProps {
   selectedIcon?: string;
@@ -49,44 +50,44 @@ interface IconPickerProps {
 }
 
 const availableIcons: { name: string; icon: LucideIcon }[] = [
-  { name: "Code2", icon: Code2 },
-  { name: "Database", icon: Database },
-  { name: "Globe", icon: Globe },
-  { name: "Rocket", icon: Rocket },
-  { name: "Server", icon: Server },
-  { name: "Cloud", icon: Cloud },
-  { name: "Cpu", icon: Cpu },
-  { name: "Briefcase", icon: Briefcase },
-  { name: "BookOpen", icon: BookOpen },
-  { name: "Lightbulb", icon: Lightbulb },
-  { name: "Smartphone", icon: Smartphone },
-  { name: "Monitor", icon: Monitor },
-  { name: "Terminal", icon: Terminal },
-  { name: "Package", icon: Package },
-  { name: "GitBranch", icon: GitBranch },
-  { name: "Layout", icon: Layout },
-  { name: "Palette", icon: Palette },
-  { name: "Music", icon: Music },
-  { name: "Camera", icon: Camera },
-  { name: "Heart", icon: Heart },
-  { name: "Star", icon: Star },
-  { name: "Zap", icon: Zap },
-  { name: "Coffee", icon: Coffee },
-  { name: "MessageSquare", icon: MessageSquare },
-  { name: "FileCode", icon: FileCode },
-  { name: "Folder", icon: Folder },
-  { name: "Settings", icon: Settings },
-  { name: "Shield", icon: Shield },
-  { name: "Lock", icon: Lock },
-  { name: "Key", icon: Key },
-  { name: "Mail", icon: Mail },
-  { name: "Bell", icon: Bell },
-  { name: "Calendar", icon: Calendar },
-  { name: "Clock", icon: Clock },
-  { name: "Map", icon: Map },
-  { name: "Search", icon: Search },
-  { name: "Filter", icon: Filter },
-  { name: "Braces", icon: Braces },
+  { name: "code-xml", icon: Code2 },
+  { name: "database", icon: Database },
+  { name: "globe", icon: Globe },
+  { name: "rocket", icon: Rocket },
+  { name: "server", icon: Server },
+  { name: "cloud", icon: Cloud },
+  { name: "cpu", icon: Cpu },
+  { name: "briefcase", icon: Briefcase },
+  { name: "book-open", icon: BookOpen },
+  { name: "lightbulb", icon: Lightbulb },
+  { name: "smartphone", icon: Smartphone },
+  { name: "monitor", icon: Monitor },
+  { name: "terminal", icon: Terminal },
+  { name: "package", icon: Package },
+  { name: "git-branch", icon: GitBranch },
+  { name: "layout", icon: Layout },
+  { name: "palette", icon: Palette },
+  { name: "music", icon: Music },
+  { name: "camera", icon: Camera },
+  { name: "heart", icon: Heart },
+  { name: "star", icon: Star },
+  { name: "zap", icon: Zap },
+  { name: "coffee", icon: Coffee },
+  { name: "message-square", icon: MessageSquare },
+  { name: "file-code", icon: FileCode },
+  { name: "folder", icon: Folder },
+  { name: "settings", icon: Settings },
+  { name: "shield", icon: Shield },
+  { name: "lock", icon: Lock },
+  { name: "key", icon: Key },
+  { name: "mail", icon: Mail },
+  { name: "bell", icon: Bell },
+  { name: "calendar", icon: Calendar },
+  { name: "clock", icon: Clock },
+  { name: "map", icon: Map },
+  { name: "search", icon: Search },
+  { name: "filter", icon: Filter },
+  { name: "braces", icon: Braces },
 ];
 
 const IconPicker = ({
@@ -115,7 +116,7 @@ const IconPicker = ({
 
       <div className="grid grid-cols-9 gap-2 max-h-64 overflow-y-auto">
         {filteredIcons.map((item) => {
-          const Icon = item.icon;
+          // const Icon = item.icon;
           const isSelected = selectedIcon === item.name;
 
           return (
@@ -136,9 +137,14 @@ const IconPicker = ({
               `}
               title={item.name}
             >
-              <Icon
-                className={`w-5 h-5 ${isDarkMode ? "text-white" : "text-gray-700"}`}
+              <DynamicIcon
+                color="white"
+                className="w-5 h-5"
+                name={(item.name as any) || "code"}
               />
+              {/* <Icon
+                className={`w-5 h-5 ${isDarkMode ? "text-white" : "text-gray-700"}`}
+              /> */}
             </button>
           );
         })}
