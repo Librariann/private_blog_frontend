@@ -36,19 +36,17 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
     nextFetchPolicy: "cache-first",
   });
   const router = useRouter();
-  const [hydrated, setHydrated] = useState(false);
+  const [currentPath, setCurrentPath] = useState("/");
   
   useEffect(() => {
-    setHydrated(true);
-  }, []);
+    // 클라이언트에서만 router.asPath 사용
+    setCurrentPath(router.asPath);
+  }, [router.asPath]);
 
   // Prefetch category pages on hover
   const handlePrefetch = (categoryTitle: string) => {
     router.prefetch(`/${encodeURIComponent(categoryTitle)}`);
   };
-  if (!hydrated) {
-    return null;
-  }
 
   const handleClick = () => {
     onClose(); // 모바일에서 카테고리 선택 시 메뉴 닫기
@@ -61,9 +59,9 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
     0
   );
 
-  // 현재 선택된 카테고리 확인
-  const currentCategory = router.asPath.split("/")[1]; // URL에서 첫번째 경로 부분만 가져오기
-  const isHome = router.asPath === "/";
+  // 현재 선택된 카테고리 확인 (SSR safe)
+  const currentCategory = currentPath.split("/")[1];
+  const isHome = currentPath === "/";
 
   return (
     <>
