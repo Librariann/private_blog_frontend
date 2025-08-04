@@ -8,10 +8,12 @@ import ConfirmModal from "./modal/confirm-modal";
 
 const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
   const navigate = useRouter();
-  const [isToken, setIsToken] = useState<string | null>();
+  const [isToken, setIsToken] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const { data } = useMe();
 
   useEffect(() => {
+    setMounted(true);
     const token = getToken();
     setIsToken(token);
   }, []);
@@ -75,14 +77,9 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
       <div className="flex ml-auto pr-5 text-white cursor-pointer">
         {/* <div onClick={() => navigate.push("/setting")}>설정</div> */}
         &nbsp;&nbsp;&nbsp;
-        {isToken && <div onClick={myPage}>유저 정보</div>}
+        {mounted && isToken && <div onClick={myPage}>유저 정보</div>}
         &nbsp;&nbsp;&nbsp;
-        {isToken ? (
-          <div onClick={logout}>로그아웃</div>
-        ) : (
-          <div></div>
-          // <div onClick={login}>로그인</div>
-        )}
+        {mounted && isToken && <div onClick={logout}>로그아웃</div>}
         &nbsp;&nbsp;&nbsp;
         <div onClick={() => navigate.push("/about")}>About</div>
       </div>
