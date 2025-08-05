@@ -5,7 +5,7 @@ import { client } from "@/apollo"; // Apollo Client 설정 파일
 import { gql, useMutation, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import Comments, { CommentProps } from "@/components/comments";
+import Comments from "@/components/comments";
 import CommentsWrite from "@/components/comments-write";
 import {
   GetCategoriesQuery,
@@ -104,6 +104,8 @@ const EditerMarkdown = dynamic(
 );
 
 const PostDetail = ({ post }: PostProps) => {
+  const [mounted, setMounted] = useState(false);
+  
   const { data: postData, loading: postLoading } = useQuery<
     GetPostByIdQuery,
     GetPostByIdQueryVariables
@@ -142,6 +144,12 @@ const PostDetail = ({ post }: PostProps) => {
   });
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || typeof window === "undefined") return;
+    
     const updateHits = async () => {
       //마지막 조회시간 확인
       const lastViewTime = localStorage.getItem(`post-${post?.id}-lastView`);
@@ -162,31 +170,45 @@ const PostDetail = ({ post }: PostProps) => {
       }
     };
     updateHits();
-  }, [updatePostHitsMutation, post?.id]);
+  }, [mounted, updatePostHitsMutation, post?.id]);
 
   const { data } = useMe();
   const userId = data?.me?.id;
   const router = useRouter();
-  const routerContentsPath = router?.query?.contents;
-  const categoryList =
-    categoryData?.getCategories?.categories?.map(
-      (value) => value.categoryTitle
-    ) || [];
-
-  const checkCategoryList =
-    typeof routerContentsPath === "string"
-      ? !categoryList.includes(routerContentsPath)
-      : true;
+  
   const handleEditPost = () => {
     router.push(`/post-edit?id=${post?.id}`);
   };
+
+  // 마운트 전에는 스켈레톤 표시
+  if (!mounted) {
+    return <PostDetailSkeleton />;
+  }
 
   if (isLoading) {
     return <PostDetailSkeleton />;
   }
 
-  if (!currentPost || checkCategoryList) {
+  if (!currentPost) {
     return <PostDetailSkeleton />;
+  }
+
+  // 클라이언트에서만 카테고리 검증
+  if (mounted && categoryData) {
+    const routerContentsPath = router?.query?.contents;
+    const categoryList =
+      categoryData?.getCategories?.categories?.map(
+        (value) => value.categoryTitle
+      ) || [];
+
+    const checkCategoryList =
+      typeof routerContentsPath === "string"
+        ? !categoryList.includes(routerContentsPath)
+        : false;
+
+    if (checkCategoryList) {
+      return <PostDetailSkeleton />;
+    }
   }
 
   return (
