@@ -1,11 +1,19 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-interface DarkModeState {
+type DarkModeState = {
   isDarkMode: boolean;
-  setIsDarkMode: (loading: boolean) => void;
-}
+  setIsDarkMode: (isDarkMode: boolean) => void;
+};
 
-export const useDarkModeStore = create<DarkModeState>((set) => ({
-  isDarkMode: true,
-  setIsDarkMode: (loading: boolean) => set({ isDarkMode: loading }),
-}));
+export const useDarkModeStore = create<DarkModeState>()(
+  persist(
+    (set) => ({
+      isDarkMode: true,
+      setIsDarkMode: (isDarkMode: boolean) => set({ isDarkMode }),
+    }),
+    {
+      name: "darkmode-storage", // localStorage 키 이름
+    }
+  )
+);
