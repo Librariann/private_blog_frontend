@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const WritingAnimation = () => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-xs">
       <div className="relative">
         {/* 노트 배경 */}
         <div className="relative w-80 h-96 bg-amber-50 rounded-lg shadow-2xl border-2 border-amber-200 overflow-hidden">
@@ -32,7 +32,7 @@ const WritingAnimation = () => {
                 repeat: Infinity,
                 repeatDelay: 0.5,
               }}
-              className="h-1 bg-gradient-to-r from-slate-700 to-slate-500 rounded-full"
+              className="h-1 bg-linear-to-r from-slate-700 to-slate-500 rounded-full"
             />
 
             {/* 두 번째 줄 */}
@@ -46,7 +46,7 @@ const WritingAnimation = () => {
                 repeatDelay: 0.5,
                 delay: 0.3,
               }}
-              className="h-1 bg-gradient-to-r from-slate-700 to-slate-500 rounded-full"
+              className="h-1 bg-linear-to-r from-slate-700 to-slate-500 rounded-full"
             />
 
             {/* 세 번째 줄 */}
@@ -60,7 +60,7 @@ const WritingAnimation = () => {
                 repeatDelay: 0.5,
                 delay: 0.6,
               }}
-              className="h-1 bg-gradient-to-r from-slate-700 to-slate-500 rounded-full"
+              className="h-1 bg-linear-to-r from-slate-700 to-slate-500 rounded-full"
             />
           </div>
 
@@ -81,9 +81,9 @@ const WritingAnimation = () => {
             className="absolute"
           >
             {/* 연필 몸통 */}
-            <div className="relative w-20 h-3 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full shadow-lg transform origin-left">
+            <div className="relative w-20 h-3 bg-linear-to-r from-yellow-400 to-yellow-500 rounded-full shadow-lg transform origin-left">
               {/* 연필 끝 (검은 부분) */}
-              <div className="absolute -left-2 top-0 bottom-0 w-4 bg-gradient-to-r from-slate-800 to-slate-600 rounded-l-full" />
+              <div className="absolute -left-2 top-0 bottom-0 w-4 bg-linear-to-r from-slate-800 to-slate-600 rounded-l-full" />
               {/* 연필 심 */}
               <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-2 h-1 bg-slate-900 rounded-full" />
               {/* 연필 지우개 */}

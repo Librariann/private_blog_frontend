@@ -1,4 +1,4 @@
-const Footer = ({ isDarkMode }: { isDarkMode: boolean }) => {
+const Footer = ({ isDarkMode }: { isDarkMode?: boolean }) => {
   return (
     <footer
       className={`mt-16 py-8 ${isDarkMode ? "border-white/10" : "border-gray-200"} border-t`}

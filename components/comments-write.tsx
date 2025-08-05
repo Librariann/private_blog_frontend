@@ -114,7 +114,7 @@ const CommentsWrite = () => {
           {...register("id", { required: "아이디를 입력해주세요" })}
           type="text"
           placeholder="아이디"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           autoComplete="new-password"
           data-lpignore="true"
         />
@@ -122,7 +122,7 @@ const CommentsWrite = () => {
           {...register("password", { required: "패스워드를 입력해주세요" })}
           type="password"
           placeholder="비밀번호"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           autoComplete="new-password"
           data-lpignore="true"
         />
@@ -130,7 +130,7 @@ const CommentsWrite = () => {
       <textarea
         {...register("comment", { required: "댓글을 입력해주세요" })}
         placeholder="댓글을 입력하세요"
-        className="w-full p-3 border rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-3 border rounded-lg h-24 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
       />
       <div className="flex justify-end">
         <Button

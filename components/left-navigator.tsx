@@ -64,7 +64,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   return (
     <>
       {/* 데스크톱 뷰 */}
-      <nav className="hidden xl:block h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6 round rounded-xl border-gray-700">
+      <nav className="hidden xl:block h-full bg-linear-to-b from-gray-800 to-gray-900 text-white p-6 round rounded-xl border-gray-700">
         <div className="mb-8 border-b border-gray-700 pb-4">
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
@@ -141,7 +141,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
         onClick={onClose}
       >
         <nav
-          className={`fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6 transform transition-transform duration-300 ease-in-out shadow-xl ${
+          className={`fixed top-0 left-0 h-full w-72 bg-linear-to-b from-gray-800 to-gray-900 text-white p-6 transform transition-transform duration-300 ease-in-out shadow-xl ${
             isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >

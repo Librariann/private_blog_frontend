@@ -158,7 +158,7 @@ export const CategoryAddForm = async () => {
           />
         </div>
       </div>
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <Button canClick={true} loading={loading} actionText="추가" />
       </div>
     </form>
