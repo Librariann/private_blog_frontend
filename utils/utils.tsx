@@ -66,3 +66,11 @@ export function cn(...inputs: ClassValue[]) {
 export function formatNumberConvertK(num: number): string {
   return num >= 1000 ? `${(num / 1000).toFixed(1)}K` : num.toString();
 }
+
+export function formatDateShort(dateString: string): string {
+  const date = new Date(dateString);
+  const year = String(date.getFullYear());
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}.${month}.${day}`;
+}
