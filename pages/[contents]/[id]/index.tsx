@@ -211,6 +211,17 @@ const PostDetail = ({ post }: PostProps) => {
     }
   }
 
+  // 포맷팅된 날짜 (클라이언트에서만)
+  const formattedDate = mounted
+    ? new Date(currentPost.createdAt).toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
+
   return (
     <div className="max-w-4xl mx-auto p-8" data-color-mode="light">
       <div className="mb-6">
@@ -220,18 +231,9 @@ const PostDetail = ({ post }: PostProps) => {
         <div className="flex items-center justify-between text-gray-600 mb-4">
           <div className="flex items-center space-x-4">
             <span>조회수: {currentPost.hits}</span>
-            <span>
-              작성일:
-              {new Date(currentPost.createdAt).toLocaleString("ko-KR", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+            {mounted && <span>작성일: {formattedDate}</span>}
           </div>
-          {userId === currentPost.user?.id && (
+          {mounted && userId === currentPost.user?.id && (
             <div
               className="cursor-pointer text-blue-600 hover:text-blue-800"
               onClick={handleEditPost}
