@@ -46,7 +46,7 @@ export type PostsProps = {
 };
 
 const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
-  const { data, loading, error } = useQuery<
+  const { data, error } = useQuery<
     GetPostListQuery,
     GetPostListQueryVariables
   >(GET_POST_LIST_QUERY, {
@@ -56,10 +56,6 @@ const Home = ({ initialPosts }: { initialPosts: PostsProps[] }) => {
     notifyOnNetworkStatusChange: true,
   });
   const posts = data?.getPostList?.posts || initialPosts;
-
-  if (loading) {
-    return <PostListSkeleton count={6} />;
-  }
 
   if (error) {
     return (
