@@ -175,3 +175,48 @@ export const GET_POPULAR_HASHTAG_QUERY = gql`
     }
   }
 `;
+
+export const GET_USER_QUERY = gql`
+  query userProfile($userId: Int!) {
+    userProfile(userId: $userId) {
+      ok
+      error
+      user {
+        id
+        nickname
+        email
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const GET_USER_BY_NICKNAME_QUERY = gql`
+  query userProfileByNickName($userNickName: String!) {
+    userProfileByNickName(userNickName: $userNickName) {
+      ok
+      error
+      user {
+        id
+        email
+        nickname
+        profileImage
+        introduce
+        location
+        website
+        role
+        createdAt
+        updatedAt
+        posts {
+          title
+          createdAt
+          hits
+          comments {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
