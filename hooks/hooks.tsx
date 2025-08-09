@@ -1,12 +1,18 @@
 import {
+  DeletePostMutation,
+  DeletePostMutationVariables,
   GetAllPopularHashTagsQuery,
   GetAllPopularHashTagsQueryVariables,
+  GetAllPostListQuery,
+  GetAllPostListQueryVariables,
   GetCategoriesCountsQuery,
   GetCategoriesCountsQueryVariables,
   GetCategoriesQuery,
   GetCategoriesQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  TogglePostStatusMutation,
+  TogglePostStatusMutationVariables,
   UpdateUserProfileMutation,
   UpdateUserProfileMutationVariables,
   UserProfileQuery,
@@ -22,6 +28,9 @@ import {
   GET_USER_QUERY,
   UPDATE_USER_MUTATION,
   GET_USER_BY_NICKNAME_QUERY,
+  GET_ALL_POST_LIST_QUERY,
+  TOGGLE_POST_STATUS_MUTATION,
+  DELETE_POST_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -112,6 +121,18 @@ export const useGetUserInfo = ({ id }: { id: number }) => {
   return data?.userProfile?.user || null;
 };
 
+export const useGetAllPostList = () => {
+  const { data } = useQuery<GetAllPostListQuery, GetAllPostListQueryVariables>(
+    GET_ALL_POST_LIST_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-first",
+      ssr: false, // SSR 비활성화
+    }
+  );
+  return data?.getAllPostList?.posts || null;
+};
+
 export const useUpdateUserProfile = (params?: { nickname?: string }) => {
   const [updateUserProfileMutation, { loading: profileUpdateLoading }] =
     useMutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>(
@@ -130,4 +151,38 @@ export const useUpdateUserProfile = (params?: { nickname?: string }) => {
       }
     );
   return { updateUserProfileMutation, profileUpdateLoading };
+};
+
+export const useTogglePostStatus = () => {
+  const [togglePostStatusMutation, { loading: postStatusToggleLoading }] =
+    useMutation<TogglePostStatusMutation, TogglePostStatusMutationVariables>(
+      TOGGLE_POST_STATUS_MUTATION,
+      {
+        refetchQueries: [
+          {
+            query: GET_ALL_POST_LIST_QUERY,
+          },
+          {
+            query: GET_POST_LIST_QUERY,
+          },
+        ],
+        awaitRefetchQueries: true,
+      }
+    );
+  return { togglePostStatusMutation, postStatusToggleLoading };
+};
+
+export const useDeletePost = () => {
+  const [deletePostMutation, { loading: postDeleteLoading }] = useMutation<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >(DELETE_POST_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_ALL_POST_LIST_QUERY,
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { deletePostMutation, postDeleteLoading };
 };
