@@ -1,235 +1,321 @@
-import Button from "@/components/buttons/button";
-import UserInfo from "@/components/user-info";
-import { gql, useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
+import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import React from "react";
-import { useForm } from "react-hook-form";
 import {
-  UpdatePasswordMutation,
-  UpdatePasswordMutationVariables,
-} from "@/gql/graphql";
-import { CategoryAddForm } from "@/components/category/category-add-form";
+  Edit,
+  Eye,
+  Bell,
+  Mail,
+  MapPin,
+  LinkIcon,
+  Calendar,
+  FileText,
+  FolderTree,
+  MessageSquare,
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { GlassCardMain } from "@/components/main/main";
+import { NewButton } from "@/components/buttons/new-button";
+import { useMe } from "@/hooks/useMe";
+import ProfileEditModal from "@/components/modal/profile-edit-modal";
+import { useRouter } from "next/router";
+import { formatNumberConvertK } from "../utils/utils";
 
-interface IUpdatePasswordForm {
-  password: string;
-  checkPassword: string;
-}
-
-export const UPDATE_PASSWORD_MUTATION = gql`
-  mutation updatePassword($password: String!) {
-    updatePassword(password: $password) {
-      ok
-      error
-      message
-    }
-  }
-`;
+const userStats = [
+  { label: "작성한 포스트", value: "42", icon: Edit },
+  { label: "총 조회수", value: "1.2K", icon: Eye },
+  { label: "받은 댓글", value: "127", icon: Bell },
+];
 
 const MyPage = () => {
   const router = useRouter();
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<IUpdatePasswordForm>({
-    mode: "onChange",
-  });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const { isDarkMode } = useDarkModeStore();
+  const { data } = useMe();
+  if (!data?.me) {
+    return null;
+  }
 
-  const onCompleted = (data: UpdatePasswordMutation) => {
-    const {
-      updatePassword: { ok, error, message },
-    } = data;
-
-    if (ok) {
-      alert(message);
-      router.push("/");
-    } else {
-      alert(error);
-    }
-  };
-
-  const [
-    updatePasswordMutation,
-    { loading, data: updatePasswordMutationResult },
-  ] = useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(
-    UPDATE_PASSWORD_MUTATION,
-    {
-      onCompleted,
-    }
+  const allPostLength = data?.me?.posts?.length;
+  const allPostViews = data?.me?.posts?.reduce(
+    (acc, post) => acc + post.hits,
+    0
   );
-
-  const routingMainPage = () => {
-    router.push("/");
-  };
-
-  const onSubmit = async () => {
-    const { password, checkPassword } = getValues();
-    if (password === checkPassword) {
-      updatePasswordMutation({
-        variables: {
-          password,
-        },
-      });
-    } else {
-      alert("비밀번호가 다릅니다.");
-    }
-  };
+  const allCommentsLength = data?.me?.posts?.reduce(
+    (acc, post) => acc + post.comments.length,
+    0
+  );
+  userStats[0].value = allPostLength?.toString() || "0";
+  userStats[1].value = formatNumberConvertK(allPostViews) || "0";
+  userStats[2].value = allCommentsLength?.toString() || "0";
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">마이페이지</h1>
-          <p className="text-gray-600">계정 설정 및 관리</p>
-        </div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      {/* Back Button */}
+      <button
+        // onClick={onBack}
+        className={`flex items-center space-x-2 mb-6 transition-colors ${
+          isDarkMode
+            ? "text-white/70 hover:text-white"
+            : "text-gray-600 hover:text-gray-900"
+        }`}
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span>뒤로가기</span>
+      </button>
 
-        {/* User Info Card */}
-        <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <svg
-              className="w-5 h-5 mr-2 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            사용자 정보
-          </h2>
-          <UserInfo />
-        </div>
-
-        {/* Password Change Card */}
-        <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <svg
-              className="w-5 h-5 mr-2 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            비밀번호 변경
-          </h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                새 비밀번호
-              </label>
-              <input
-                {...register("password", {
-                  required: "비밀번호를 입력해주세요",
-                  minLength: {
-                    value: 6,
-                    message: "비밀번호는 최소 6자 이상이어야 합니다",
-                  },
-                })}
-                type="password"
-                id="password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="새 비밀번호를 입력하세요"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="checkPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                비밀번호 확인
-              </label>
-              <input
-                {...register("checkPassword", {
-                  required: "비밀번호 확인을 입력해주세요",
-                  validate: (value) =>
-                    value === getValues("password") ||
-                    "비밀번호가 일치하지 않습니다",
-                })}
-                type="password"
-                id="checkPassword"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="비밀번호를 다시 입력하세요"
-              />
-              {errors.checkPassword && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.checkPassword.message}
-                </p>
-              )}
-            </div>
-            <div className="pt-2">
-              <Button
-                canClick={isValid}
-                loading={loading}
-                actionText="비밀번호 변경"
-              />
-            </div>
-          </form>
-        </div>
-
-        {/* Category Management Card */}
-        <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <svg
-              className="w-5 h-5 mr-2 text-purple-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-              />
-            </svg>
-            카테고리 관리
-          </h2>
-          <CategoryAddForm />
-        </div>
-
-        {/* Navigation */}
-        <div className="flex justify-center pt-4">
-          <button
-            onClick={routingMainPage}
-            className="inline-flex items-center px-6 py-3 border border-gray-300 shadow-xs text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+      {/* Profile Header */}
+      <GlassCardMain
+        $isDarkMode={isDarkMode}
+        className="rounded-2xl p-6 sm:p-8 mb-6"
+      >
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          {/* Avatar */}
+          <Avatar
+            className={`w-24 h-24 sm:w-32 sm:h-32 ring-4 ${isDarkMode ? "ring-white/20" : "ring-blue-200"}`}
           >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <AvatarImage src={`${data?.me?.profileImage}`} />
+            <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl">
+              Dev
+            </AvatarFallback>
+          </Avatar>
+
+          {/* Profile Info */}
+          <div className="flex-1 text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+              <div>
+                <h1
+                  className={`mb-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                >
+                  {data?.me?.nickname}
+                </h1>
+                <p className={isDarkMode ? "text-white/70" : "text-gray-600"}>
+                  {data?.me?.role}
+                </p>
+              </div>
+              <NewButton
+                variant="default"
+                size="lg"
+                className={`mt-4 sm:mt-0 ${
+                  isDarkMode
+                    ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-900"
+                }`}
+                onClick={() => setIsEditModalOpen(true)}
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                프로필 수정
+              </NewButton>
+            </div>
+
+            <p
+              className={`mb-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              {data?.me?.introduce}
+            </p>
+
+            <div
+              className={`flex flex-wrap gap-4 justify-center sm:justify-start ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
+            >
+              <div className="flex items-center space-x-2">
+                <Mail className="w-4 h-4" />
+                <span>{data?.me?.email}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4" />
+                <span>{data?.me?.location}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <LinkIcon className="w-4 h-4" />
+                <a
+                  href={`${data?.me?.website}`}
+                  target="_blank"
+                  className={`transition-colors ${
+                    isDarkMode
+                      ? "text-blue-300 hover:text-blue-200"
+                      : "text-blue-600 hover:text-blue-700"
+                  }`}
+                >
+                  {data?.me?.website}
+                </a>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4" />
+                <span>
+                  {new Date(data?.me?.createdAt!).toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "long",
+                  })}{" "}
+                  가입
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </GlassCardMain>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        {userStats.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <GlassCardMain
+              key={index}
+              $isDarkMode={isDarkMode}
+              className="rounded-xl p-6"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Icon
+                  className={`w-5 h-5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
+                />
+                <span className={isDarkMode ? "text-white" : "text-gray-900"}>
+                  {stat.value}
+                </span>
+              </div>
+              <p className={isDarkMode ? "text-white/60" : "text-gray-600"}>
+                {stat.label}
+              </p>
+            </GlassCardMain>
+          );
+        })}
+      </div>
+
+      {/* Recent Posts */}
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 mb-6">
+        <h2 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+          최근 작성한 글
+        </h2>
+        <div className="space-y-3">
+          {data?.me?.posts?.slice(0, 3).map((post, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg transition-colors ${
+                isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h3
+                    className={`mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                  >
+                    {post.title}
+                  </h3>
+                  <div
+                    className={`flex items-center gap-3 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
+                  >
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {post.createdAt}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-4 h-4" />
+                      {post.hits}
+                    </span>
+                  </div>
+                </div>
+                <Badge
+                  variant="outline"
+                  className={isDarkMode ? "border-white/20 text-white/70" : ""}
+                >
+                  공개
+                </Badge>
+              </div>
+            </div>
+          ))}
+        </div>
+      </GlassCardMain>
+
+      {/* Blog Management */}
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
+        <h2 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+          블로그 관리
+        </h2>
+        <div className="space-y-2">
+          <button
+            // onClick={onNavigateToPostManagement}
+            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors ${
+              isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-center space-x-3">
+              <FileText
+                className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
               />
-            </svg>
-            메인으로 돌아가기
+              <div className="text-left">
+                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
+                  포스트 관리
+                </div>
+                <div
+                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+                >
+                  글 작성, 수정, 삭제
+                </div>
+              </div>
+            </div>
+            <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>
+              ›
+            </span>
+          </button>
+          <button
+            // onClick={onNavigateToCategoryManagement}
+            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors ${
+              isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-center space-x-3">
+              <FolderTree
+                className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
+              />
+              <div className="text-left">
+                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
+                  카테고리 관리
+                </div>
+                <div
+                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+                >
+                  카테고리 추가, 수정, 삭제
+                </div>
+              </div>
+            </div>
+            <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>
+              ›
+            </span>
+          </button>
+          <button
+            // onClick={onNavigateToCommentManagement}
+            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors ${
+              isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-center space-x-3">
+              <MessageSquare
+                className={`w-5 h-5 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
+              />
+              <div className="text-left">
+                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
+                  댓글 관리
+                </div>
+                <div
+                  className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+                >
+                  댓글 승인, 삭제, 스팸 관리
+                </div>
+              </div>
+            </div>
+            <span className={isDarkMode ? "text-white/40" : "text-gray-400"}>
+              ›
+            </span>
           </button>
         </div>
-      </div>
+      </GlassCardMain>
+
+      {/* Profile Edit Modal */}
+      <ProfileEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      />
     </div>
   );
 };
