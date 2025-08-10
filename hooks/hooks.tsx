@@ -1,4 +1,6 @@
 import {
+  CreateCategoryMutation,
+  CreateCategoryMutationVariables,
   CreatePostMutation,
   CreatePostMutationVariables,
   DeletePostMutation,
@@ -35,6 +37,7 @@ import {
   DELETE_POST_MUTATION,
   CREATE_POST_MUTATION,
   EDIT_POST_MUTATION,
+  CREATE_CATEGORY_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -244,4 +247,22 @@ export const useEditPost = ({ postId }: { postId: number }) => {
     }
   );
   return { editPostMutation, editLoading };
+};
+
+export const useCreateCategory = () => {
+  const [createCategoryMutation, { loading: categoryLoading }] = useMutation<
+    CreateCategoryMutation,
+    CreateCategoryMutationVariables
+  >(CREATE_CATEGORY_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_CATEGORIES,
+      },
+      {
+        query: GET_CATEGORIES_COUNTS_QUERY,
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { createCategoryMutation, categoryLoading };
 };
