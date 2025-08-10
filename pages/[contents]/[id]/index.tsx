@@ -1,15 +1,16 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { GetServerSideProps } from "next";
-import { client } from "@/apollo"; // Apollo Client 설정 파일
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { createApolloClient, client } from "@/apollo";
+import { gql, useMutation } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Comments from "@/components/comments";
 import CommentsWrite from "@/components/comments-write";
+import { GET_POST_LIST_QUERY } from "@/pages";
 import {
-  GetCategoriesQuery,
-  GetCategoriesQueryVariables,
+  GetPostListQuery,
+  GetPostListQueryVariables,
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
   UpdatePostHitsMutation,
@@ -106,31 +107,7 @@ const EditerMarkdown = dynamic(
 const PostDetail = ({ post }: PostProps) => {
   const [mounted, setMounted] = useState(false);
   
-  const { data: postData, loading: postLoading } = useQuery<
-    GetPostByIdQuery,
-    GetPostByIdQueryVariables
-  >(GET_POST_BY_ID_QUERY, {
-    variables: { postId: post?.id },
-    fetchPolicy: "cache-and-network",
-    nextFetchPolicy: "cache-first",
-    errorPolicy: "all",
-    notifyOnNetworkStatusChange: true,
-    skip: !post?.id,
-  });
-
-  const { data: categoryData, loading: categoryLoading } = useQuery<
-    GetCategoriesQuery,
-    GetCategoriesQueryVariables
-  >(GET_CATEGORIES, {
-    fetchPolicy: "cache-and-network",
-    nextFetchPolicy: "cache-first",
-    errorPolicy: "all",
-    notifyOnNetworkStatusChange: true,
-    ssr: false, // SSR 비활성화
-  });
-
-  const currentPost = postData?.getPostById?.post || post;
-  const isLoading = postLoading || categoryLoading;
+  const currentPost = post;
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
@@ -180,35 +157,8 @@ const PostDetail = ({ post }: PostProps) => {
     router.push(`/post-edit?id=${post?.id}`);
   };
 
-  // 마운트 전에는 스켈레톤 표시
-  if (!mounted) {
-    return <PostDetailSkeleton />;
-  }
-
-  if (isLoading) {
-    return <PostDetailSkeleton />;
-  }
-
   if (!currentPost) {
     return <PostDetailSkeleton />;
-  }
-
-  // 클라이언트에서만 카테고리 검증
-  if (mounted && categoryData) {
-    const routerContentsPath = router?.query?.contents;
-    const categoryList =
-      categoryData?.getCategories?.categories?.map(
-        (value) => value.categoryTitle
-      ) || [];
-
-    const checkCategoryList =
-      typeof routerContentsPath === "string"
-        ? !categoryList.includes(routerContentsPath)
-        : false;
-
-    if (checkCategoryList) {
-      return <PostDetailSkeleton />;
-    }
   }
 
   // 포맷팅된 날짜 (클라이언트에서만)
@@ -263,39 +213,70 @@ const PostDetail = ({ post }: PostProps) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { params, res } = context;
-  const postId = Number(params?.id); // URL에서 postId를 추출합니다.
+export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const apolloClient = createApolloClient();
+    const { data } = await apolloClient.query<
+      GetPostListQuery,
+      GetPostListQueryVariables
+    >({
+      query: GET_POST_LIST_QUERY,
+      fetchPolicy: "network-only",
+    });
 
-  // Set cache headers
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59"
-  );
+    const posts = data.getPostList.posts || [];
+    const paths = posts.map((post) => ({
+      params: {
+        contents: post.category.categoryTitle,
+        id: post.id.toString(),
+      },
+    }));
+
+    return {
+      paths,
+      fallback: "blocking", // 새 포스트는 on-demand로 생성
+    };
+  } catch (error) {
+    console.error("getStaticPaths Error:", error);
+    return {
+      paths: [],
+      fallback: "blocking",
+    };
+  }
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { params } = context;
+  const postId = Number(params?.id);
 
   try {
-    const { data } = await client.query<
+    const apolloClient = createApolloClient();
+    const { data } = await apolloClient.query<
       GetPostByIdQuery,
       GetPostByIdQueryVariables
     >({
       query: GET_POST_BY_ID_QUERY,
       variables: { postId },
-      fetchPolicy: "network-only", // 항상 최신 데이터
+      fetchPolicy: "network-only",
     });
+
     if (!data.getPostById?.ok) {
       return {
-        notFound: true, // 포스트가 없으면 404 페이지로 리디렉션합니다.
+        notFound: true,
       };
     }
+
     return {
       props: {
         post: data.getPostById.post,
-        initialApolloState: client.cache.extract(),
       },
+      revalidate: 60, // 60초마다 재생성 (댓글, 조회수 업데이트)
     };
   } catch (error) {
+    console.error("getStaticProps Error:", error);
     return {
-      notFound: true, // 에러 발생 시 404 페이지로 리디렉션
+      notFound: true,
+      revalidate: 60,
     };
   }
 };
