@@ -136,7 +136,6 @@ const PostEdit = () => {
 
   const onSubmit = async (formData: postingProps) => {
     try {
-      console.log("TEST!!");
       setIsSubmitting(true);
       setOpen(false);
 
@@ -224,14 +223,14 @@ const PostEdit = () => {
         <div className="space-y-4 md:space-y-6">
           <input
             {...register("title", { required: "제목을 입력해주세요" })}
-            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             placeholder="제목을 입력하세요"
             defaultValue={data?.getPostById?.post?.title}
           />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
-            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           >
             {categoriesData?.getCategories?.categories?.map((value) => {
               return (
@@ -247,7 +246,7 @@ const PostEdit = () => {
               value={hashtagInput}
               onChange={(e) => setHashtagInput(e.target.value)}
               onKeyDown={handleHashtagInput}
-              className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
               placeholder="해시태그를 입력하고 Enter를 누르세요"
             />
             <div className="flex flex-wrap gap-2">
@@ -326,7 +325,7 @@ const PostEdit = () => {
                   <img
                     src={thumbnailPreview}
                     alt="썸네일 미리보기"
-                    className="w-48 h-32 object-cover rounded-lg border shadow-sm"
+                    className="w-48 h-32 object-cover rounded-lg border shadow-xs"
                   />
                   <div className="absolute top-2 right-2">
                     <button

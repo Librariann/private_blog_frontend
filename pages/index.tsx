@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
 import Posts from "@/components/posts";
 import { GetPostListQuery, GetPostListQueryVariables } from "@/gql/graphql";
+import Main from "@/components/main/main";
 
 export const GET_POST_LIST_QUERY = gql`
   query getPostList {
@@ -11,12 +12,13 @@ export const GET_POST_LIST_QUERY = gql`
         id
         title
         contents
+        excerpt
         hits
         thumbnailUrl
         category {
           id
           categoryTitle
-          parentCategoryId
+          parentCategoryTitle
         }
         comments {
           comment
@@ -33,6 +35,7 @@ export type PostsProps = {
   id: number;
   title: string;
   contents: string;
+  excerpt: string | null;
   hits: number;
   thumbnailUrl?: string | null;
   category: {
@@ -45,22 +48,6 @@ export type PostsProps = {
   hashtags: {
     hashtag?: string | null;
   }[]; // 배열 타입으로 수정
-};
-
-const Home = ({ posts }: { posts: PostsProps[] }) => {
-  if (!posts || posts.length === 0) {
-    return <div className="p-10 text-center">게시물이 없습니다.</div>;
-  }
-
-  return (
-    <div className="p-10">
-      <ul className="flex flex-wrap justify-start">
-        {posts.map((post) => {
-          return <Posts key={post.id} post={post} />;
-        })}
-      </ul>
-    </div>
-  );
 };
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -89,6 +76,23 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: 60,
     };
   }
+};
+
+const Home = ({ posts }: { posts: PostsProps[] }) => {
+  return <Main posts={posts} />;
+  // if (!posts || posts.length === 0) {
+  //   return <div className="p-10 text-center">게시물이 없습니다.</div>;
+  // }
+
+  // return (
+  //   <div className="p-10">
+  //     <ul className="flex flex-wrap justify-start">
+  //       {posts.map((post) => {
+  //         return <Posts key={post.id} post={post} />;
+  //       })}
+  //     </ul>
+  //   </div>
+  // );
 };
 
 export default Home;

@@ -241,13 +241,13 @@ function PostWrite() {
         <div className="space-y-4 md:space-y-6">
           <input
             {...register("title", { required: "제목을 입력해주세요" })}
-            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             placeholder="제목을 입력하세요"
           />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
-            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           >
             {data?.getCategories?.categories?.map((value) => {
               return (
@@ -263,7 +263,7 @@ function PostWrite() {
               value={hashtagInput}
               onChange={(e) => setHashtagInput(e.target.value)}
               onKeyDown={handleHashtagInput}
-              className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
               placeholder="해시태그를 입력하고 Enter를 누르세요"
             />
             <div className="flex flex-wrap gap-2">
@@ -342,7 +342,7 @@ function PostWrite() {
                   <img
                     src={thumbnailPreview}
                     alt="썸네일 미리보기"
-                    className="w-48 h-32 object-cover rounded-lg border shadow-sm"
+                    className="w-48 h-32 object-cover rounded-lg border shadow-xs"
                   />
                   <div className="absolute top-2 right-2">
                     <button

@@ -280,7 +280,7 @@ function About() {
                 className="glass-card p-6 md:p-8 rounded-xl hover:scale-105 transition-transform duration-300"
               >
                 <div className="flex flex-col md:flex-row md:items-center gap-4">
-                  <div className="md:w-24 flex-shrink-0">
+                  <div className="md:w-24 shrink-0">
                     <span className="text-2xl font-bold text-[#29445D]">
                       {item.year}
                     </span>
