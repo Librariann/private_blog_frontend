@@ -5,6 +5,7 @@ import { client, createApolloClient } from "@/apollo";
 import { ApolloProvider } from "@apollo/client";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
+import "aos/dist/aos.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
