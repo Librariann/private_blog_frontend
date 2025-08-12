@@ -70,6 +70,8 @@ export const GET_CATEGORIES_COUNTS_QUERY = gql`
         categoryTitle
         parentCategoryId
         count
+        icon
+        iconColor
         children {
           id
           categoryTitle
@@ -264,6 +266,15 @@ export const CREATE_POST_MUTATION = gql`
 export const EDIT_POST_MUTATION = gql`
   mutation editPost($input: EditPostInput!, $hashtags: [String!]) {
     editPost(input: $input, hashtags: $hashtags) {
+      ok
+      error
+    }
+  }
+`;
+
+export const CREATE_CATEGORY_MUTATION = gql`
+  mutation createCategory($input: CreateCategoryInput!) {
+    createCategory(input: $input) {
       ok
       error
     }
