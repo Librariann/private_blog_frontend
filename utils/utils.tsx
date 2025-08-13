@@ -1,6 +1,8 @@
 import { LOCAL_STORAGE_TOKEN, handlePathes } from "@/common/constants";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import clsx, { ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 // 이미지를 서버에 업로드하는 함수
 export async function uploadImageToServer(file: File): Promise<string> {
@@ -54,4 +56,8 @@ export async function uploadImageToServer(file: File): Promise<string> {
 
     throw new Error("Unknown upload error occurred. Please try again.");
   }
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }

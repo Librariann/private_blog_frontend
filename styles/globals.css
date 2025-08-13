@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -255,7 +253,11 @@ html {
 }
 
 .input {
-  @apply focus:outline-none focus:border-gray-500 p-3 border-2 text-lg font-light border-gray-200 transition-colors;
+  @apply focus:outline-none p-3 border-2 text-lg font-light border-gray-200 transition-colors;
+
+  &:focus {
+    border-color: var(--color-gray-500);
+  }
 }
 
 .input-new {
@@ -263,5 +265,8 @@ html {
 }
 
 .btn {
-  @apply text-lg font-medium focus:outline-none text-white py-2 transition-colors bg-lime-500 hover:bg-lime-700;
+  @apply text-lg font-medium focus:outline-none text-white py-2 transition-colors bg-lime-500;
+  &:hover {
+    background-color: var(--color-lime-700);
+  }
 }

@@ -1,3 +1,10 @@
 gql/**
 *.graphql.ts
 .next/**
+node_modules/
+package-lock.json
+.taskmaster/
+graphql.schema.json
+next-env.d.ts
+*.tsbuildinfo
+.vercel/

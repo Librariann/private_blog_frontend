@@ -2,7 +2,7 @@ import { PostsProps } from "@/pages";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import Card from "./cards/card";
+import Card from "./cards/blog-post-card";
 
 const PostTitle = styled.div`
   font-size: 1.2rem;
@@ -35,7 +35,7 @@ const Posts = ({ post }: { post: PostsProps }) => {
     //         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
     //         priority
     //       />
-    //       <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent backdrop-blur-sm rounded-b-lg">
+    //       <div className="absolute bottom-0 w-full p-4 bg-linear-to-t from-black/80 to-transparent backdrop-blur-xs rounded-b-lg">
     //         <PostTitle className="text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
     //           {post.title}
     //         </PostTitle>
