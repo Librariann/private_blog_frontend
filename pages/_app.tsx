@@ -10,9 +10,20 @@ import "../styles/markdown.css";
 import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { useUserInfoStore } from "@/stores/useUserInfoStore";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
+  const { setUserInfo } = useUserInfoStore();
+
+  // useEffect(() => {
+  //   // ISR로 받은 최신 데이터가 있으면 스토어 업데이트
+  //   if (pageProps.userInfo) {
+  //     setUserInfo(pageProps.userInfo);
+  //   }
+  // }, [pageProps.userInfo, setUserInfo]);
+
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
