@@ -20,7 +20,8 @@ import { GlassCardMain } from "@/components/main/main";
 import { NewButton } from "@/components/buttons/new-button";
 import { useMe } from "@/hooks/useMe";
 import ProfileEditModal from "@/components/modal/profile-edit-modal";
-import { formatNumberConvertK } from "../utils/utils";
+import { formatNumberConvertK } from "@/utils/utils";
+import { useRouter } from "next/router";
 
 const userStats = [
   { label: "작성한 포스트", value: "42", icon: Edit },
@@ -29,6 +30,7 @@ const userStats = [
 ];
 
 const MyPage = () => {
+  const router = useRouter();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isDarkMode } = useDarkModeStore();
   const { data, error } = useMe();
@@ -233,8 +235,8 @@ const MyPage = () => {
         </h2>
         <div className="space-y-2">
           <button
-            // onClick={onNavigateToPostManagement}
-            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors ${
+            onClick={() => router.push("/settings/management-posts")}
+            className={`w-full flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer ${
               isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
             }`}
           >
