@@ -42,7 +42,7 @@ import { uploadImageToServer } from "@/utils/utils";
 import { toast } from "react-toastify";
 import { useCreatePost, useEditPost, useGetCategories } from "@/hooks/hooks";
 import { Category, PostStatus } from "@/gql/graphql";
-import CreateCategoryModal from "@/components/modal/create-category-modal";
+import CreateCategoryModal from "@/components/posts/modal/create-category-modal";
 import WritingAnimation from "@/components/loading/writing-animation";
 import { useRouter } from "next/router";
 import { usePostEditStore } from "@/stores/usePostEditStore";
