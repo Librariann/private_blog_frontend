@@ -7,6 +7,7 @@ import { popularHashTagsProps } from "@/pages";
 import { useRouter } from "next/router";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { GlassCardMain } from "./main";
+import { useUserInfoStore } from "@/stores/useUserInfoStore";
 
 export type DesktopAndMobileProps = {
   categories: CategoryCount[];
@@ -30,12 +31,13 @@ const Desktop = ({
 }: DesktopAndMobileProps) => {
   const router = useRouter();
   const { isDarkMode } = useDarkModeStore();
+
   return (
     <aside className="hidden lg:block lg:col-span-4 space-y-6">
       <ProfileSidebar />
 
       {/* Categories */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 ">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 ">
         <h3 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
           카테고리
         </h3>
@@ -141,7 +143,7 @@ const Desktop = ({
           })}
         </div>
       </GlassCardMain>
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 ">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 ">
         <h3 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
           인기 태그
         </h3>

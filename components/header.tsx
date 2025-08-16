@@ -37,7 +37,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
   return (
     <>
       <GlassCardMain
-        isDarkMode={isDarkMode}
+        $isDarkMode={isDarkMode}
         className="sticky top-0 z-50 border-b"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -205,7 +205,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <GlassMotionCardMain
-            isDarkMode={isDarkMode}
+            $isDarkMode={isDarkMode}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -234,7 +234,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 포스트
               </button>
               <button
-                onClick={() => console.log(category)}
+                onClick={() => console.log("category")}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
@@ -305,17 +305,19 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
 
 export const GlassMotionCardMain = styled(motion.div)<glassCardTypes>`
   background: ${(props) =>
-    props.isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.7)"};
+    props.$isDarkMode
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(255, 255, 255, 0.7)"};
   backdrop-filter: ${(props) =>
-    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
   -webkit-backdrop-filter: ${(props) =>
-    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
   border: ${(props) =>
-    props.isDarkMode
+    props.$isDarkMode
       ? "1px solid rgba(255, 255, 255, 0.2)"
       : "1px solid rgba(0, 0, 0, 0.05)"};
   box-shadow: ${(props) =>
-    props.isDarkMode
+    props.$isDarkMode
       ? "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
       : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
 `;
