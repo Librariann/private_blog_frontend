@@ -62,11 +62,26 @@ function About() {
   };
 
   const skills = {
-    Frontend: ["React", "TypeScript", "Next.js", "Zustand", "React Query"],
-    Backend: ["Spring Boot", "Nest.js", "Node.js", "Express", "Java", "PHP"],
-    DevOps: ["Kubernetes", "Docker", "Jenkins", "ArgoCD"],
-    Database: ["PostgreSQL", "MariaDB", "Oracle", "Tibero"],
-    Etc: ["Git", "GitLab", "Jira", "Slack"],
+    Frontend: ["React", "TypeScript", "Next.js", "Zustand", "React-Query"],
+    Backend: [
+      "Java",
+      "Spring Boot",
+      "Node.js",
+      "Express",
+      "Nest.js",
+      "PHP",
+      "CodeIgniter",
+    ],
+    DevOps: [
+      "OpenStack",
+      "Kubernetes",
+      "Docker",
+      "Jenkins",
+      "Harbor",
+      "ArgoCD",
+    ],
+    Database: ["PostgreSQL", "MySQL", "MariaDB", "Oracle", "Tibero"],
+    Etc: ["Git", "Jira", "Slack"],
   };
 
   const timeline = [
@@ -113,9 +128,9 @@ function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-slate-900 snap-y snap-mandatory overflow-y-scroll h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 bg-slate-900">
+      <section className="snap-start relative min-h-screen flex items-center justify-center px-4 bg-slate-900">
         <div className="text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -194,7 +209,7 @@ function About() {
       </section>
 
       {/* About Me Section */}
-      <section className="relative py-32 px-4 bg-slate-800">
+      <section className="snap-start relative min-h-screen flex items-center py-32 px-4 bg-slate-800">
         <div className="max-w-4xl mx-auto">
           <motion.div
             {...fadeInUp}
@@ -248,7 +263,7 @@ function About() {
       </section>
 
       {/* Timeline Section */}
-      <section className="relative py-32 px-4 bg-slate-900">
+      <section className="snap-start relative min-h-screen flex items-center py-32 px-4 bg-slate-900">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             {...fadeInUp}
@@ -289,7 +304,7 @@ function About() {
       </section>
 
       {/* Skills Section */}
-      <section className="relative py-32 px-4 bg-slate-800">
+      <section className="snap-start relative min-h-screen flex items-center py-32 px-4 bg-slate-800">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             {...fadeInUp}
@@ -328,7 +343,7 @@ function About() {
       </section>
 
       {/* Contact Section */}
-      <section className="relative py-32 px-4 bg-slate-900">
+      <section className="snap-start relative min-h-screen flex items-center py-32 px-4 bg-slate-900">
         <div className="max-w-4xl mx-auto text-center">
           <motion.h2
             {...fadeInUp}
