@@ -1,5 +1,5 @@
 import { ArrowLeft, Calendar, Clock, List } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "../ui/badge";
 import { Post } from "@/gql/graphql";
@@ -9,6 +9,9 @@ import Comments from "../comments/comments";
 import PostNavigation from "./post-navigation";
 import PostTags from "./post-tags";
 import { GlassCardMain } from "../main/main";
+import { useMe } from "@/hooks/useMe";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 type topicProps = {
   id: string;
@@ -20,12 +23,27 @@ export type PostDetailPageProps = {
 
 const PostDetail = ({ post }: PostDetailPageProps) => {
   const { isDarkMode } = useDarkModeStore();
+  const { data } = useMe();
   const [isTocOpen, setIsTocOpen] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    // console.log(post?.postStatus !== "PUBLISHED");
+    if (
+      post?.postStatus !== "PUBLISHED" &&
+      data?.me?.id &&
+      post?.user?.id &&
+      Number(data?.me?.id) !== Number(post?.user?.id)
+    ) {
+      toast.error("접근 권한이 없습니다.");
+      router.push("/");
+    }
+  }, [post, data, router]);
 
   // 목차 항목들
   const tocItems: topicProps = [];
-  const filterH1 = post.contents
-    .match(/^#\s+(.+)/gm)
+  const filterH1 = post?.contents
+    ?.match(/^#\s+(.+)/gm)
     ?.map((match) => match.replace(/^#\s+/, ""));
 
   filterH1?.map((h1) => {
@@ -38,7 +56,6 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    console.log(element);
     if (element) {
       const offset = 100; // 헤더 높이만큼 여유
       const elementPosition = element.getBoundingClientRect().top;
@@ -52,7 +69,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   };
 
   // 포맷팅된 날짜 (클라이언트에서만)
-  const formattedDate = new Date(post.createdAt).toLocaleString("ko-KR", {
+  const formattedDate = new Date(post?.createdAt).toLocaleString("ko-KR", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -67,7 +84,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   );
 
   // 이전/다음 포스트 찾기
-  // const currentIndex = allPosts.findIndex((p) => p.id === post.id);
+  // const currentIndex = allPosts.findIndex((p) => p.id === post?.id);
   // const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
   // const nextPost =
   //   currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
@@ -101,11 +118,11 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                 : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300 mb-4"
             }
           >
-            {post.category.categoryTitle}
+            {post?.category?.categoryTitle}
           </Badge>
 
           <h1 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
-            {post.title}
+            {post?.title}
           </h1>
 
           <div
@@ -117,7 +134,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="w-4 h-4" />
-              <span>{post.readTime}분 읽기</span>
+              <span>{post?.readTime}분 읽기</span>
             </div>
           </div>
         </div>
@@ -216,7 +233,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
           className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
         >
           <EditerMarkdown
-            source={post.contents}
+            source={post?.contents}
             data-color-mode={isDarkMode ? "dark" : "light"}
             style={{ backgroundColor: "transparent" }}
           />
@@ -227,7 +244,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
       </GlassCardMain>
 
       {/* Comments Section */}
-      <Comments comments={post.comments} />
+      <Comments comments={post?.comments || []} />
 
       {/* Previous/Next Posts Navigation */}
       <PostNavigation />
