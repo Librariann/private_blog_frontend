@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "gopfkmlgdpxbqjxftuin.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "librarian-blog-images.s3.ap-northeast-2.amazonaws.com",
+      },
     ],
   },
   // Vercel caching Settings
