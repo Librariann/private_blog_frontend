@@ -7,6 +7,7 @@ import {
   GET_POST_BY_ID_QUERY,
   GET_POST_BY_PARENT_CATEGORY_ID_QUERY,
   GET_POST_LIST_QUERY,
+  GET_USER_BY_NICKNAME_QUERY,
 } from "./queries";
 import {
   GetAllPopularHashTagsQuery,
@@ -23,6 +24,8 @@ import {
   GetPostListByParentCategoryIdQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  UserProfileByNickNameQuery,
+  UserProfileByNickNameQueryVariables,
 } from "@/gql/graphql";
 
 const apolloClient = createApolloClient();
@@ -131,4 +134,16 @@ export async function getPopularHashTagDatas() {
     fetchPolicy: "cache-first",
   });
   return data.getAllPopularHashTags?.hashtags || [];
+}
+
+export async function getUserInfo(userNickName: string) {
+  const { data } = await apolloClient.query<
+    UserProfileByNickNameQuery,
+    UserProfileByNickNameQueryVariables
+  >({
+    query: GET_USER_BY_NICKNAME_QUERY,
+    variables: { userNickName },
+    fetchPolicy: "cache-first",
+  });
+  return data.userProfileByNickName?.user || null;
 }

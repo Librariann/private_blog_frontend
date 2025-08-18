@@ -1,22 +1,28 @@
 import { GetStaticProps } from "next";
-import { Post } from "@/gql/graphql";
+import { Post, User, UserProfileByNickNameQuery } from "@/gql/graphql";
 import Main from "@/components/main/main";
-import { getPopularHashTagDatas, getPostDatas } from "@/lib/posts";
+import { getPopularHashTagDatas, getPostDatas, getUserInfo } from "@/lib/posts";
 
 export type popularHashTagsProps = {
   hashtag: string;
   count: number;
 };
 
+export type UserInfoType = NonNullable<
+  UserProfileByNickNameQuery["userProfileByNickName"]["user"]
+>;
+
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const postDatas = await getPostDatas();
     const popularHashTagDatas = await getPopularHashTagDatas();
+    // const userInfo = await getUserInfo("librarian");
 
     return {
       props: {
         posts: postDatas,
         popularHashTags: popularHashTagDatas,
+        // userInfo: userInfo as UserInfoType,
       },
       revalidate: 60, // 60초마다 재생성
     };

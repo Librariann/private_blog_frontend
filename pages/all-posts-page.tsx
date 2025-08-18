@@ -47,7 +47,7 @@ const AllPostsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <h1 className={isDarkMode ? "text-white mb-2" : "text-gray-900 mb-2"}>
           모든 포스트
         </h1>
@@ -59,7 +59,7 @@ const AllPostsPage = () => {
       {/* Search and Filter */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         <div className="lg:col-span-4">
-          <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-4">
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-4">
             <div className="flex items-center space-x-3">
               <Search
                 className={`w-5 h-5 ${isDarkMode ? "text-white/60" : "text-gray-400"}`}
@@ -96,7 +96,7 @@ const AllPostsPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1">
-          <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-4">
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-4">
             <h3
               className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}
             >
@@ -241,7 +241,7 @@ const AllPostsPage = () => {
 
         {/* Posts Grid */}
         <div className="lg:col-span-3">
-          <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6">
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2

@@ -39,7 +39,7 @@ const AllCategoriesPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <h1 className={isDarkMode ? "text-white mb-2" : "text-gray-900 mb-2"}>
           카테고리
         </h1>
@@ -50,7 +50,7 @@ const AllCategoriesPage = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
+        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -60,7 +60,7 @@ const AllCategoriesPage = () => {
             {categories.countsData?.length}개
           </div>
         </GlassCardMain>
-        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
+        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -70,7 +70,7 @@ const AllCategoriesPage = () => {
             {totalSubCategories}개
           </div>
         </GlassCardMain>
-        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
+        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -94,7 +94,7 @@ const AllCategoriesPage = () => {
           return (
             <GlassCardMain
               key={parentCategory.categoryTitle}
-              isDarkMode={isDarkMode}
+              $isDarkMode={isDarkMode}
               className="rounded-2xl p-6"
             >
               <div className="flex items-center justify-between mb-6">
@@ -211,7 +211,7 @@ const AllCategoriesPage = () => {
       </div>
 
       {/* Popular Topics */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-8">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-8">
         <h2 className={isDarkMode ? "text-white mb-6" : "text-gray-900 mb-6"}>
           인기 주제
         </h2>
