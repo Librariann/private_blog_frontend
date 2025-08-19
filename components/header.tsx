@@ -53,7 +53,7 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
 
   return (
     <div className="w-full h-16 flex items-center bg-header-color pl-5">
-      <button className="lg:hidden mr-3 text-white" onClick={onMenuToggle}>
+      <button className="xl:hidden mr-3 text-white" onClick={onMenuToggle}>
         <svg
           className="w-6 h-6"
           fill="none"

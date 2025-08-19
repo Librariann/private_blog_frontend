@@ -78,7 +78,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   return (
     <>
       {/* 데스크톱 뷰 */}
-      <nav className="hidden lg:block h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6">
+      <nav className="hidden xl:block h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6">
         <div className="mb-8 border-b border-gray-700 pb-4">
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
@@ -129,7 +129,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
 
       {/* 모바일 뷰 */}
       <div
-        className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${
+        className={`xl:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
