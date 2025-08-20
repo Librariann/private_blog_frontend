@@ -44,7 +44,7 @@ function Layout({ children }: Props) {
           <Header onMenuToggle={handleMobileMenuClose} />
           <div className="flex-grow" style={{ height: "calc(100vh - 64px)" }}>
             <div className="flex flex-row h-full">
-              <div className="md:block md:w-1/6">
+              <div className="xl:block xl:w-1/6">
                 <LeftNavigator
                   isOpen={isMobileMenuOpen}
                   onClose={handleMobileMenuClose}
