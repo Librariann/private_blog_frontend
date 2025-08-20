@@ -149,7 +149,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
               {isLoggedIn && (
                 <button
                   onClick={() => {
-                    router.push("/my-page");
+                    router.push("/settings/my-page");
                   }}
                   className={`hidden sm:block cursor-pointer ${isDarkMode ? "text-white/70 hover:text-white transition-colors" : "text-gray-600 hover:text-gray-900 transition-colors"}`}
                   aria-label="User profile"

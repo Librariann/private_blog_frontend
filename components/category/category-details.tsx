@@ -12,7 +12,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
   const { slug } = router.query;
 
   posts
-    .flatMap((post) => post.hashtags)
+    ?.flatMap((post) => post.hashtags)
     .forEach((tag) => {
       const count = hashtagMaps.get(tag?.hashtag || "") || 0;
       hashtagMaps.set(tag?.hashtag || "", count + 1);

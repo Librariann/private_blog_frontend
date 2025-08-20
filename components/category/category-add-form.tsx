@@ -50,11 +50,11 @@ export const CategoryAddForm = () => {
     const categories = getCategoryDatas?.getCategories?.categories || [];
     const tree: categoryList[] = [];
     const map = new Map();
-    categories.forEach((category) => {
+    categories?.forEach((category) => {
       map.set(category.id, { ...category, children: [] });
     });
 
-    categories.forEach((category) => {
+    categories?.forEach((category) => {
       const node = map.get(category.id);
       if (category.parentCategoryId) {
         const parent = map.get(category.parentCategoryId);

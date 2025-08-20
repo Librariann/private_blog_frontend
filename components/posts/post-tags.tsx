@@ -15,7 +15,7 @@ const PostTags = ({ post }: PostDetailPageProps) => {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {post.hashtags.map((tag) => (
+        {post?.hashtags?.map((tag) => (
           <span
             key={tag.id}
             className={`px-3 py-1 backdrop-blur-sm rounded-full border transition-all cursor-pointer ${

@@ -258,7 +258,7 @@ const ProfileEditModal = ({ isOpen, onClose, data }: ProfileEditModalProps) => {
           <div className="flex gap-3 pt-4">
             <NewButton
               type="submit"
-              className={`flex-1 ${
+              className={`flex-1 cursor-pointer ${
                 isDarkMode
                   ? "bg-blue-500 hover:bg-blue-600 text-white"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
@@ -270,7 +270,7 @@ const ProfileEditModal = ({ isOpen, onClose, data }: ProfileEditModalProps) => {
               type="button"
               variant="default"
               onClick={onClose}
-              className={`flex-1 ${
+              className={`flex-1 cursor-pointer ${
                 isDarkMode
                   ? "bg-white/10 hover:bg-white/20 border-white/20 text-white"
                   : "border-gray-300"

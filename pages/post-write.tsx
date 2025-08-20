@@ -395,7 +395,7 @@ function PostWrite() {
         isCancel={true}
       />
 
-      {/* 작성 중 애니메이션 */}
+      {/* 로딩 애니메이션 */}
       {isSubmitting && <WritingAnimation />}
     </div>
   );
