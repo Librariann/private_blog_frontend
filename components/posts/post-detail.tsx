@@ -89,7 +89,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
 
       {/* Post Header */}
       <GlassCardMain
-        isDarkMode={isDarkMode}
+        $isDarkMode={isDarkMode}
         className="rounded-2xl p-6 sm:p-8 mb-6"
       >
         <div className="mb-6">

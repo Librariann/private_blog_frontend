@@ -48,7 +48,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
       </button>
 
       {/* Category Header */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <div className="flex items-center space-x-4 mb-4">
           <div
             className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center`}
@@ -74,7 +74,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
 
       {/* Category Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
+        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -85,7 +85,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
           </div>
         </GlassCardMain>
 
-        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
+        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -96,7 +96,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
           </div>
         </GlassCardMain>
 
-        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
+        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -109,7 +109,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
       </div>
 
       {/* Posts List */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
         <h2 className={isDarkMode ? "text-white mb-6" : "text-gray-900 mb-6"}>
           모든 포스트
         </h2>
@@ -137,7 +137,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
       </GlassCardMain>
 
       {/* Popular Tags in Category */}
-      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-6">
+      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-6">
         <h3 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
           인기 태그
         </h3>

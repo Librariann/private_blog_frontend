@@ -2,21 +2,10 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import styled from "styled-components";
+import { Post } from "@/gql/graphql";
 
 type BlogPostCardProps = {
-  post: {
-    id: number;
-    title: string;
-    excerpt?: string | null;
-    createdAt?: any;
-    readTime?: number;
-    category: {
-      categoryTitle: string;
-    };
-    hashtags: Array<{
-      hashtag: string;
-    }>;
-  };
+  post: Post;
   onClick?: () => void;
 };
 
@@ -25,7 +14,7 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
 
   return (
     <GlassCard
-      isDarkMode={isDarkMode}
+      $isDarkMode={isDarkMode}
       onClick={onClick}
       className={`group rounded-xl p-6 cursor-pointer transition-all duration-300 border ${
         isDarkMode
@@ -84,7 +73,7 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
 
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap gap-2">
-          {post.hashtags.map((tag) => (
+          {post?.hashtags?.map((tag) => (
             <span
               key={tag.hashtag}
               className={`px-2 py-1 backdrop-blur-sm rounded border ${
@@ -111,30 +100,30 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
 }
 
 export type glassCardTypes = {
-  isDarkMode?: boolean;
+  $isDarkMode?: boolean;
 };
 
 const GlassCard = styled.article<glassCardTypes>`
   background: ${(props) =>
-    props.isDarkMode === true
+    props.$isDarkMode === true
       ? "rgba(255, 255, 255, 0.08)"
       : "rgba(255, 255, 255, 0.6)"};
   backdrop-filter: ${(props) =>
-    props.isDarkMode === true ? "blur(4px)" : "blur(10px)"};
+    props.$isDarkMode === true ? "blur(4px)" : "blur(10px)"};
   -webkit-backdrop-filter: ${(props) =>
-    props.isDarkMode === true ? "blur(4px)" : "blur(10px)"};
+    props.$isDarkMode === true ? "blur(4px)" : "blur(10px)"};
   box-shadow: ${(props) =>
-    props.isDarkMode === true
+    props.$isDarkMode === true
       ? "0 4px 16px 0 rgba(0, 0, 0, 0.1)"
       : "0 4px 16px 0 rgba(0, 0, 0, 0.06)"};
 
   &:hover {
     background: ${(props) =>
-      props.isDarkMode === true
+      props.$isDarkMode === true
         ? "rgba(255, 255, 255, 0.15)"
         : "rgba(255, 255, 255, 0.85)"};
     box-shadow: ${(props) =>
-      props.isDarkMode === true
+      props.$isDarkMode === true
         ? "0 8px 32px 0 rgba(0, 0, 0, 0.2)"
         : "0 12px 40px 0 rgba(0, 0, 0, 0.12)"};
     transform: translateY(-2px);
