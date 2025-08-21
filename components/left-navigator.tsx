@@ -48,7 +48,8 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
     // 데이터가 있고, 변경되었을 때만 state 업데이트
     if (data?.getCategoriesCounts.categoryCounts) {
       const newCategories = data.getCategoriesCounts.categoryCounts;
-      const isDifferent = JSON.stringify(newCategories) !== JSON.stringify(categories);
+      const isDifferent =
+        JSON.stringify(newCategories) !== JSON.stringify(categories);
       if (isDifferent || categories.length === 0) {
         setCategories(newCategories);
       }
@@ -64,12 +65,9 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
     onClose(); // 모바일에서 카테고리 선택 시 메뉴 닫기
   };
 
-  const sumAllCategoryCounts = categories.reduce(
-    (acc, cur) => {
-      return acc + cur.count;
-    },
-    0
-  );
+  const sumAllCategoryCounts = categories.reduce((acc, cur) => {
+    return acc + cur.count;
+  }, 0);
 
   // 현재 선택된 카테고리 확인 (SSR safe)
   const currentCategory = currentPath.split("/")[1];
@@ -82,7 +80,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
         <div className="mb-8 border-b border-gray-700 pb-4">
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
-{categories.length === 0 ? (
+        {categories.length === 0 ? (
           <CategorySkeleton />
         ) : (
           <ul className="space-y-3">
@@ -160,7 +158,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
               </svg>
             </button>
           </div>
-{categories.length === 0 ? (
+          {categories.length === 0 ? (
             <CategorySkeleton />
           ) : (
             <ul className="space-y-3">
