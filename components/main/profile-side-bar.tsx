@@ -7,7 +7,7 @@ import { formatNumberConvertK } from "@/utils/utils";
 
 const ProfileSidebar = () => {
   const { isDarkMode } = useDarkModeStore();
-  const userInfo = useUserInfoStore((state) => state.userInfo);
+  const { userInfo } = useUserInfoStore();
 
   const postLength = userInfo?.posts.length;
   const viewLength = formatNumberConvertK(
@@ -24,7 +24,7 @@ const ProfileSidebar = () => {
         <Avatar
           className={`w-24 h-24 mx-auto mb-4 ring-4 ${isDarkMode ? "ring-white/20" : "ring-blue-200"}`}
         >
-          <AvatarImage src="https://images.unsplash.com/photo-1517309561013-16f6e4020305?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXZlbG9wZXIlMjBwcm9maWxlfGVufDF8fHx8MTc2MzAwOTM0NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" />
+          <AvatarImage src={`${userInfo?.profileImage || ""}`} />
           <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
             Dev
           </AvatarFallback>

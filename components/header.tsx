@@ -15,6 +15,7 @@ import { glassCardTypes } from "./cards/blog-post-card";
 import styled from "styled-components";
 import { GlassCardMain } from "./main/main";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useUserInfoStore } from "@/stores/useUserInfoStore";
 
 type HeaderProps = {
   isDarkMode: boolean;
@@ -25,6 +26,7 @@ type HeaderProps = {
 const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { userInfo } = useUserInfoStore();
   const handleNavigation = (action: () => void) => {
     action();
     setIsMobileMenuOpen(false);
@@ -153,7 +155,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                   aria-label="User profile"
                 >
                   <Avatar className="w-8 h-8 ring-2 ring-offset-2 ring-offset-transparent hover:ring-blue-500 transition-all">
-                    <AvatarImage src="https://images.unsplash.com/photo-1517309561013-16f6e4020305?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXZlbG9wZXIlMjBwcm9maWxlfGVufDF8fHx8MTc2MzAwOTM0NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" />
+                    <AvatarImage src={`${userInfo?.profileImage || ""}`} />
                     <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs">
                       Dev
                     </AvatarFallback>
