@@ -26,17 +26,12 @@ export type ContentsProps = DetailProps | ListProps;
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
     const data = await getCategoriesCounts();
-
-    // 데이터가 없거나 배열이 아닌 경우 빈 배열로 처리
     const categories = Array.isArray(data) ? data : [];
-
     const paths = categories
       .filter((category) => category && category.categoryTitle)
       .map((category) => ({
         params: { slug: [category.categoryTitle] },
       }));
-
-    // 빌드 시점에 경로 생성 완료
 
     return {
       paths,

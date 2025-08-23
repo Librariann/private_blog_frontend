@@ -21,6 +21,7 @@ const CommentsWriteForm = ({
   const [commentPassword, setCommentPassword] = useState("");
   const { isDarkMode } = useDarkModeStore();
   const { setGlobalLoading } = useLoadingStore();
+  //TODO: 추후 수정필요
   const { createCommentMutation } = useCreateComment({ id: 1 });
 
   const router = useRouter();
