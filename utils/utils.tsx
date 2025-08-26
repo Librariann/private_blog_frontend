@@ -2,9 +2,15 @@ import clsx, { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 // 이미지를 서버에 업로드하는 함수
-export async function uploadImageToServer(file: File): Promise<string> {
-  const uploadUri = process.env.NEXT_PUBLIC_FILE_UPLOAD_URI;
-
+export async function uploadImageToServer(
+  file: File,
+  type: string = "original"
+): Promise<string> {
+  const uploadUri =
+    type === "original"
+      ? process.env.NEXT_PUBLIC_FILE_UPLOAD_URI
+      : process.env.NEXT_PUBLIC_PROFILE_IMAGE_UPLOAD_URI;
+  console.log(uploadUri);
   if (!uploadUri) {
     throw new Error("Upload server URL is not configured");
   }
@@ -53,7 +59,6 @@ export async function uploadImageToServer(file: File): Promise<string> {
     throw new Error("Unknown upload error occurred. Please try again.");
   }
 }
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
