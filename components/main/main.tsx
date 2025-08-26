@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { popularHashTagsProps } from "@/pages";
+import { popularHashTagsProps, UserInfoType } from "@/pages";
 import { BlogPostCard, glassCardTypes } from "../cards/blog-post-card";
-import { GetPostListQuery, Post } from "@/gql/graphql";
+import { GetPostListQuery, Post, User } from "@/gql/graphql";
 import Mobile from "./mobile";
 import Desktop from "./desktop";
 import { useRouter } from "next/router";
@@ -36,6 +36,7 @@ const Main = ({
       color: "from-yellow-500 to-amber-500",
     },
   ];
+
   const { isDarkMode } = useDarkModeStore();
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     new Set()
@@ -68,7 +69,7 @@ const Main = ({
         {/* Main Content */}
         <div className="lg:col-span-8 space-y-6">
           {/* Featured Post */}
-          <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8">
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8">
             <div className="flex items-center space-x-2 mb-4">
               <Rocket
                 className={`w-5 h-5 ${
@@ -162,17 +163,19 @@ const Main = ({
 
 export const GlassCardMain = styled.div<glassCardTypes>`
   background: ${(props) =>
-    props.isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.7)"};
+    props.$isDarkMode
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(255, 255, 255, 0.7)"};
   backdrop-filter: ${(props) =>
-    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
   -webkit-backdrop-filter: ${(props) =>
-    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
   border: ${(props) =>
-    props.isDarkMode
+    props.$isDarkMode
       ? "1px solid rgba(255, 255, 255, 0.2)"
       : "1px solid rgba(0, 0, 0, 0.05)"};
   box-shadow: ${(props) =>
-    props.isDarkMode
+    props.$isDarkMode
       ? "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
       : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
 `;

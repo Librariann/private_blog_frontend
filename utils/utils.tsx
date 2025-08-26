@@ -57,3 +57,7 @@ export async function uploadImageToServer(file: File): Promise<string> {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function formatNumberConvertK(num: number): string {
+  return num >= 1000 ? `${(num / 1000).toFixed(1)}K` : num.toString();
+}

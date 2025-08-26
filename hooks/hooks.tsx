@@ -7,6 +7,8 @@ import {
   GetCategoriesQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  UserProfileQuery,
+  UserProfileQueryVariables,
 } from "@/gql/graphql";
 import {
   CREATE_COMMENT_MUTATION,
@@ -15,6 +17,7 @@ import {
   GET_POST_LIST_QUERY,
   GET_POPULAR_HASHTAG_QUERY,
   GET_CATEGORIES_COUNTS_QUERY,
+  GET_USER_QUERY,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -89,4 +92,17 @@ export const useGetPopularHashTagList = () => {
     ssr: false, // SSR 비활성화
   });
   return data?.getAllPopularHashTags.hashtags || [];
+};
+
+export const useGetUserInfo = ({ id }: { id: number }) => {
+  const { data } = useQuery<UserProfileQuery, UserProfileQueryVariables>(
+    GET_USER_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-first",
+      ssr: false, // SSR 비활성화
+      variables: { userId: id },
+    }
+  );
+  return data?.userProfile?.user || null;
 };

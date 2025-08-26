@@ -8,6 +8,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
+import { useMe } from "./hooks/useMe";
 
 // 클라이언트에서만 사용할 수 있는 localStorage 접근
 export const getToken = () => {
