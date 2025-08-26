@@ -17,6 +17,7 @@ export const ME_QUERY = gql`
         title
         createdAt
         hits
+        postStatus
         comments {
           id
         }
@@ -41,6 +42,7 @@ export type MeType = {
       title: string;
       createdAt: string;
       hits: number;
+      postStatus: string;
       comments: {
         id: string;
       }[];

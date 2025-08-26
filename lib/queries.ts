@@ -209,6 +209,7 @@ export const GET_USER_BY_NICKNAME_QUERY = gql`
           title
           createdAt
           hits
+          postStatus
           comments {
             id
           }

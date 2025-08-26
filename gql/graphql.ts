@@ -21,13 +21,13 @@ export type Scalars = {
 export type Category = {
   __typename?: 'Category';
   categoryTitle: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   depth?: Maybe<Scalars['Float']['output']>;
   id: Scalars['Float']['output'];
   parentCategoryId?: Maybe<Scalars['Float']['output']>;
   parentCategoryTitle?: Maybe<Scalars['String']['output']>;
   sortOrder?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type CategoryCount = {
@@ -44,9 +44,9 @@ export type Comment = {
   comment: Scalars['String']['output'];
   commentId: Scalars['String']['output'];
   commentPassword: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['Float']['output'];
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type CreateAccountInput = {
@@ -220,11 +220,11 @@ export type GetPostListOutput = {
 
 export type Hashtag = {
   __typename?: 'Hashtag';
-  createdAt: Scalars['DateTime']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   hashtag: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   postId?: Maybe<Scalars['Float']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type HashtagCount = {
@@ -359,7 +359,7 @@ export type Post = {
   category: Category;
   comments?: Maybe<Array<Comment>>;
   contents: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
   hashtags?: Maybe<Array<Hashtag>>;
   hits: Scalars['Int']['output'];
@@ -368,7 +368,7 @@ export type Post = {
   readTime: Scalars['Int']['output'];
   thumbnailUrl?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
 };
 
@@ -476,7 +476,7 @@ export type UpdateUserProfileOutput = {
 export type User = {
   __typename?: 'User';
   comments: Array<Comment>;
-  createdAt: Scalars['DateTime']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   introduce?: Maybe<Scalars['String']['output']>;
@@ -486,7 +486,7 @@ export type User = {
   posts: Array<Post>;
   profileImage?: Maybe<Scalars['String']['output']>;
   role?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
   website?: Maybe<Scalars['String']['output']>;
 };
 
@@ -512,21 +512,21 @@ export type CreateCategoryMutationVariables = Exact<{
 
 export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CreateCategoryOutput', ok: boolean, error?: string | null } };
 
-export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt: any, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null };
+export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null };
 
 export type GetPostListByCategoryIdQueryVariables = Exact<{
   categoryId: Scalars['Int']['input'];
 }>;
 
 
-export type GetPostListByCategoryIdQuery = { __typename?: 'Query', getPostListByCategoryId?: { __typename?: 'getPostListByCategoryIdOutput', ok: boolean, error?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, hits: number, thumbnailUrl?: string | null, createdAt: any, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryId?: number | null, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } | null };
+export type GetPostListByCategoryIdQuery = { __typename?: 'Query', getPostListByCategoryId?: { __typename?: 'getPostListByCategoryIdOutput', ok: boolean, error?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryId?: number | null, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } | null };
 
 export type GetPostListByParentCategoryIdQueryVariables = Exact<{
   categoryId: Scalars['Int']['input'];
 }>;
 
 
-export type GetPostListByParentCategoryIdQuery = { __typename?: 'Query', getPostListByParentCategoryId?: { __typename?: 'getPostListByCategoryIdOutput', ok: boolean, error?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, hits: number, thumbnailUrl?: string | null, createdAt: any, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryId?: number | null, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } | null };
+export type GetPostListByParentCategoryIdQuery = { __typename?: 'Query', getPostListByParentCategoryId?: { __typename?: 'getPostListByCategoryIdOutput', ok: boolean, error?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryId?: number | null, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } | null };
 
 export type GetCategoriesCountsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -543,7 +543,7 @@ export type GetPostByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetPostByIdQuery = { __typename?: 'Query', getPostById?: { __typename?: 'GetPostByIdOutput', ok: boolean, post?: { __typename?: 'Post', id: number, title: string, contents: string, hits: number, createdAt: any, readTime: number, thumbnailUrl?: string | null, postStatus: PostStatus, user?: { __typename?: 'User', id: number } | null, category: { __typename?: 'Category', id: number, categoryTitle: string }, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null, comments?: Array<{ __typename?: 'Comment', id: number, commentId: string, comment: string, createdAt: any }> | null } | null } | null };
+export type GetPostByIdQuery = { __typename?: 'Query', getPostById?: { __typename?: 'GetPostByIdOutput', ok: boolean, post?: { __typename?: 'Post', id: number, title: string, contents: string, hits: number, createdAt?: any | null, readTime: number, thumbnailUrl?: string | null, postStatus: PostStatus, user?: { __typename?: 'User', id: number } | null, category: { __typename?: 'Category', id: number, categoryTitle: string }, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null, comments?: Array<{ __typename?: 'Comment', id: number, commentId: string, comment: string, createdAt?: any | null }> | null } | null } | null };
 
 export type CreateCommentMutationVariables = Exact<{
   input: CreateCommentInput;
@@ -555,12 +555,12 @@ export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { 
 export type GetPostListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPostListQuery = { __typename?: 'Query', getPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt: any, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
+export type GetPostListQuery = { __typename?: 'Query', getPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
 
 export type GetAllPostListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPostListQuery = { __typename?: 'Query', getAllPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', postStatus: PostStatus, id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt: any, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
+export type GetAllPostListQuery = { __typename?: 'Query', getAllPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', postStatus: PostStatus, id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, readTime: number, category: { __typename?: 'Category', id: number, categoryTitle: string, parentCategoryTitle?: string | null }, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
 
 export type GetAllPopularHashTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -572,14 +572,14 @@ export type UserProfileQueryVariables = Exact<{
 }>;
 
 
-export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', id: number, nickname?: string | null, email: string, createdAt: any, updatedAt: any } | null } };
+export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', id: number, nickname?: string | null, email: string, createdAt?: any | null, updatedAt?: any | null } | null } };
 
 export type UserProfileByNickNameQueryVariables = Exact<{
   userNickName: Scalars['String']['input'];
 }>;
 
 
-export type UserProfileByNickNameQuery = { __typename?: 'Query', userProfileByNickName: { __typename?: 'UserProfileOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', id: number, email: string, nickname?: string | null, profileImage?: string | null, introduce?: string | null, location?: string | null, website?: string | null, role?: string | null, createdAt: any, updatedAt: any, posts: Array<{ __typename?: 'Post', title: string, createdAt: any, hits: number, comments?: Array<{ __typename?: 'Comment', id: number }> | null }> } | null } };
+export type UserProfileByNickNameQuery = { __typename?: 'Query', userProfileByNickName: { __typename?: 'UserProfileOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', id: number, email: string, nickname?: string | null, profileImage?: string | null, introduce?: string | null, location?: string | null, website?: string | null, role?: string | null, createdAt?: any | null, updatedAt?: any | null, posts: Array<{ __typename?: 'Post', title: string, createdAt?: any | null, hits: number, postStatus: PostStatus, comments?: Array<{ __typename?: 'Comment', id: number }> | null }> } | null } };
 
 export type UpdateUserProfileMutationVariables = Exact<{
   input: UpdateUserProfileInput;
@@ -644,7 +644,7 @@ export const GetPostListDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const GetAllPostListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PostFields"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategoryTitle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<GetAllPostListQuery, GetAllPostListQueryVariables>;
 export const GetAllPopularHashTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllPopularHashTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllPopularHashTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllPopularHashTagsQuery, GetAllPopularHashTagsQueryVariables>;
 export const UserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<UserProfileQuery, UserProfileQueryVariables>;
-export const UserProfileByNickNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userProfileByNickName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userNickName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userProfileByNickName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userNickName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userNickName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profileImage"}},{"kind":"Field","name":{"kind":"Name","value":"introduce"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<UserProfileByNickNameQuery, UserProfileByNickNameQueryVariables>;
+export const UserProfileByNickNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userProfileByNickName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userNickName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userProfileByNickName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userNickName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userNickName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profileImage"}},{"kind":"Field","name":{"kind":"Name","value":"introduce"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<UserProfileByNickNameQuery, UserProfileByNickNameQueryVariables>;
 export const UpdateUserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateUserProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateUserProfileInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>;
 export const TogglePostStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"togglePostStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"postId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"togglePostStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"postId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"postId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<TogglePostStatusMutation, TogglePostStatusMutationVariables>;
 export const DeletePostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deletePost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"postId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"postId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"postId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<DeletePostMutation, DeletePostMutationVariables>;
