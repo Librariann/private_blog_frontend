@@ -24,6 +24,7 @@ const documents = {
     "\n  query getAllPopularHashTags {\n    getAllPopularHashTags {\n      hashtags {\n        hashtag\n        count\n      }\n    }\n  }\n": types.GetAllPopularHashTagsDocument,
     "\n  query userProfile($userId: Int!) {\n    userProfile(userId: $userId) {\n      ok\n      error\n      user {\n        id\n        nickname\n        email\n        createdAt\n        updatedAt\n      }\n    }\n  }\n": types.UserProfileDocument,
     "\n  query userProfileByNickName($userNickName: String!) {\n    userProfileByNickName(userNickName: $userNickName) {\n      ok\n      error\n      user {\n        id\n        email\n        nickname\n        profileImage\n        introduce\n        location\n        website\n        role\n        createdAt\n        updatedAt\n        posts {\n          title\n          createdAt\n          hits\n          comments {\n            id\n          }\n        }\n      }\n    }\n  }\n": types.UserProfileByNickNameDocument,
+    "\n  mutation updateUserProfile($input: UpdateUserProfileInput!) {\n    updateUserProfile(input: $input) {\n      ok\n      error\n    }\n  }\n": types.UpdateUserProfileDocument,
     "\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
     "\n  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {\n    editPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n    }\n  }\n": types.EditPostDocument,
@@ -88,6 +89,10 @@ export function graphql(source: "\n  query userProfile($userId: Int!) {\n    use
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query userProfileByNickName($userNickName: String!) {\n    userProfileByNickName(userNickName: $userNickName) {\n      ok\n      error\n      user {\n        id\n        email\n        nickname\n        profileImage\n        introduce\n        location\n        website\n        role\n        createdAt\n        updatedAt\n        posts {\n          title\n          createdAt\n          hits\n          comments {\n            id\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query userProfileByNickName($userNickName: String!) {\n    userProfileByNickName(userNickName: $userNickName) {\n      ok\n      error\n      user {\n        id\n        email\n        nickname\n        profileImage\n        introduce\n        location\n        website\n        role\n        createdAt\n        updatedAt\n        posts {\n          title\n          createdAt\n          hits\n          comments {\n            id\n          }\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updateUserProfile($input: UpdateUserProfileInput!) {\n    updateUserProfile(input: $input) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation updateUserProfile($input: UpdateUserProfileInput!) {\n    updateUserProfile(input: $input) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

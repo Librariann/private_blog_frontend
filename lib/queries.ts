@@ -220,3 +220,12 @@ export const GET_USER_BY_NICKNAME_QUERY = gql`
     }
   }
 `;
+
+export const UPDATE_USER_MUTATION = gql`
+  mutation updateUserProfile($input: UpdateUserProfileInput!) {
+    updateUserProfile(input: $input) {
+      ok
+      error
+    }
+  }
+`;
