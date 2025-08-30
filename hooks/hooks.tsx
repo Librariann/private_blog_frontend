@@ -7,6 +7,8 @@ import {
   GetCategoriesQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  UpdateUserProfileMutation,
+  UpdateUserProfileMutationVariables,
   UserProfileQuery,
   UserProfileQueryVariables,
 } from "@/gql/graphql";
@@ -18,13 +20,17 @@ import {
   GET_POPULAR_HASHTAG_QUERY,
   GET_CATEGORIES_COUNTS_QUERY,
   GET_USER_QUERY,
+  UPDATE_USER_MUTATION,
+  GET_USER_BY_NICKNAME_QUERY,
 } from "@/lib/queries";
+import { ME_QUERY } from "./useMe";
 import { useQuery } from "@apollo/client";
 import {
   CreateCommentMutation,
   CreateCommentMutationVariables,
 } from "@/gql/graphql";
 import { useMutation } from "@apollo/client";
+import { ME_QUERY } from "./useMe";
 
 export function useGetCategories() {
   const { data } = useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(
@@ -105,4 +111,24 @@ export const useGetUserInfo = ({ id }: { id: number }) => {
     }
   );
   return data?.userProfile?.user || null;
+};
+
+export const useUpdateUserProfile = (params?: { nickname?: string }) => {
+  const [updateUserProfileMutation, { loading: profileUpdateLoading }] =
+    useMutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>(
+      UPDATE_USER_MUTATION,
+      {
+        refetchQueries: [
+          {
+            query: GET_USER_BY_NICKNAME_QUERY,
+            variables: { userNickName: params?.nickname || "librarian" },
+          },
+          {
+            query: ME_QUERY,
+          },
+        ],
+        awaitRefetchQueries: true,
+      }
+    );
+  return { updateUserProfileMutation, profileUpdateLoading };
 };
