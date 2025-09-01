@@ -22,6 +22,8 @@ import { useMe } from "@/hooks/useMe";
 import ProfileEditModal from "@/components/modal/profile-edit-modal";
 import { formatNumberConvertK } from "@/utils/utils";
 import { useRouter } from "next/router";
+import { POST_STATUS_OBJECTS } from "@/common/constants";
+import { PostStatus } from "@/gql/graphql";
 
 const userStats = [
   { label: "작성한 포스트", value: "42", icon: Edit },
@@ -39,18 +41,18 @@ const MyPage = () => {
     return null;
   }
 
-  const allPostLength = data?.me?.posts?.length;
-  const allPostViews = data?.me?.posts?.reduce(
-    (acc, post) => acc + post.hits,
-    0
-  );
-  const allCommentsLength = data?.me?.posts?.reduce(
-    (acc, post) => acc + post.comments.length,
-    0
-  );
-  userStats[0].value = allPostLength?.toString() || "0";
-  userStats[1].value = formatNumberConvertK(allPostViews || 0);
-  userStats[2].value = allCommentsLength?.toString() || "0";
+  const allPostLength = data?.me?.posts?.filter(
+    (post) => post.postStatus === "PUBLISHED"
+  ).length;
+  const allPostViews = data?.me?.posts
+    ?.filter((post) => post.postStatus === "PUBLISHED")
+    .reduce((acc, post) => acc + post.hits, 0);
+  const allCommentsLength = data?.me?.posts
+    ?.filter((post) => post.postStatus === "PUBLISHED")
+    .reduce((acc, post) => acc + post.comments.length, 0);
+  userStats[0].value = allPostLength?.toString() || "0"; //작성한 포스트 갯수
+  userStats[1].value = formatNumberConvertK(allPostViews || 0); //총 조회수
+  userStats[2].value = allCommentsLength?.toString() || "0"; //총 댓글 갯수
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
@@ -186,45 +188,54 @@ const MyPage = () => {
       {/* Recent Posts */}
       <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 mb-6">
         <h2 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-          최근 작성한 글
+          최근 작성한 공개 글
         </h2>
         <div className="space-y-3">
-          {data?.me?.posts?.slice(0, 3).map((post, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-lg transition-colors ${
-                isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <h3
-                    className={`mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}
-                  >
-                    {post.title}
-                  </h3>
-                  <div
-                    className={`flex items-center gap-3 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-                  >
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {post.createdAt}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      {post.hits}
-                    </span>
+          {data?.me?.posts
+            ?.filter((post) => post.postStatus === "PUBLISHED")
+            .slice(0, 5)
+            .map((post, index) => (
+              <div
+                key={index}
+                className={`p-4 rounded-lg transition-colors ${
+                  isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-50"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <h3
+                      className={`mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                    >
+                      {post.title}
+                    </h3>
+                    <div
+                      className={`flex items-center gap-3 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
+                    >
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {post.createdAt}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        {post.hits}
+                      </span>
+                    </div>
                   </div>
+                  <Badge
+                    variant="outline"
+                    className={
+                      POST_STATUS_OBJECTS[post.postStatus as PostStatus]
+                        .buttonColor
+                    }
+                  >
+                    {
+                      POST_STATUS_OBJECTS[post.postStatus as PostStatus]
+                        .statusName
+                    }
+                  </Badge>
                 </div>
-                <Badge
-                  variant="outline"
-                  className={isDarkMode ? "border-white/20 text-white/70" : ""}
-                >
-                  공개
-                </Badge>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </GlassCardMain>
 
