@@ -1,40 +1,86 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NewButton } from "../buttons/new-button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/text-area";
 import { Input } from "../ui/input";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { MeType } from "@/hooks/useMe";
+import { useUpdateUserProfile } from "@/hooks/hooks";
+import { UpdateUserProfileInput } from "@/gql/graphql";
+import { toast } from "react-toastify";
+import { uploadImageToServer } from "@/utils/utils";
 
 interface ProfileEditModalProps {
   isOpen: boolean;
   onClose: () => void;
+  data: MeType;
 }
 
-const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
+const ProfileEditModal = ({ isOpen, onClose, data }: ProfileEditModalProps) => {
   const { isDarkMode } = useDarkModeStore();
+  const { updateUserProfileMutation, profileUpdateLoading } =
+    useUpdateUserProfile();
 
   const [formData, setFormData] = useState({
-    name: "김개발",
-    title: "Full Stack Developer",
-    bio: "웹 기술과 클라우드 아키텍처에 관심이 많은 개발자입니다. 최신 기술 트렌드와 실무 경험을 공유합니다.",
-    email: "developer@example.com",
-    location: "서울, 대한민국",
-    website: "github.com/developer",
+    nickname: "",
+    role: "",
+    introduce: "",
+    email: "",
+    location: "",
+    website: "",
   });
 
+  const [formDataChange, setFormDataChange] = useState({});
   const handleChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
+    setFormDataChange({ ...formDataChange, [field]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 실제 저장 로직
-    console.log("Profile saved:", formData);
-    onClose();
+    updateUserProfileMutation({
+      variables: {
+        input: {
+          ...formDataChange,
+        },
+      },
+    });
+    if (!profileUpdateLoading) {
+      onClose();
+      setFormDataChange({});
+      toast.success("프로필 변경 완료!");
+    }
   };
 
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        nickname: data.me.nickname,
+        role: data.me.role,
+        introduce: data.me.introduce,
+        email: data.me.email,
+        location: data.me.location,
+        website: data.me.website,
+      });
+    }
+  }, [data]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadProfileImage = async (file: File) => {
+    const profileImage = await uploadImageToServer(file, "profile");
+    updateUserProfileMutation({
+      variables: {
+        input: {
+          profileImage: profileImage,
+        },
+      },
+    });
+    if (!profileUpdateLoading) {
+      toast.success("프로필 이미지 변경 완료!");
+    }
+  };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
@@ -55,11 +101,23 @@ const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
           {/* Profile Image */}
           <div className="flex flex-col items-center gap-4">
             <Avatar className="w-24 h-24">
-              <AvatarImage src="https://images.unsplash.com/photo-1517309561013-16f6e4020305?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXZlbG9wZXIlMjBwcm9maWxlfGVufDF8fHx8MTc2MzAwOTM0NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" />
+              <AvatarImage src={`${data?.me?.profileImage || ""}`} />
               <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl">
                 Dev
               </AvatarFallback>
             </Avatar>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  await uploadProfileImage(file);
+                }
+              }}
+            />
             <NewButton
               type="button"
               variant="default"
@@ -68,6 +126,7 @@ const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
                   ? "bg-white/10 hover:bg-white/20 border-white/20 text-white"
                   : ""
               }
+              onClick={() => fileInputRef.current?.click()}
             >
               프로필 이미지 변경
             </NewButton>
@@ -83,8 +142,8 @@ const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
             </Label>
             <Input
               id="name"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              value={formData.nickname}
+              onChange={(e) => handleChange("nickname", e.target.value)}
               className={
                 isDarkMode
                   ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
@@ -93,18 +152,18 @@ const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
             />
           </div>
 
-          {/* Title */}
+          {/* role */}
           <div className="space-y-2">
             <Label
-              htmlFor="title"
+              htmlFor="role"
               className={isDarkMode ? "text-white" : "text-gray-900"}
             >
               직책
             </Label>
             <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) => handleChange("title", e.target.value)}
+              id="role"
+              value={formData.role}
+              onChange={(e) => handleChange("role", e.target.value)}
               className={
                 isDarkMode
                   ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
@@ -113,18 +172,18 @@ const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
             />
           </div>
 
-          {/* Bio */}
+          {/* introduce */}
           <div className="space-y-2">
             <Label
-              htmlFor="bio"
+              htmlFor="introduce"
               className={isDarkMode ? "text-white" : "text-gray-900"}
             >
               소개
             </Label>
             <Textarea
-              id="bio"
-              value={formData.bio}
-              onChange={(e) => handleChange("bio", e.target.value)}
+              id="introduce"
+              value={formData.introduce}
+              onChange={(e) => handleChange("introduce", e.target.value)}
               rows={4}
               className={
                 isDarkMode
