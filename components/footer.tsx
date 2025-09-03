@@ -8,13 +8,11 @@ const Footer = ({ isDarkMode }: { isDarkMode?: boolean }) => {
           className={`rounded-2xl p-6 text-center ${isDarkMode ? "glass-card" : "glass-card-light"}`}
         >
           <p className={isDarkMode ? "text-white/70" : "text-gray-600"}>
-            © 2025 Developer Blog. All rights reserved.
+            © 2025 Librarian. All rights reserved.
           </p>
           <p
             className={isDarkMode ? "text-white/50 mt-2" : "text-gray-400 mt-2"}
-          >
-            글래스모피즘 디자인으로 제작된 개인 기술 블로그
-          </p>
+          ></p>
         </div>
       </div>
     </footer>
