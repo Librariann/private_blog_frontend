@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 
+const menuList = ["/", "/all-posts-page", "/all-categories-page", "/about"];
+
 const Header = ({
   isDarkMode,
   onNavigateHome,
@@ -25,6 +27,10 @@ const Header = ({
     setIsMobileMenuOpen(false);
   };
 
+  const clickedMenu = (menuName: string): boolean => {
+    return menuName === router.pathname;
+  };
+
   return (
     <>
       <header
@@ -34,8 +40,8 @@ const Header = ({
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <button
-              onClick={onNavigateHome}
-              className="flex items-center space-x-3"
+              onClick={() => router.push("/")}
+              className="flex items-center space-x-3 cursor-pointer"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                 <span className="text-white">{`{L}`}</span>
@@ -51,11 +57,15 @@ const Header = ({
             <nav className="hidden md:flex items-center space-x-8">
               <button
                 onClick={() => router.push("/")}
-                className={`cursor-pointer
+                className={`cursor-pointer transition-colors
                   ${
                     isDarkMode
-                      ? "text-white hover:text-white/80 transition-colors"
-                      : "text-gray-900 hover:text-blue-600 transition-colors"
+                      ? clickedMenu("/")
+                        ? "text-white"
+                        : "text-white/70 hover:text-white"
+                      : clickedMenu("/")
+                        ? "text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
                   }
                 `}
               >
@@ -63,33 +73,45 @@ const Header = ({
               </button>
               <button
                 onClick={() => router.push("/all-posts-page")}
-                className={`cursor-pointer 
+                className={`cursor-pointer transition-colors
                   ${
                     isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors"
-                      : "text-gray-600 hover:text-gray-900 transition-colors"
+                      ? clickedMenu("/all-posts-page")
+                        ? "text-white"
+                        : "text-white/70 hover:text-white"
+                      : clickedMenu("/all-posts-page")
+                        ? "text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
                   }`}
               >
                 포스트
               </button>
               <button
                 onClick={() => router.push("/all-categories-page")}
-                className={`cursor-pointer
+                className={`cursor-pointer transition-colors
                   ${
                     isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors"
-                      : "text-gray-600 hover:text-gray-900 transition-colors"
+                      ? clickedMenu("/all-categories-page")
+                        ? "text-white"
+                        : "text-white/70 hover:text-white"
+                      : clickedMenu("/all-categories-page")
+                        ? "text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
                   }`}
               >
                 카테고리
               </button>
               <button
                 onClick={() => router.push("/about")}
-                className={`cursor-pointer
+                className={`cursor-pointer transition-colors
                   ${
                     isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors"
-                      : "text-gray-600 hover:text-gray-900 transition-colors"
+                      ? clickedMenu("/about")
+                        ? "text-white"
+                        : "text-white/70 hover:text-white"
+                      : clickedMenu("/about")
+                        ? "text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
                   }`}
               >
                 소개
@@ -105,7 +127,7 @@ const Header = ({
               </button> */}
               <button
                 onClick={onToggleTheme}
-                className={`p-2 rounded-lg transition-all ${
+                className={`p-2 rounded-lg transition-all cursor-pointer ${
                   isDarkMode
                     ? "bg-white/10 hover:bg-white/20 text-white"
                     : "bg-gray-100 hover:bg-gray-200 text-gray-900"
