@@ -16,13 +16,13 @@ export const getStaticProps: GetStaticProps = async () => {
   try {
     const postDatas = await getPostDatas();
     const popularHashTagDatas = await getPopularHashTagDatas();
-    // const userInfo = await getUserInfo("librarian");
+    const userInfo = await getUserInfo("librarian");
 
     return {
       props: {
         posts: postDatas,
         popularHashTags: popularHashTagDatas,
-        // userInfo: userInfo as UserInfoType,
+        userInfo: userInfo,
       },
       revalidate: 60, // 60초마다 재생성
     };
@@ -43,6 +43,7 @@ const Home = ({
 }: {
   posts: Post[];
   popularHashTags: popularHashTagsProps[];
+  userInfo: UserInfoType;
 }) => {
   return <Main posts={posts} popularHashTags={popularHashTags} />;
 };

@@ -7,12 +7,7 @@ interface UserInfoState {
   setUserInfo: (userInfo: UserInfoType) => void;
 }
 
-export const useUserInfoStore = create<UserInfoState>()(
-  persist(
-    (set) => ({
-      userInfo: null,
-      setUserInfo: (userInfo: UserInfoType) => set({ userInfo }),
-    }),
-    { name: "user-info-storage" }
-  )
-);
+export const useUserInfoStore = create<UserInfoState>()((set) => ({
+  userInfo: null,
+  setUserInfo: (userInfo: UserInfoType) => set({ userInfo }),
+}));
