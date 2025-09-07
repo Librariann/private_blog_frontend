@@ -20,7 +20,6 @@ import { GlassCardMain } from "@/components/main/main";
 import { NewButton } from "@/components/buttons/new-button";
 import { useMe } from "@/hooks/useMe";
 import ProfileEditModal from "@/components/modal/profile-edit-modal";
-import { useRouter } from "next/router";
 import { formatNumberConvertK } from "../utils/utils";
 
 const userStats = [
@@ -30,11 +29,11 @@ const userStats = [
 ];
 
 const MyPage = () => {
-  const router = useRouter();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isDarkMode } = useDarkModeStore();
-  const { data } = useMe();
-  if (!data?.me) {
+  const { data, error } = useMe();
+
+  if (data === undefined && error === "Token has expired") {
     return null;
   }
 
@@ -48,7 +47,7 @@ const MyPage = () => {
     0
   );
   userStats[0].value = allPostLength?.toString() || "0";
-  userStats[1].value = formatNumberConvertK(allPostViews) || "0";
+  userStats[1].value = formatNumberConvertK(allPostViews || 0);
   userStats[2].value = allCommentsLength?.toString() || "0";
 
   return (
@@ -76,7 +75,7 @@ const MyPage = () => {
           <Avatar
             className={`w-24 h-24 sm:w-32 sm:h-32 ring-4 ${isDarkMode ? "ring-white/20" : "ring-blue-200"}`}
           >
-            <AvatarImage src={`${data?.me?.profileImage}`} />
+            <AvatarImage src={`${data?.me?.profileImage || ""}`} />
             <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl">
               Dev
             </AvatarFallback>
@@ -315,6 +314,7 @@ const MyPage = () => {
       <ProfileEditModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
+        data={data!}
       />
     </div>
   );

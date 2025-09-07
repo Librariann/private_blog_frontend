@@ -41,7 +41,6 @@ function Layout({ children }: Props) {
 
   useEffect(() => {
     setMounted(true);
-    console.log(data);
     if (data === undefined && error === "Token has expired") {
       toast.error("로그인 시간이 만료되었습니다. 다시 로그인 해주세요.");
       localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
