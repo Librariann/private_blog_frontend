@@ -6,6 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import "aos/dist/aos.css";
+import "../styles/edit.css";
 import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -38,11 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           sizes="64x64"
           href="/favicon-64x64.png"
         />
-        <link
-          rel="apple-touch-icon"
-          sizes="64x64"
-          href="/favicon-64x64.png"
-        />
+        <link rel="apple-touch-icon" sizes="64x64" href="/favicon-64x64.png" />
       </Head>
       <Layout>
         <Component {...pageProps} />
