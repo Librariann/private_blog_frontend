@@ -61,12 +61,15 @@ function Layout({ children }: Props) {
             <div className="fixed inset-0 -z-10">
               {isDarkMode ? (
                 <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-slate-900 to-black"></div>
-                  <div className="absolute inset-0 bg-[url('/images/darkmode-background.jpeg')] bg-cover bg-center opacity-5"></div>
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/20 via-transparent to-purple-950/20"></div>
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1604781109199-ced99b89b0f6?...')] bg-cover bg-center" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/30 via-transparent to-purple-950/30" />
                 </>
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50 to-slate-100"></div>
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50 to-slate-100"></div>
+                  <div className="absolute inset-0 bg-[url('/images/darkmode-background.jpeg')] bg-cover bg-center opacity-5"></div>
+                </>
               )}
             </div>
 
