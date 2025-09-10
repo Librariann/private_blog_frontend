@@ -5,3 +5,8 @@
 .wmde-markdown h2 {
   border-bottom: none;
 }
+
+.mde-markdown hr {
+  border-bottom: none;
+  height: 0.1em;
+}
