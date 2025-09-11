@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CategoryCount } from "@/gql/graphql";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { popularHashTagsProps } from "@/pages";
+import { useRouter } from "next/router";
 
 export type DesktopAndMobileProps = {
   isDarkMode: boolean;
@@ -27,6 +28,7 @@ const Desktop = ({
   toggleCategoryExpand,
   popularHashTags,
 }: DesktopAndMobileProps) => {
+  const router = useRouter();
   return (
     <aside className="hidden lg:block lg:col-span-4 space-y-6">
       <ProfileSidebar isDarkMode={isDarkMode} />
@@ -50,7 +52,7 @@ const Desktop = ({
                 {/* 상위 카테고리 */}
                 <button
                   onClick={() => toggleCategoryExpand(parent.categoryTitle)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all cursor-pointer ${
                     isDarkMode
                       ? "text-white/80 hover:bg-white/5"
                       : "text-gray-700 hover:bg-gray-50"
@@ -95,35 +97,43 @@ const Desktop = ({
                         className="overflow-hidden"
                       >
                         <div className="ml-11 mt-1 space-y-1">
-                          {parent.children.map((subCat, index) => (
-                            <motion.button
-                              key={subCat.categoryTitle}
-                              initial={{ x: -10, opacity: 0 }}
-                              animate={{ x: 0, opacity: 1 }}
-                              transition={{
-                                duration: 0.2,
-                                delay: index * 0.05,
-                                ease: "easeOut",
-                              }}
-                              className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
-                                isDarkMode
-                                  ? "text-white/70 hover:bg-white/10 hover:text-white"
-                                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                              }`}
+                          {parent.children.map((subCategory, index) => (
+                            <span
+                              key={subCategory.categoryTitle}
+                              onClick={() =>
+                                router.push(
+                                  `/post/${parent.categoryTitle}/${subCategory.categoryTitle}`
+                                )
+                              }
                             >
-                              <div className="flex items-center justify-between">
-                                <span>{subCat.categoryTitle}</span>
-                                <span
-                                  className={
-                                    isDarkMode
-                                      ? "text-white/50"
-                                      : "text-gray-400"
-                                  }
-                                >
-                                  {subCat.count}
-                                </span>
-                              </div>
-                            </motion.button>
+                              <motion.button
+                                initial={{ x: -10, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{
+                                  duration: 0.2,
+                                  delay: index * 0.05,
+                                  ease: "easeOut",
+                                }}
+                                className={`w-full text-left px-3 py-2 rounded-lg transition-all cursor-pointer ${
+                                  isDarkMode
+                                    ? "text-white/70 hover:bg-white/10 hover:text-white"
+                                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span>{subCategory.categoryTitle}</span>
+                                  <span
+                                    className={
+                                      isDarkMode
+                                        ? "text-white/50"
+                                        : "text-gray-400"
+                                    }
+                                  >
+                                    {subCategory.count}
+                                  </span>
+                                </div>
+                              </motion.button>
+                            </span>
                           ))}
                         </div>
                       </motion.div>
