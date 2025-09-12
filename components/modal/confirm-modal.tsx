@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ConfirmModalProps = {
   isOpen: boolean;
@@ -32,6 +32,7 @@ const ConfirmModal = ({
         {isComment && (
           <input
             type="password"
+            autoComplete="new-password"
             placeholder="비밀번호를 입력해주세요"
             className="border border-gray-300 rounded w-full p-2 mb-4"
             value={password}
@@ -41,8 +42,11 @@ const ConfirmModal = ({
         <div className="flex justify-center space-x-3">
           <button
             onClick={() => {
-              onConfirm(password);
-              setPassword("");
+              if (isComment) {
+                onConfirm(password);
+              } else {
+                onConfirm();
+              }
             }}
             className={`px-4 py-2 bg-blue-500 text-white rounded transition-colors hover:bg-blue-600`}
           >
