@@ -47,16 +47,18 @@ const CommentsWrite = () => {
   const {
     register,
     reset,
+    getValues,
     formState: { isValid },
   } = useForm<commentProps>({
     mode: "onChange",
   });
-  const onSubmit = async (data: commentProps) => {
+  const onSubmit = async () => {
     if (!id) {
       alert("댓글 내용이 없습니다! 다시 확인해주세요!");
       return;
     }
 
+    const data = getValues();
     const commentResult = await createCommentMutation({
       variables: {
         input: {
@@ -71,8 +73,10 @@ const CommentsWrite = () => {
     if (commentResult.data?.createComment.ok) {
       alert("댓글이 작성됐습니다.");
       reset();
+      setIsModalOpen(false);
     } else {
       alert("댓글 작성에 실패했습니다.");
+      setIsModalOpen(false);
     }
   };
 
@@ -125,7 +129,7 @@ const CommentsWrite = () => {
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
-        onConfirm={handleCommentConfirm}
+        onConfirm={onSubmit}
         title="댓글 작성"
         message="댓글을 작성 하시겠습니까?"
         isCancel={false}
