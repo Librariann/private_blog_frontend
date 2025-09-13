@@ -2,7 +2,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { createApolloClient, client } from "@/apollo";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Comments from "@/components/comments";
@@ -106,8 +106,20 @@ const EditerMarkdown = dynamic(
 
 const PostDetail = ({ post }: PostProps) => {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const { id } = router.query;
   
-  const currentPost = post;
+  // useQuery로 실시간 데이터 가져오기
+  const { data: postData, loading } = useQuery<
+    GetPostByIdQuery,
+    GetPostByIdQueryVariables
+  >(GET_POST_BY_ID_QUERY, {
+    variables: { postId: Number(id) },
+    skip: !id,
+  });
+
+  const currentPost = postData?.getPostById?.post || post;
+  
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
@@ -151,13 +163,12 @@ const PostDetail = ({ post }: PostProps) => {
 
   const { data } = useMe();
   const userId = data?.me?.id;
-  const router = useRouter();
   
   const handleEditPost = () => {
-    router.push(`/post-edit?id=${post?.id}`);
+    router.push(`/post-edit?id=${currentPost?.id}`);
   };
 
-  if (!currentPost) {
+  if (loading || !currentPost) {
     return <PostDetailSkeleton />;
   }
 
