@@ -3,8 +3,7 @@ import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { popularHashTagsProps } from "@/pages";
 import { BlogPostCard } from "../cards/blog-post-card";
-import { GetPostListQuery } from "@/gql/graphql";
-import { useQuery } from "@apollo/client";
+import { GetPostListQuery, Post } from "@/gql/graphql";
 import Mobile from "./mobile";
 import Desktop from "./desktop";
 import { useRouter } from "next/router";
@@ -14,7 +13,7 @@ const Main = ({
   posts,
   popularHashTags,
 }: {
-  posts: GetPostListQuery["getPostList"]["posts"];
+  posts: Post[];
   popularHashTags: popularHashTagsProps[];
 }) => {
   const router = useRouter();
@@ -129,7 +128,6 @@ const Main = ({
               <BlogPostCard
                 key={post.id}
                 post={post}
-                isDarkMode={isDarkMode}
                 onClick={() =>
                   router.push(
                     `/post/${post.category.parentCategoryTitle}/${post.category.categoryTitle}/@Post-${post.id}`
