@@ -1,0 +1,3 @@
+gql/**
+*.graphql.ts
+.next/**
