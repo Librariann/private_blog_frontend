@@ -8,6 +8,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import "aos/dist/aos.css";
 import "../styles/edit.css";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
@@ -41,6 +42,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <link rel="apple-touch-icon" sizes="64x64" href="/favicon-64x64.png" />
       </Head>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: "#4ade80",
+              secondary: "#fff",
+            },
+          },
+          error: {
+            duration: 3000,
+            iconTheme: {
+              primary: "#ef4444",
+              secondary: "#fff",
+            },
+          },
+        }}
+      />
       <Layout>
         <Component {...pageProps} />
       </Layout>
