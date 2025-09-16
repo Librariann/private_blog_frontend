@@ -1,5 +1,3 @@
-import { PostsProps } from "@/pages";
-
 const PostList = ({ posts }: { posts: PostsProps[] }) => {
   if (!posts || posts.length === 0) {
     return (
