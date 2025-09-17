@@ -52,6 +52,11 @@ const CommentsWrite = () => {
     formState: { isValid },
   } = useForm<commentProps>({
     mode: "onChange",
+    defaultValues: {
+      id: "",
+      password: "",
+      comment: "",
+    },
   });
   const onSubmit = async () => {
     if (!id) {
@@ -73,7 +78,11 @@ const CommentsWrite = () => {
 
     if (commentResult.data?.createComment.ok) {
       toast.success("댓글이 작성됐습니다.");
-      reset();
+      reset({
+        id: "",
+        password: "",
+        comment: "",
+      });
       setIsModalOpen(false);
     } else {
       toast.error("댓글 작성에 실패했습니다.");
