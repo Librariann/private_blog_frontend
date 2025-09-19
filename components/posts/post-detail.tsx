@@ -15,17 +15,9 @@ type topicProps = {
 }[];
 export type PostDetailPageProps = {
   post: Post;
-  // onBack: () => void;
-  // allPosts: Post[];
-  // onPostClick: (post: Post) => void;
 };
 
-const PostDetail = ({
-  post,
-  // onBack,
-  // allPosts,
-  // onPostClick,
-}: PostDetailPageProps) => {
+const PostDetail = ({ post }: PostDetailPageProps) => {
   const { isDarkMode } = useDarkModeStore();
   const [isTocOpen, setIsTocOpen] = useState(true);
 
@@ -123,7 +115,7 @@ const PostDetail = ({
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="w-4 h-4" />
-              {/* <span>{post.readTime} 읽기</span> */}
+              <span>{post.readTime}분 읽기</span>
             </div>
           </div>
         </div>
