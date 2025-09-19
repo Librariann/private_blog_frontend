@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { GET_POST_BY_ID_QUERY } from "./[contents]/[id]";
 import { GET_CATEGORIES, imageUploadCommand, postingProps } from "./post-write";
@@ -16,7 +16,19 @@ import {
   GetCategoriesQueryVariables,
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
+  EditPostMutation,
+  EditPostMutationVariables,
 } from "@/gql/graphql";
+import toast from "react-hot-toast";
+
+const EDIT_POST_MUTATION = gql`
+  mutation editPost($input: EditPostInput!) {
+    editPost(input: $input) {
+      ok
+      error
+    }
+  }
+`;
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -55,6 +67,19 @@ const PostEdit = () => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
+  const [editPostMutation, { loading: editLoading }] = useMutation(
+    EDIT_POST_MUTATION,
+    {
+      refetchQueries: [
+        {
+          query: GET_POST_BY_ID_QUERY,
+          variables: { postId: Number(postId) },
+        },
+      ],
+      awaitRefetchQueries: true,
+    }
+  );
+
   const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
       e.key === "Enter" &&
@@ -92,36 +117,36 @@ const PostEdit = () => {
     setThumbnailPreview(null);
   };
 
-  //   const onSubmit = async (data: postingProps) => {
-  //     try {
-  //       const { title } = data;
-  //       let thumbnailUrl = "";
-  //       if (thumbnailFile) {
-  //         thumbnailUrl = await uploadImageToServer(thumbnailFile);
-  //       }
+  const onSubmit = async (formData: postingProps) => {
+    try {
+      const { title } = formData;
 
-  //       const postResult = await createPostMutation({
-  //         variables: {
-  //           input: {
-  //             title,
-  //             contents: md || "",
-  //             categoryId: selectedCategory,
-  //             thumbnailUrl,
-  //           },
-  //           hashtags,
-  //         },
-  //       });
+      if (!postId) {
+        toast.error("게시물 ID가 없습니다.");
+        return;
+      }
 
-  //       if (postResult.data?.createPost.ok) {
-  //         setPostConfirmModal(true);
-  //       } else {
-  //         alert(postResult.data?.createPost.error);
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       alert("게시물 작성 중 오류가 발생했습니다.");
-  //     }
-  //   };
+      const result = await editPostMutation({
+        variables: {
+          input: {
+            id: Number(postId),
+            title,
+            contents: md || "",
+          },
+        },
+      });
+
+      if (result.data?.editPost.ok) {
+        toast.success("게시물이 수정되었습니다.");
+        setPostConfirmModal(true);
+      } else {
+        toast.error(result.data?.editPost.error || "게시물 수정에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("게시물 수정 중 오류가 발생했습니다.");
+    }
+  };
 
   const redirect = () => {
     if (process.env.NODE_ENV === "production") {
@@ -273,11 +298,11 @@ const PostEdit = () => {
           </div>
 
           <div className="flex justify-end mt-4">
-            <div onClick={() => isValid && !loading && setOpen(true)}>
+            <div onClick={() => isValid && !loading && !editLoading && setOpen(true)}>
               <Button
-                canClick={isValid && !loading}
-                loading={loading}
-                actionText="게시물 생성"
+                canClick={isValid && !loading && !editLoading}
+                loading={loading || editLoading}
+                actionText="게시물 수정"
               />
             </div>
           </div>
@@ -288,24 +313,23 @@ const PostEdit = () => {
         onClose={() => {
           setOpen(false);
         }}
-        onConfirm={() => {
-          //   handleSubmit(onSubmit)();
-        }}
-        title="게시물 작성"
-        message="게시물을 작성하시겠습니까?"
+        onConfirm={handleSubmit(onSubmit)}
+        title="게시물 수정"
+        message="게시물을 수정하시겠습니까?"
         isCancel={false}
+        loading={editLoading}
       />
 
       <ConfirmModal
         isOpen={postConfirmModal}
         onClose={() => {
-          setPostConfirmModal(false);
+          redirect();
         }}
         onConfirm={() => {
           redirect();
         }}
-        title="작성 완료"
-        message="게시물이 작성되었습니다."
+        title="수정 완료"
+        message="게시물이 수정되었습니다."
         isCancel={true}
       />
     </div>
