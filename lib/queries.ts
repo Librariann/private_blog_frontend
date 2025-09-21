@@ -11,6 +11,8 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         contents
         hits
         thumbnailUrl
+        createdAt
+        readTime
         category {
           id
           categoryTitle
@@ -39,6 +41,8 @@ export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
         contents
         hits
         thumbnailUrl
+        createdAt
+        readTime
         category {
           id
           categoryTitle
@@ -100,6 +104,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         contents
         hits
         createdAt
+        readTime
         thumbnailUrl
         user {
           id
@@ -143,6 +148,7 @@ export const GET_POST_LIST_QUERY = gql`
         hits
         thumbnailUrl
         createdAt
+        readTime
         category {
           id
           categoryTitle
