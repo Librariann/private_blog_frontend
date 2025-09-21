@@ -15,7 +15,6 @@ const ConfirmModal = ({
   title,
   message,
   isCancel = false,
-  loading = false,
 }: ConfirmModalProps) => {
   if (!isOpen) return null;
 
@@ -25,35 +24,19 @@ const ConfirmModal = ({
         <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
         <p className="text-gray-600 mb-6 text-center">{message}</p>
 
-        {loading && (
-          <div className="mb-4 flex justify-center">
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        )}
-
         <div className="flex justify-center space-x-3">
           <button
             onClick={() => {
               onConfirm();
             }}
-            disabled={loading}
-            className={`px-4 py-2 bg-blue-500 text-white rounded transition-colors ${
-              loading
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-blue-600"
-            }`}
+            className={`px-4 py-2 bg-blue-500 text-white rounded transition-colors hover:bg-blue-600`}
           >
             확인
           </button>
           {!isCancel && (
             <button
               onClick={onClose}
-              disabled={loading}
-              className={`px-4 py-2 bg-gray-200 text-gray-700 rounded transition-colors ${
-                loading
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-gray-300"
-              }`}
+              className={`px-4 py-2 bg-gray-200 text-gray-700 rounded transition-colorshover:bg-gray-300`}
             >
               취소
             </button>
