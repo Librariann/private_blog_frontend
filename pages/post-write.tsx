@@ -21,6 +21,7 @@ import {
   TextState,
 } from "@uiw/react-md-editor";
 import { uploadImageToServer } from "@/utils/utils";
+import WritingAnimation from "@/components/loading/writing-animation";
 
 export const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
@@ -162,6 +163,7 @@ function PostWrite() {
   const [postConfirmModal, setPostConfirmModal] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
@@ -202,6 +204,9 @@ function PostWrite() {
 
   const onSubmit = async (data: postingProps) => {
     try {
+      setIsSubmitting(true);
+      setOpen(false);
+      
       const { title } = data;
       let thumbnailUrl = "";
       if (thumbnailFile) {
@@ -221,16 +226,15 @@ function PostWrite() {
       });
 
       if (postResult.data?.createPost.ok) {
-        setOpen(false);
         setPostConfirmModal(true);
       } else {
-        setOpen(false);
         alert(postResult.data?.createPost.error);
       }
     } catch (error) {
       console.error(error);
-      setOpen(false);
       alert("게시물 작성 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -402,6 +406,9 @@ function PostWrite() {
         message="게시물이 작성되었습니다."
         isCancel={true}
       />
+
+      {/* 작성 중 애니메이션 */}
+      {isSubmitting && <WritingAnimation />}
     </div>
   );
 }
