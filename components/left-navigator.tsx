@@ -3,32 +3,26 @@ import {
   GetCategoriesCountsQuery,
   GetCategoriesCountsQueryVariables,
 } from "@/gql/graphql";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import CategorySkeleton from "./skeleton/category-skeleton";
-
-export const GET_CATEGORIES_COUNTS_QUERY = gql`
-  query getCategoriesCounts {
-    getCategoriesCounts {
-      ok
-      categoryCounts {
-        id
-        categoryTitle
-        count
-      }
-    }
-  }
-`;
+import { GET_CATEGORIES_COUNTS_QUERY } from "@/lib/queries";
 
 type LeftNavigatorProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+type childrenProps = {
+  id: number;
+  categoryTitle: string;
+  count: number;
+};
+
 const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
-  const { loading, data } = useQuery<
+  const { loading, data: getCategoryDatas } = useQuery<
     GetCategoriesCountsQuery,
     GetCategoriesCountsQueryVariables
   >(GET_CATEGORIES_COUNTS_QUERY, {
@@ -40,21 +34,15 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
+    const categories =
+      getCategoryDatas?.getCategoriesCounts?.categoryCounts || [];
+    setCategories(categories);
+  }, [getCategoryDatas]);
+
+  useEffect(() => {
     // 클라이언트에서만 router.asPath 사용
     setCurrentPath(router.asPath);
   }, [router.asPath]);
-
-  useEffect(() => {
-    // 데이터가 있고, 변경되었을 때만 state 업데이트
-    if (data?.getCategoriesCounts.categoryCounts) {
-      const newCategories = data.getCategoriesCounts.categoryCounts;
-      const isDifferent =
-        JSON.stringify(newCategories) !== JSON.stringify(categories);
-      if (isDifferent || categories.length === 0) {
-        setCategories(newCategories);
-      }
-    }
-  }, [data]);
 
   // Prefetch category pages on hover
   const handlePrefetch = (categoryTitle: string) => {
@@ -76,7 +64,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   return (
     <>
       {/* 데스크톱 뷰 */}
-      <nav className="hidden xl:block h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6">
+      <nav className="hidden xl:block h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6 round rounded-xl border-gray-700">
         <div className="mb-8 border-b border-gray-700 pb-4">
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
@@ -84,7 +72,8 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
           <CategorySkeleton />
         ) : (
           <ul className="space-y-3">
-            <li
+            {/* 전체보기 필요없어서 삭제 */}
+            {/* <li
               className={`hover:bg-gray-600 transition-colors duration-200 ${
                 isHome ? "bg-gray-700" : "hover:bg-gray-700"
               }`}
@@ -98,28 +87,47 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
                   {sumAllCategoryCounts}
                 </span>
               </Link>
-            </li>
+            </li> */}
             {categories.map((category) => (
-              <li
-                key={category.categoryTitle}
-                className={`hover:bg-gray-700 transition-colors duration-200 ${
-                  decodeURIComponent(currentCategory) === category.categoryTitle
-                    ? "bg-gray-700"
-                    : ""
-                }`}
-                onMouseEnter={() => handlePrefetch(category.categoryTitle)}
-              >
-                <Link
-                  href={`/${encodeURIComponent(category.categoryTitle)}`}
-                  prefetch={true}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+              <>
+                <li
+                  key={category.categoryTitle}
+                  className={`hover:bg-gray-700 transition-colors duration-200 ${
+                    decodeURIComponent(currentCategory) ===
+                    category.categoryTitle
+                      ? "bg-gray-700"
+                      : ""
+                  }`}
+                  onMouseEnter={() => handlePrefetch(category.categoryTitle)}
                 >
-                  <span>{category.categoryTitle}</span>
-                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                    {category.count}
-                  </span>
-                </Link>
-              </li>
+                  <Link
+                    href={`/post/${encodeURIComponent(category.categoryTitle)}`}
+                    prefetch={true}
+                    className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+                  >
+                    <span>{category.categoryTitle}</span>
+                    <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                      {category.count}
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  {category.children.map((child: childrenProps, i: number) => (
+                    <Link
+                      key={i}
+                      href={`/post/${encodeURIComponent(
+                        category.categoryTitle
+                      )}/${encodeURIComponent(child.categoryTitle)}`}
+                    >
+                      <div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ㄴ
+                        {child.categoryTitle}
+                        {child.count}
+                      </div>
+                    </Link>
+                  ))}
+                </li>
+              </>
             ))}
           </ul>
         )}
