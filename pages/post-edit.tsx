@@ -4,11 +4,8 @@ import { GET_POST_BY_ID_QUERY } from "./[contents]/[id]";
 import { GET_CATEGORIES, imageUploadCommand, postingProps } from "./post-write";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import {
-  commands,
-} from "@uiw/react-md-editor";
+import { commands } from "@uiw/react-md-editor";
 import dynamic from "next/dynamic";
-import { uploadImageToServer } from "@/utils/utils";
 import ConfirmModal from "@/components/modal/confirm-modal";
 import Button from "@/components/button";
 import {
@@ -16,10 +13,9 @@ import {
   GetCategoriesQueryVariables,
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
-  EditPostMutation,
-  EditPostMutationVariables,
 } from "@/gql/graphql";
 import toast from "react-hot-toast";
+import WritingAnimation from "@/components/loading/writing-animation";
 
 const EDIT_POST_MUTATION = gql`
   mutation editPost($input: EditPostInput!) {
@@ -66,19 +62,18 @@ const PostEdit = () => {
   const [postConfirmModal, setPostConfirmModal] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [editPostMutation, { loading: editLoading }] = useMutation(
-    EDIT_POST_MUTATION,
-    {
-      refetchQueries: [
-        {
-          query: GET_POST_BY_ID_QUERY,
-          variables: { postId: Number(postId) },
-        },
-      ],
-      awaitRefetchQueries: true,
-    }
-  );
+    EDIT_POST_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_POST_BY_ID_QUERY,
+        variables: { postId: Number(postId) },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
 
   const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
@@ -119,6 +114,9 @@ const PostEdit = () => {
 
   const onSubmit = async (formData: postingProps) => {
     try {
+      setIsSubmitting(true);
+      setOpen(false);
+      
       const { title } = formData;
 
       if (!postId) {
@@ -145,6 +143,8 @@ const PostEdit = () => {
     } catch (error) {
       console.error(error);
       toast.error("게시물 수정 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -298,7 +298,11 @@ const PostEdit = () => {
           </div>
 
           <div className="flex justify-end mt-4">
-            <div onClick={() => isValid && !loading && !editLoading && setOpen(true)}>
+            <div
+              onClick={() =>
+                isValid && !loading && !editLoading && setOpen(true)
+              }
+            >
               <Button
                 canClick={isValid && !loading && !editLoading}
                 loading={loading || editLoading}
@@ -332,6 +336,9 @@ const PostEdit = () => {
         message="게시물이 수정되었습니다."
         isCancel={true}
       />
+
+      {/* 수정 중 애니메이션 */}
+      {isSubmitting && <WritingAnimation />}
     </div>
   );
 };
