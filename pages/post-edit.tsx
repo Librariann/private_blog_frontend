@@ -65,15 +65,17 @@ const PostEdit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [editPostMutation, { loading: editLoading }] = useMutation(
-    EDIT_POST_MUTATION, {
-    refetchQueries: [
-      {
-        query: GET_POST_BY_ID_QUERY,
-        variables: { postId: Number(postId) },
-      },
-    ],
-    awaitRefetchQueries: true,
-  });
+    EDIT_POST_MUTATION,
+    {
+      refetchQueries: [
+        {
+          query: GET_POST_BY_ID_QUERY,
+          variables: { postId: Number(postId) },
+        },
+      ],
+      awaitRefetchQueries: true,
+    }
+  );
 
   const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
@@ -116,7 +118,7 @@ const PostEdit = () => {
     try {
       setIsSubmitting(true);
       setOpen(false);
-      
+
       const { title } = formData;
 
       if (!postId) {
@@ -138,7 +140,9 @@ const PostEdit = () => {
         toast.success("게시물이 수정되었습니다.");
         setPostConfirmModal(true);
       } else {
-        toast.error(result.data?.editPost.error || "게시물 수정에 실패했습니다.");
+        toast.error(
+          result.data?.editPost.error || "게시물 수정에 실패했습니다."
+        );
       }
     } catch (error) {
       console.error(error);
