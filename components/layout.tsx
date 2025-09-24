@@ -45,10 +45,12 @@ function Layout({ children }: Props) {
       {isLayoutVisible ? (
         <>
           {globalLoading && <GlobalLoading />}
-          <Header onMenuToggle={handleMobileMenuClose} />
+          <div className="p-2">
+            <Header onMenuToggle={handleMobileMenuClose} />
+          </div>
           <div className="flex-grow" style={{ height: "calc(100vh - 64px)" }}>
             <div className="flex flex-row h-full">
-              <div className="xl:block xl:w-1/6">
+              <div className="xl:block xl:w-64 p-4">
                 <LeftNavigator
                   isOpen={isMobileMenuOpen}
                   onClose={handleMobileMenuClose}
