@@ -67,6 +67,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         contents
         hits
         createdAt
+        thumbnailUrl
         user {
           id
         }
