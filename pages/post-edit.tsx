@@ -1,7 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { GET_POST_BY_ID_QUERY } from "./[contents]/[id]";
-import { GET_CATEGORIES, imageUploadCommand, postingProps } from "./post-write";
+import { imageUploadCommand, postingProps } from "./post-write";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { commands } from "@uiw/react-md-editor";
@@ -16,6 +15,9 @@ import {
 } from "@/gql/graphql";
 import WritingAnimation from "@/components/loading/writing-animation";
 import { uploadImageToServer } from "@/utils/utils";
+import { GET_POST_BY_ID_QUERY } from "@/components/post-detail";
+import { GET_CATEGORIES } from "@/lib/queries";
+import { toast } from "react-toastify";
 
 const EDIT_POST_MUTATION = gql`
   mutation editPost($input: EditPostInput!, $hashtags: [String!]) {
@@ -134,13 +136,14 @@ const PostEdit = () => {
 
   const onSubmit = async (formData: postingProps) => {
     try {
+      console.log("TEST!!");
       setIsSubmitting(true);
       setOpen(false);
 
       const { title } = formData;
 
       if (!postId) {
-        //toast.error("게시물 ID가 없습니다.");
+        toast.error("게시물 ID가 없습니다.");
         setIsSubmitting(false);
         return;
       }
@@ -174,17 +177,17 @@ const PostEdit = () => {
       });
 
       if (result.data?.editPost.ok) {
-        //toast.success("게시물이 수정되었습니다.");
+        toast.success("게시물이 수정되었습니다.");
         setPostConfirmModal(true);
       } else {
         console.error("Edit Post Error:", result.data?.editPost.error);
-        //toast.error(
-        //result.data?.editPost.error || "게시물 수정에 실패했습니다."
-        //);
+        toast.error(
+          result.data?.editPost.error || "게시물 수정에 실패했습니다."
+        );
       }
     } catch (error) {
       console.error("Edit Post Exception:", error);
-      //toast.error("게시물 수정 중 오류가 발생했습니다.");
+      toast.error("게시물 수정 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }
@@ -355,7 +358,7 @@ const PostEdit = () => {
         onClose={() => {
           setOpen(false);
         }}
-        onConfirm={() => handleSubmit(onSubmit)}
+        onConfirm={() => handleSubmit(onSubmit)()}
         title="게시물 수정"
         message="게시물을 수정하시겠습니까?"
         isCancel={false}

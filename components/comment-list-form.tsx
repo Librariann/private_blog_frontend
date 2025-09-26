@@ -3,10 +3,10 @@ import { CommentProps } from "./comments";
 import ConfirmModal from "./modal/confirm-modal";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { GET_POST_BY_ID_QUERY } from "@/pages/[contents]/[id]";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useLoadingStore } from "@/stores/useLoadingStore";
+import { GET_POST_BY_ID_QUERY } from "./post-detail";
 
 const CommentListForm = ({ comment }: { comment: CommentProps }) => {
   const router = useRouter();

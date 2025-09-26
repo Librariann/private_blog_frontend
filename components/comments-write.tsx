@@ -6,11 +6,11 @@ import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import Button from "./button";
-import { GET_POST_BY_ID_QUERY } from "@/pages/[contents]/[id]";
 import ConfirmModal from "./modal/confirm-modal";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useLoadingStore } from "@/stores/useLoadingStore";
+import { GET_POST_BY_ID_QUERY } from "./post-detail";
 
 type commentProps = {
   id: string;
