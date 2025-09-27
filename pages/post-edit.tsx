@@ -16,6 +16,7 @@ import {
 } from "@/gql/graphql";
 import toast from "react-hot-toast";
 import WritingAnimation from "@/components/loading/writing-animation";
+import { uploadImageToServer } from "@/utils/utils";
 
 const EDIT_POST_MUTATION = gql`
   mutation editPost($input: EditPostInput!) {
@@ -51,6 +52,11 @@ const PostEdit = () => {
           []
       );
       setSelectedCategory(data?.getPostById?.post?.category?.id || 1);
+      
+      // 기존 썸네일이 있으면 표시
+      if (data?.getPostById?.post?.thumbnailUrl) {
+        setThumbnailPreview(data.getPostById.post.thumbnailUrl);
+      }
     }
   }, [data]);
 
@@ -123,16 +129,31 @@ const PostEdit = () => {
 
       if (!postId) {
         toast.error("게시물 ID가 없습니다.");
+        setIsSubmitting(false);
         return;
+      }
+
+      // 썸네일이 새로 선택된 경우에만 업로드
+      let thumbnailUrl;
+      if (thumbnailFile) {
+        thumbnailUrl = await uploadImageToServer(thumbnailFile);
+      }
+
+      // input 객체 동적 생성
+      const input: any = {
+        id: Number(postId),
+        title,
+        contents: md || "",
+      };
+
+      // 썸네일이 업로드된 경우에만 추가
+      if (thumbnailUrl) {
+        input.thumbnailUrl = thumbnailUrl;
       }
 
       const result = await editPostMutation({
         variables: {
-          input: {
-            id: Number(postId),
-            title,
-            contents: md || "",
-          },
+          input,
         },
       });
 
