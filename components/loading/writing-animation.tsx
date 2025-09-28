@@ -66,10 +66,10 @@ const WritingAnimation = () => {
 
           {/* 연필 애니메이션 */}
           <motion.div
-            initial={{ x: 60, y: 60, rotate: 45 }}
+            initial={{ x: 60, y: 97, rotate: 45 }}
             animate={{
               x: [60, 260, 60, 240, 60, 280],
-              y: [60, 60, 108, 108, 156, 156],
+              y: [97, 97, 128, 128, 156, 156],
               rotate: 45,
             }}
             transition={{
@@ -103,7 +103,7 @@ const WritingAnimation = () => {
               }}
               className="text-slate-700 font-medium text-lg"
             >
-              작성 중...
+              Posting...
             </motion.p>
           </div>
         </div>

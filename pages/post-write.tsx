@@ -206,7 +206,7 @@ function PostWrite() {
     try {
       setIsSubmitting(true);
       setOpen(false);
-      
+
       const { title } = data;
       let thumbnailUrl = "";
       if (thumbnailFile) {
