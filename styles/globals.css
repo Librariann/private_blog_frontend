@@ -1,6 +1,10 @@
 @tailwind base;
 @tailwind components;
 
+body {
+  background-color: #E8E8E8;
+}
+
 .input {
   @apply focus:outline-none focus:border-gray-500 p-3 border-2 text-lg font-light border-gray-200 transition-colors;
 }

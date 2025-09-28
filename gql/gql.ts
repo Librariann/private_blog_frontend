@@ -13,17 +13,19 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n": types.CreateCategoryDocument,
+    "\n  mutation createCategory($categoryTitle: String!, $categoryParentId: Int) {\n    createCategory(\n      categoryTitle: $categoryTitle\n      categoryParentId: $categoryParentId\n    ) {\n      ok\n      error\n    }\n  }\n": types.CreateCategoryDocument,
     "\n    mutation editComment($input: EditCommentInput!) {\n      editComment(input: $input) {\n        ok\n        error\n      }\n    }\n  ": types.EditCommentDocument,
+    "\n    mutation deleteComment($input: DeleteCommentInput!) {\n      deleteComment(input: $input) {\n        ok\n        error\n      }\n    }\n  ": types.DeleteCommentDocument,
     "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentId\n    }\n  }\n": types.CreateCommentDocument,
-    "\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        count\n      }\n    }\n  }\n": types.GetCategoriesCountsDocument,
-    "\n  query getCategories {\n    getCategories {\n      ok\n      categories {\n        id\n        categoryTitle\n      }\n    }\n  }\n": types.GetCategoriesDocument,
+    "\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n          parentCategoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListByCategoryIdDocument,
+    "\n  query getPostListByParentCategoryId($categoryId: Int!) {\n    getPostListByParentCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n          parentCategoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListByParentCategoryIdDocument,
+    "\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        parentCategoryId\n        count\n        children {\n          id\n          categoryTitle\n          count\n        }\n      }\n    }\n  }\n": types.GetCategoriesCountsDocument,
+    "\n  query getCategories {\n    getCategories {\n      ok\n      categories {\n        id\n        categoryTitle\n        depth\n        parentCategoryId\n        sortOrder\n      }\n    }\n  }\n": types.GetCategoriesDocument,
     "\n  query getPostById($postId: Int!) {\n    getPostById(postId: $postId) {\n      ok\n      post {\n        id\n        title\n        contents\n        hits\n        createdAt\n        thumbnailUrl\n        user {\n          id\n        }\n        category {\n          id\n          categoryTitle\n        }\n        hashtags {\n          hashtag\n        }\n        comments {\n          id\n          commentId\n          comment\n          createdAt\n        }\n      }\n    }\n  }\n": types.GetPostByIdDocument,
     "\n  mutation updatePostHits($postId: Int!) {\n    updatePostHits(postId: $postId) {\n      ok\n    }\n  }\n": types.UpdatePostHitsDocument,
     "\n  mutation deletePost($postId: Int!) {\n    deletePost(postId: $postId) {\n      ok\n    }\n  }\n": types.DeletePostDocument,
-    "\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListByCategoryIdDocument,
     "\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
-    "\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListDocument,
+    "\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
     "\n  mutation updatePassword($password: String!) {\n    updatePassword(password: $password) {\n      ok\n      error\n      message\n    }\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {\n    editPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n    }\n  }\n": types.EditPostDocument,
@@ -47,7 +49,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createCategory($categoryTitle: String!) {\n    createCategory(categoryTitle: $categoryTitle) {\n      ok\n      error\n    }\n  }\n"];
+export function graphql(source: "\n  mutation createCategory($categoryTitle: String!, $categoryParentId: Int) {\n    createCategory(\n      categoryTitle: $categoryTitle\n      categoryParentId: $categoryParentId\n    ) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createCategory($categoryTitle: String!, $categoryParentId: Int) {\n    createCategory(\n      categoryTitle: $categoryTitle\n      categoryParentId: $categoryParentId\n    ) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -55,15 +57,27 @@ export function graphql(source: "\n    mutation editComment($input: EditCommentI
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n    mutation deleteComment($input: DeleteCommentInput!) {\n      deleteComment(input: $input) {\n        ok\n        error\n      }\n    }\n  "): (typeof documents)["\n    mutation deleteComment($input: DeleteCommentInput!) {\n      deleteComment(input: $input) {\n        ok\n        error\n      }\n    }\n  "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentId\n    }\n  }\n"): (typeof documents)["\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentId\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        count\n      }\n    }\n  }\n"): (typeof documents)["\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        count\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n          parentCategoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n          parentCategoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getCategories {\n    getCategories {\n      ok\n      categories {\n        id\n        categoryTitle\n      }\n    }\n  }\n"): (typeof documents)["\n  query getCategories {\n    getCategories {\n      ok\n      categories {\n        id\n        categoryTitle\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getPostListByParentCategoryId($categoryId: Int!) {\n    getPostListByParentCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n          parentCategoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPostListByParentCategoryId($categoryId: Int!) {\n    getPostListByParentCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n          parentCategoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        parentCategoryId\n        count\n        children {\n          id\n          categoryTitle\n          count\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getCategoriesCounts {\n    getCategoriesCounts {\n      ok\n      categoryCounts {\n        id\n        categoryTitle\n        parentCategoryId\n        count\n        children {\n          id\n          categoryTitle\n          count\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getCategories {\n    getCategories {\n      ok\n      categories {\n        id\n        categoryTitle\n        depth\n        parentCategoryId\n        sortOrder\n      }\n    }\n  }\n"): (typeof documents)["\n  query getCategories {\n    getCategories {\n      ok\n      categories {\n        id\n        categoryTitle\n        depth\n        parentCategoryId\n        sortOrder\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -79,15 +93,11 @@ export function graphql(source: "\n  mutation deletePost($postId: Int!) {\n    d
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPostListByCategoryId($categoryId: Int!) {\n    getPostListByCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          id\n          categoryTitle\n          parentCategoryId\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

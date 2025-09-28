@@ -28,13 +28,11 @@ function About() {
           setDisplayText(currentTitle.slice(0, displayText.length + 1));
           // 마지막 글자 타이핑 완료 시
           if (displayText.length + 1 === currentTitle.length && isLastTitle) {
-            console.log("강조 효과 시작!"); // 디버깅용
             setShowEmphasis(true);
           }
         } else {
           // 타이핑 완료 - 대기 후 삭제
           setTimeout(() => {
-            console.log("강조 효과 종료"); // 디버깅용
             setShowEmphasis(false);
             setIsDeleting(true);
           }, pauseTime);
@@ -425,18 +423,30 @@ function About() {
             text-shadow: 0 0 20px rgba(255, 255, 255, 1);
           }
           20% {
-            text-shadow: 0 0 30px #29445d, 0 0 50px #29445d, 0 0 70px #29445d,
-              0 0 90px rgba(41, 68, 93, 0.8), 0 0 110px rgba(41, 68, 93, 0.6);
+            text-shadow:
+              0 0 30px #29445d,
+              0 0 50px #29445d,
+              0 0 70px #29445d,
+              0 0 90px rgba(41, 68, 93, 0.8),
+              0 0 110px rgba(41, 68, 93, 0.6);
           }
           40% {
-            text-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 40px #29445d;
+            text-shadow:
+              0 0 25px rgba(255, 255, 255, 1),
+              0 0 40px #29445d;
           }
           60% {
-            text-shadow: 0 0 35px #29445d, 0 0 55px #29445d, 0 0 75px #29445d,
-              0 0 95px rgba(41, 68, 93, 0.8), 0 0 115px rgba(41, 68, 93, 0.6);
+            text-shadow:
+              0 0 35px #29445d,
+              0 0 55px #29445d,
+              0 0 75px #29445d,
+              0 0 95px rgba(41, 68, 93, 0.8),
+              0 0 115px rgba(41, 68, 93, 0.6);
           }
           80% {
-            text-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 40px #29445d;
+            text-shadow:
+              0 0 25px rgba(255, 255, 255, 1),
+              0 0 40px #29445d;
           }
           100% {
             text-shadow: 0 0 20px rgba(255, 255, 255, 1);

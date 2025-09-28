@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme="colored"
       />
       <Layout>
         <Component {...pageProps} />

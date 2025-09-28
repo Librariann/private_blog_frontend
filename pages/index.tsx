@@ -14,7 +14,9 @@ export const GET_POST_LIST_QUERY = gql`
         hits
         thumbnailUrl
         category {
+          id
           categoryTitle
+          parentCategoryId
         }
         comments {
           comment
@@ -35,6 +37,7 @@ export type PostsProps = {
   thumbnailUrl?: string | null;
   category: {
     categoryTitle: string;
+    parentCategoryTitle: string;
   };
   comments: {
     comment?: string | null;

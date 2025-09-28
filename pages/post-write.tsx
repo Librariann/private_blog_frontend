@@ -22,6 +22,7 @@ import {
 } from "@uiw/react-md-editor";
 import { uploadImageToServer } from "@/utils/utils";
 import WritingAnimation from "@/components/loading/writing-animation";
+import { GET_CATEGORIES } from "@/lib/queries";
 
 export const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {
@@ -29,18 +30,6 @@ export const CREATE_POST_MUTATION = gql`
       ok
       error
       postId
-    }
-  }
-`;
-
-export const GET_CATEGORIES = gql`
-  query getCategories {
-    getCategories {
-      ok
-      categories {
-        id
-        categoryTitle
-      }
     }
   }
 `;

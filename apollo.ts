@@ -5,8 +5,6 @@ import {
   ApolloClient,
   createHttpLink,
   makeVar,
-  ApolloLink,
-  Observable,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
