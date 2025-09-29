@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import { GetPostListQuery } from "@/gql/graphql";
+import { Post } from "@/gql/graphql";
 import Main from "@/components/main/main";
 import { getPopularHashTagDatas, getPostDatas } from "@/lib/posts";
 
@@ -35,7 +35,7 @@ const Home = ({
   posts,
   popularHashTags,
 }: {
-  posts: GetPostListQuery["getPostList"]["posts"];
+  posts: Post[];
   popularHashTags: popularHashTagsProps[];
 }) => {
   return <Main posts={posts} popularHashTags={popularHashTags} />;
