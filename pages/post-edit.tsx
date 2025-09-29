@@ -45,17 +45,18 @@ const PostEdit = () => {
   });
 
   useEffect(() => {
-    if (data) {
-      setMd(data?.getPostById?.post?.contents);
+    if (data?.getPostById?.post) {
+      const post = data.getPostById.post as any;
+      setMd(post.contents);
       setHashtags(
-        data?.getPostById?.post?.hashtags?.map((value: any) => value.hashtag) ||
-          []
+        post.hashtags?.map((value: any) => value.hashtag) || []
       );
-      setSelectedCategory(data?.getPostById?.post?.category?.id || 1);
+      setSelectedCategory(post.category?.id || 1);
       
-      // 기존 썸네일이 있으면 표시
-      if (data?.getPostById?.post?.thumbnailUrl) {
-        setThumbnailPreview(data.getPostById.post.thumbnailUrl);
+      // 기존 썸네일 URL 저장 및 미리보기 표시
+      if (post.thumbnailUrl) {
+        setOriginalThumbnailUrl(post.thumbnailUrl);
+        setThumbnailPreview(post.thumbnailUrl);
       }
     }
   }, [data]);
@@ -69,6 +70,8 @@ const PostEdit = () => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [originalThumbnailUrl, setOriginalThumbnailUrl] = useState<string | null>(null);
+  const [thumbnailChanged, setThumbnailChanged] = useState(false);
 
   const [editPostMutation, { loading: editLoading }] = useMutation(
     EDIT_POST_MUTATION,
@@ -105,6 +108,7 @@ const PostEdit = () => {
     const file = e.target.files?.[0];
     if (file) {
       setThumbnailFile(file);
+      setThumbnailChanged(true); // 썸네일이 변경되었음을 표시
       const reader = new FileReader();
       reader.onload = () => {
         setThumbnailPreview(reader.result as string);
@@ -118,6 +122,7 @@ const PostEdit = () => {
   const removeThumbnail = () => {
     setThumbnailFile(null);
     setThumbnailPreview(null);
+    setThumbnailChanged(true); // 썸네일 제거도 변경으로 간주
   };
 
   const onSubmit = async (formData: postingProps) => {
@@ -133,23 +138,26 @@ const PostEdit = () => {
         return;
       }
 
-      // 썸네일이 새로 선택된 경우에만 업로드
-      let thumbnailUrl;
-      if (thumbnailFile) {
-        thumbnailUrl = await uploadImageToServer(thumbnailFile);
-      }
-
-      // input 객체 동적 생성
+      // input 객체 생성
       const input: any = {
         id: Number(postId),
         title,
         contents: md || "",
       };
 
-      // 썸네일이 업로드된 경우에만 추가
-      if (thumbnailUrl) {
-        input.thumbnailUrl = thumbnailUrl;
+      // 썸네일 처리 로직
+      if (thumbnailChanged) {
+        // 썸네일이 변경된 경우
+        if (thumbnailFile) {
+          // 새 썸네일 파일이 있으면 업로드
+          const uploadedUrl = await uploadImageToServer(thumbnailFile);
+          input.thumbnailUrl = uploadedUrl;
+        } else {
+          // 썸네일이 제거된 경우 (빈 문자열 또는 null)
+          input.thumbnailUrl = "";
+        }
       }
+      // thumbnailChanged가 false면 thumbnailUrl을 아예 보내지 않음 (기존 썸네일 유지)
 
       const result = await editPostMutation({
         variables: {
