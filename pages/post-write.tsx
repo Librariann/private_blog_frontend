@@ -24,7 +24,7 @@ import { uploadImageToServer } from "@/utils/utils";
 import WritingAnimation from "@/components/loading/writing-animation";
 
 export const CREATE_POST_MUTATION = gql`
-  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {
+  mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {
     createPost(input: $input, hashtags: $hashtags) {
       ok
       error
