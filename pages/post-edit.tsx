@@ -19,8 +19,8 @@ import WritingAnimation from "@/components/loading/writing-animation";
 import { uploadImageToServer } from "@/utils/utils";
 
 const EDIT_POST_MUTATION = gql`
-  mutation editPost($input: EditPostInput!) {
-    editPost(input: $input) {
+  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {
+    editPost(input: $input, hashtags: $hashtags) {
       ok
       error
     }
@@ -48,11 +48,9 @@ const PostEdit = () => {
     if (data?.getPostById?.post) {
       const post = data.getPostById.post as any;
       setMd(post.contents);
-      setHashtags(
-        post.hashtags?.map((value: any) => value.hashtag) || []
-      );
+      setHashtags(post.hashtags?.map((value: any) => value.hashtag) || []);
       setSelectedCategory(post.category?.id || 1);
-      
+
       // 기존 썸네일 URL 저장 및 미리보기 표시
       if (post.thumbnailUrl) {
         setOriginalThumbnailUrl(post.thumbnailUrl);
@@ -162,6 +160,7 @@ const PostEdit = () => {
       const result = await editPostMutation({
         variables: {
           input,
+          hashtags,
         },
       });
 
