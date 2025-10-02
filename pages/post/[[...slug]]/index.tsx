@@ -6,8 +6,22 @@ import {
   getPostsByCategoryId,
   getPostsByParentCategoryId,
 } from "@/lib/posts";
-import PostList from "@/components/post-list";
 import PostDetail from "@/components/posts/post-detail";
+import CategoryDetails from "@/components/category/category-details";
+import { Post } from "@/gql/graphql";
+
+type DetailProps = {
+  type: "detail";
+  post: Post;
+};
+
+type ListProps = {
+  type?: undefined;
+  posts: Post[];
+  categoryId: number;
+};
+
+export type ContentsProps = DetailProps | ListProps;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
@@ -17,7 +31,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const categories = Array.isArray(data) ? data : [];
 
     const paths = categories
-      .filter((category) => category && category.categoryTitle) // null/undefined 필터링
+      .filter((category) => category && category.categoryTitle)
       .map((category) => ({
         params: { slug: [category.categoryTitle] },
       }));
@@ -26,11 +40,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
       paths,
-      fallback: "blocking", // 새 카테고리는 on-demand로 생성
+      fallback: "blocking",
     };
   } catch (error) {
-    // 빌드 시점에는 GraphQL 서버가 없는 것이 정상이므로 에러 로그 제거
-    // 에러 발생 시 빈 경로로 fallback 처리
     return {
       paths: [],
       fallback: "blocking",
@@ -84,7 +96,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 60, // 60초마다 재생성
     };
   } catch (error) {
-    // 빌드 시점에는 GraphQL 서버가 없는 것이 정상이므로 에러 로그 제거
     return {
       notFound: true,
       revalidate: 60,
@@ -92,11 +103,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 };
 
-const Contents = (props: any) => {
+const Contents = (props: ContentsProps) => {
   if (props.type === "detail") {
     return <PostDetail post={props.post} />;
   }
-  return <PostList posts={props.posts} />;
+  return <CategoryDetails posts={props.posts} />;
 };
 
 export default Contents;
