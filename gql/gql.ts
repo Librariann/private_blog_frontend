@@ -24,8 +24,8 @@ const documents = {
     "\n  query getPostList {\n    getPostList {\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        category {\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostListDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
     "\n  mutation updatePassword($password: String!) {\n    updatePassword(password: $password) {\n      ok\n      error\n      message\n    }\n  }\n": types.UpdatePasswordDocument,
-    "\n  mutation editPost($input: EditPostInput!) {\n    editPost(input: $input) {\n      ok\n      error\n    }\n  }\n": types.EditPostDocument,
-    "\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n": types.CreatePostDocument,
+    "\n  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {\n    editPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n    }\n  }\n": types.EditPostDocument,
+    "\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n": types.CreatePostDocument,
 };
 
 /**
@@ -89,11 +89,11 @@ export function graphql(source: "\n  mutation updatePassword($password: String!)
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation editPost($input: EditPostInput!) {\n    editPost(input: $input) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation editPost($input: EditPostInput!) {\n    editPost(input: $input) {\n      ok\n      error\n    }\n  }\n"];
+export function graphql(source: "\n  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {\n    editPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {\n    editPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n"): (typeof documents)["\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]!) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n"];
+export function graphql(source: "\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n"): (typeof documents)["\n  mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {\n    createPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n      postId\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
