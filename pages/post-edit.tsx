@@ -157,23 +157,31 @@ const PostEdit = () => {
       }
       // thumbnailChanged가 false면 thumbnailUrl을 아예 보내지 않음 (기존 썸네일 유지)
 
+      console.log("=== Edit Post Debug ===");
+      console.log("input:", JSON.stringify(input, null, 2));
+      console.log("hashtags:", JSON.stringify(hashtags));
+
       const result = await editPostMutation({
         variables: {
           input,
-          hashtags,
+          hashtags: hashtags || [],
         },
       });
+
+      console.log("=== Edit Post Result ===");
+      console.log("result:", result);
 
       if (result.data?.editPost.ok) {
         toast.success("게시물이 수정되었습니다.");
         setPostConfirmModal(true);
       } else {
+        console.error("Edit Post Error:", result.data?.editPost.error);
         toast.error(
           result.data?.editPost.error || "게시물 수정에 실패했습니다."
         );
       }
     } catch (error) {
-      console.error(error);
+      console.error("Edit Post Exception:", error);
       toast.error("게시물 수정 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
