@@ -136,9 +136,16 @@ const PostEdit = () => {
         return;
       }
 
+      const postIdNumber = Number(postId);
+      if (isNaN(postIdNumber)) {
+        toast.error("유효하지 않은 게시물 ID입니다.");
+        setIsSubmitting(false);
+        return;
+      }
+
       // input 객체 생성
       const input: any = {
-        id: Number(postId),
+        id: postIdNumber,
         title,
         contents: md || "",
       };
@@ -151,8 +158,8 @@ const PostEdit = () => {
           const uploadedUrl = await uploadImageToServer(thumbnailFile);
           input.thumbnailUrl = uploadedUrl;
         } else {
-          // 썸네일이 제거된 경우 (빈 문자열 또는 null)
-          input.thumbnailUrl = "";
+          // 썸네일이 제거된 경우 null로 전송
+          input.thumbnailUrl = null;
         }
       }
       // thumbnailChanged가 false면 thumbnailUrl을 아예 보내지 않음 (기존 썸네일 유지)
@@ -160,12 +167,19 @@ const PostEdit = () => {
       console.log("=== Edit Post Debug ===");
       console.log("input:", JSON.stringify(input, null, 2));
       console.log("hashtags:", JSON.stringify(hashtags));
+      console.log("postId type:", typeof postIdNumber, "value:", postIdNumber);
+
+      const variables: any = { input };
+      
+      // hashtags가 있을 때만 추가
+      if (hashtags && hashtags.length > 0) {
+        variables.hashtags = hashtags;
+      }
+
+      console.log("variables:", JSON.stringify(variables, null, 2));
 
       const result = await editPostMutation({
-        variables: {
-          input,
-          hashtags: hashtags || [],
-        },
+        variables,
       });
 
       console.log("=== Edit Post Result ===");
