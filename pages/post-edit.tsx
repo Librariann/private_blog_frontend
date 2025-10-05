@@ -68,7 +68,9 @@ const PostEdit = () => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [originalThumbnailUrl, setOriginalThumbnailUrl] = useState<string | null>(null);
+  const [originalThumbnailUrl, setOriginalThumbnailUrl] = useState<
+    string | null
+  >(null);
   const [thumbnailChanged, setThumbnailChanged] = useState(false);
 
   const [editPostMutation, { loading: editLoading }] = useMutation(
@@ -81,6 +83,14 @@ const PostEdit = () => {
         },
       ],
       awaitRefetchQueries: true,
+      // 캐시도 함께 업데이트
+      update(cache, { data }) {
+        if (data?.editPost.ok) {
+          cache.evict({ fieldName: "getPostList" });
+          cache.evict({ fieldName: "getPostListByCategoryId" });
+          cache.gc();
+        }
+      },
     }
   );
 
@@ -136,16 +146,9 @@ const PostEdit = () => {
         return;
       }
 
-      const postIdNumber = Number(postId);
-      if (isNaN(postIdNumber)) {
-        toast.error("유효하지 않은 게시물 ID입니다.");
-        setIsSubmitting(false);
-        return;
-      }
-
       // input 객체 생성
       const input: any = {
-        id: postIdNumber,
+        id: Number(postId),
         title,
         contents: md || "",
       };
@@ -164,26 +167,12 @@ const PostEdit = () => {
       }
       // thumbnailChanged가 false면 thumbnailUrl을 아예 보내지 않음 (기존 썸네일 유지)
 
-      console.log("=== Edit Post Debug ===");
-      console.log("input:", JSON.stringify(input, null, 2));
-      console.log("hashtags:", JSON.stringify(hashtags));
-      console.log("postId type:", typeof postIdNumber, "value:", postIdNumber);
-
-      const variables: any = { input };
-      
-      // hashtags가 있을 때만 추가
-      if (hashtags && hashtags.length > 0) {
-        variables.hashtags = hashtags;
-      }
-
-      console.log("variables:", JSON.stringify(variables, null, 2));
-
       const result = await editPostMutation({
-        variables,
+        variables: {
+          input,
+          hashtags, // 빈 배열도 보내서 해시태그 삭제 가능
+        },
       });
-
-      console.log("=== Edit Post Result ===");
-      console.log("result:", result);
 
       if (result.data?.editPost.ok) {
         toast.success("게시물이 수정되었습니다.");
