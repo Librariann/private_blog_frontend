@@ -28,6 +28,10 @@
 - **Language**: Use English
 - **Type**: Use `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 - **Scope**: Use `auth`, `post`, `comment`, `category`, `user`, `common`
-- **Rules**: One file per commit, one commit per feature, one commit one date, increasing day by day
-- **Example**: example1.tsx - 2024.01.01, example2.tsx - 2024.01.02
+- **Rules**: When committing multiple files:
+- Create a separate commit for each file
+- Use the date I specify as the starting point
+- Increment the commit date by exactly one day for each subsequent file
+- Use --date "{date} 10:00:00 KST" to set the commit date
+- Apply this to commit date
 - **Other**: Don't use Contributors Name
