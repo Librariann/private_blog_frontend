@@ -1,4 +1,4 @@
-import { ChangeEventHandler, MouseEventHandler } from "react";
+import { MouseEventHandler } from "react";
 import ButtonSkeleton from "./skeleton/button-skeleton";
 
 interface IButtonProps {
