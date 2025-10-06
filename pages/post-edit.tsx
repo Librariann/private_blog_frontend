@@ -161,15 +161,15 @@ const PostEdit = () => {
           const uploadedUrl = await uploadImageToServer(thumbnailFile);
           input.thumbnailUrl = uploadedUrl;
         } else {
-          // 썸네일이 제거된 경우 null로 전송
-          input.thumbnailUrl = null;
+          // 썸네일이 제거된 경우 빈 문자열로 전송
+          input.thumbnailUrl = "";
         }
       }
       // thumbnailChanged가 false면 thumbnailUrl을 아예 보내지 않음 (기존 썸네일 유지)
 
       const result = await editPostMutation({
         variables: {
-          input,
+          input, // 위에서 조건부로 생성한 input 사용
           hashtags, // 빈 배열도 보내서 해시태그 삭제 가능
         },
       });
