@@ -7,6 +7,8 @@ import { useReactiveVar } from "@apollo/client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { authPage, handlePathes } from "@/common/constants";
+import { GlobalLoading } from "./loading/global-loading";
+import { useLoadingStore } from "@/stores/useLoadingStore";
 
 type Props = {
   children: React.ReactNode;
@@ -17,6 +19,7 @@ function Layout({ children }: Props) {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { globalLoading } = useLoadingStore();
 
   const handleMobileMenuClose = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -41,6 +44,7 @@ function Layout({ children }: Props) {
     <div className="p-0 font-sans flex flex-col min-h-screen">
       {isLayoutVisible ? (
         <>
+          {globalLoading && <GlobalLoading />}
           <Header onMenuToggle={handleMobileMenuClose} />
           <div className="flex-grow" style={{ height: "calc(100vh - 64px)" }}>
             <div className="flex flex-row h-full">
