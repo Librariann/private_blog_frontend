@@ -161,8 +161,8 @@ const PostEdit = () => {
           const uploadedUrl = await uploadImageToServer(thumbnailFile);
           input.thumbnailUrl = uploadedUrl;
         } else {
-          // 썸네일이 제거된 경우 빈 문자열로 전송
-          input.thumbnailUrl = "";
+          // 썸네일이 제거된 경우 null로 전송
+          input.thumbnailUrl = null;
         }
       }
       // thumbnailChanged가 false면 thumbnailUrl을 아예 보내지 않음 (기존 썸네일 유지)
@@ -347,7 +347,7 @@ const PostEdit = () => {
               }
             >
               <Button
-                canClick={isValid && !loading && !editLoading}
+                canClick={!loading && !editLoading}
                 loading={loading || editLoading}
                 actionText="게시물 수정"
               />
