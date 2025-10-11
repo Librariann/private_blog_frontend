@@ -6,10 +6,12 @@ import { gql } from "@apollo/client";
 import { GET_POST_BY_ID_QUERY } from "@/pages/[contents]/[id]";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { useLoadingStore } from "@/stores/useLoadingStore";
 
 const CommentListForm = ({ comment }: { comment: CommentProps }) => {
   const router = useRouter();
   const { id } = router.query;
+  const { setGlobalLoading } = useLoadingStore();
 
   const [commentEditMode, setCommentEditMode] = useState(false);
   const [commentValue, setCommentValue] = useState(comment.comment);
@@ -25,7 +27,7 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
     }
   `;
 
-  const [editCommentMutation, loading] = useMutation(EDIT_COMMENT_MUTATION, {
+  const [editCommentMutation] = useMutation(EDIT_COMMENT_MUTATION, {
     refetchQueries: [
       {
         query: GET_POST_BY_ID_QUERY,
@@ -43,6 +45,33 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
     },
   });
 
+  const DELETE_COMMENT_MUTATION = gql`
+    mutation deleteComment($input: DeleteCommentInput!) {
+      deleteComment(input: $input) {
+        ok
+        error
+      }
+    }
+  `;
+
+  const [deleteCommentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_POST_BY_ID_QUERY,
+        variables: { postId: Number(id) },
+      },
+    ],
+    awaitRefetchQueries: true,
+    // 캐시도 함께 업데이트
+    update(cache, { data }) {
+      if (data?.deleteComment.ok) {
+        cache.evict({ fieldName: "getPostList" });
+        cache.evict({ fieldName: "getPostListByCategoryId" });
+        cache.gc();
+      }
+    },
+  });
+
   const handleUpdateCommentStatus = () => {
     setCommentEditMode(!commentEditMode);
   };
@@ -52,6 +81,9 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
   };
 
   const handleUpdateComment = async (password?: string) => {
+    cmtEditConfirmModalStatus();
+    handleUpdateCommentStatus();
+    setGlobalLoading(true);
     const result = await editCommentMutation({
       variables: {
         input: {
@@ -62,16 +94,34 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
       },
     });
     if (result.data?.editComment.ok) {
-      cmtEditConfirmModalStatus();
-      handleUpdateCommentStatus();
       toast.success("댓글 수정이 완료되었습니다.");
     } else {
       toast.error(result.data?.editComment.error);
     }
+    setGlobalLoading(false);
   };
 
-  const handleDeleteComment = () => {
-    console.log("삭제");
+  const handleDeleteModal = () => {
+    setCmtDeleteConfirmModal(!cmtDeleteConfirmModal);
+  };
+
+  const handleDeleteComment = async (password?: string) => {
+    handleDeleteModal();
+    setGlobalLoading(true);
+    const result = await deleteCommentMutation({
+      variables: {
+        input: {
+          id: comment.id,
+          commentPassword: password,
+        },
+      },
+    });
+    if (result.data?.deleteComment.ok) {
+      toast.success("댓글 삭제가 완료되었습니다.");
+    } else {
+      toast.error(result.data?.deleteComment.error);
+    }
+    setGlobalLoading(false);
   };
 
   return (
@@ -112,9 +162,13 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
           </button>
           <button
             className="text-sm text-red-500 hover:text-red-600"
-            onClick={handleDeleteComment}
+            onClick={
+              commentEditMode
+                ? () => handleUpdateCommentStatus()
+                : () => handleDeleteModal()
+            }
           >
-            삭제
+            {commentEditMode ? "취소" : "삭제"}
           </button>
         </div>
       </div>
@@ -136,12 +190,13 @@ const CommentListForm = ({ comment }: { comment: CommentProps }) => {
         onClose={() => {
           setCmtDeleteConfirmModal(false);
         }}
-        onConfirm={() => {
-          handleDeleteComment();
+        onConfirm={(password) => {
+          handleDeleteComment(password);
         }}
         title="댓글 삭제"
         message="댓글을 삭제하시겠습니까?"
         isCancel={false}
+        isComment={true}
       />
     </div>
   );
