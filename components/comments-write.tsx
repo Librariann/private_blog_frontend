@@ -9,7 +9,6 @@ import Button from "./button";
 import { GET_POST_BY_ID_QUERY } from "@/pages/[contents]/[id]";
 import ConfirmModal from "./modal/confirm-modal";
 import { useState } from "react";
-import toast from "react-hot-toast";
 
 type commentProps = {
   id: string;
@@ -60,7 +59,7 @@ const CommentsWrite = () => {
   });
   const onSubmit = async () => {
     if (!id) {
-      toast.error("댓글 내용이 없습니다! 다시 확인해주세요!");
+      //toast.error("댓글 내용이 없습니다! 다시 확인해주세요!");
       return;
     }
 
@@ -77,7 +76,7 @@ const CommentsWrite = () => {
     });
 
     if (commentResult.data?.createComment.ok) {
-      toast.success("댓글이 작성됐습니다.");
+      //toast.success("댓글이 작성됐습니다.");
       reset({
         id: "",
         password: "",
@@ -85,14 +84,14 @@ const CommentsWrite = () => {
       });
       setIsModalOpen(false);
     } else {
-      toast.error("댓글 작성에 실패했습니다.");
+      //toast.error("댓글 작성에 실패했습니다.");
       setIsModalOpen(false);
     }
   };
 
   const handleCommentConfirm = () => {
     if (!id) {
-      toast.error("댓글 내용이 없습니다! 다시 확인해주세요!");
+      //toast.error("댓글 내용이 없습니다! 다시 확인해주세요!");
       return;
     }
 

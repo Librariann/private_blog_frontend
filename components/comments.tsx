@@ -2,8 +2,8 @@ import CommentListForm from "./comment-list-form";
 
 export type CommentProps = {
   id: number;
-  commentId: string;
   comment: string;
+  commentId: string;
   createdAt: string;
 };
 
