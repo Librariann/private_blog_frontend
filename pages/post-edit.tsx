@@ -14,7 +14,6 @@ import {
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
 } from "@/gql/graphql";
-import toast from "react-hot-toast";
 import WritingAnimation from "@/components/loading/writing-animation";
 import { uploadImageToServer } from "@/utils/utils";
 
@@ -141,7 +140,7 @@ const PostEdit = () => {
       const { title } = formData;
 
       if (!postId) {
-        toast.error("게시물 ID가 없습니다.");
+        //toast.error("게시물 ID가 없습니다.");
         setIsSubmitting(false);
         return;
       }
@@ -175,17 +174,17 @@ const PostEdit = () => {
       });
 
       if (result.data?.editPost.ok) {
-        toast.success("게시물이 수정되었습니다.");
+        //toast.success("게시물이 수정되었습니다.");
         setPostConfirmModal(true);
       } else {
         console.error("Edit Post Error:", result.data?.editPost.error);
-        toast.error(
-          result.data?.editPost.error || "게시물 수정에 실패했습니다."
-        );
+        //toast.error(
+        //result.data?.editPost.error || "게시물 수정에 실패했습니다."
+        //);
       }
     } catch (error) {
       console.error("Edit Post Exception:", error);
-      toast.error("게시물 수정 중 오류가 발생했습니다.");
+      //toast.error("게시물 수정 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }
@@ -356,7 +355,7 @@ const PostEdit = () => {
         onClose={() => {
           setOpen(false);
         }}
-        onConfirm={handleSubmit(onSubmit)}
+        onConfirm={() => handleSubmit(onSubmit)}
         title="게시물 수정"
         message="게시물을 수정하시겠습니까?"
         isCancel={false}
