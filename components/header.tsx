@@ -83,6 +83,7 @@ const Header = ({ onMenuToggle }: { onMenuToggle: () => void }) => {
           <div></div>
           // <div onClick={login}>로그인</div>
         )}
+        &nbsp;&nbsp;&nbsp;
         <div onClick={() => navigate.push("/about")}>About</div>
       </div>
       <ConfirmModal

@@ -15,7 +15,7 @@ const nextConfig = {
       },
     ],
   },
-  // Vercel caching 설정
+  // Vercel caching Settings
   headers: async () => {
     return [
       {
