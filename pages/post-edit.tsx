@@ -14,7 +14,12 @@ import dynamic from "next/dynamic";
 import { uploadImageToServer } from "@/utils/utils";
 import ConfirmModal from "@/components/modal/confirm-modal";
 import Button from "@/components/button";
-import { GetCategoriesQuery, GetCategoriesQueryVariables } from "@/gql/graphql";
+import {
+  GetCategoriesQuery,
+  GetCategoriesQueryVariables,
+  GetPostByIdQuery,
+  GetPostByIdQueryVariables,
+} from "@/gql/graphql";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -24,7 +29,10 @@ const PostEdit = () => {
   const router = useRouter();
   const postId = router.query.id;
 
-  const { data, loading } = useQuery(GET_POST_BY_ID_QUERY, {
+  const { data, loading } = useQuery<
+    GetPostByIdQuery,
+    GetPostByIdQueryVariables
+  >(GET_POST_BY_ID_QUERY, {
     variables: { postId: Number(postId) },
     fetchPolicy: "cache-first", // 캐시 우선
   });
@@ -32,10 +40,10 @@ const PostEdit = () => {
   useEffect(() => {
     if (data) {
       setMd(data?.getPostById?.post?.contents);
-      setHashtags([
-        ...data?.getPostById?.post?.hashtags.map((value) => value.hashtag),
-      ]);
-      setSelectedCategory(data?.getPostById?.post?.category?.id);
+      setHashtags(
+        data?.getPostById?.post?.hashtags?.map((value: any) => value.hashtag) || []
+      );
+      setSelectedCategory(data?.getPostById?.post?.category?.id || 1);
     }
   }, [data]);
 
