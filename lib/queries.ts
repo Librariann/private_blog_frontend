@@ -162,7 +162,6 @@ export const GET_ALL_POST_LIST_QUERY = gql`
     getAllPostList {
       posts {
         ...PostFields
-        postStatus
       }
     }
   }
@@ -258,6 +257,15 @@ export const CREATE_POST_MUTATION = gql`
       ok
       error
       postId
+    }
+  }
+`;
+
+export const EDIT_POST_MUTATION = gql`
+  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {
+    editPost(input: $input, hashtags: $hashtags) {
+      ok
+      error
     }
   }
 `;
