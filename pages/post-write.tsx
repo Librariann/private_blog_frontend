@@ -30,7 +30,7 @@ import {
   SplitSquareHorizontal,
   ArrowRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   commands,
@@ -40,16 +40,12 @@ import {
 } from "@uiw/react-md-editor";
 import { uploadImageToServer } from "@/utils/utils";
 import { toast } from "react-toastify";
-import { useCreatePost, useGetCategories } from "@/hooks/hooks";
+import { useCreatePost, useEditPost, useGetCategories } from "@/hooks/hooks";
 import { Category, PostStatus } from "@/gql/graphql";
 import CreateCategoryModal from "@/components/modal/create-category-modal";
 import WritingAnimation from "@/components/loading/writing-animation";
-
-interface PostEditorPageProps {
-  onBack: () => void;
-  categoryHierarchy: any[];
-  post?: any; // 수정 모드일 때 기존 포스트 데이터
-}
+import { useRouter } from "next/router";
+import { usePostEditStore } from "@/stores/usePostEditStore";
 
 function insertAtSelection(
   state: TextState,
@@ -109,25 +105,48 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
 });
 
-const PostWrite = ({ post }: PostEditorPageProps) => {
+const PostWrite = () => {
+  const { back } = useRouter();
   const getCategories = useGetCategories();
   const getCategoriesData = getCategories?.getCategories.categories;
 
-  const [title, setTitle] = useState(post?.title || "");
-  const [excerpt, setExcerpt] = useState(post?.excerpt || "");
-  const [thumbnailUrl, setThumbnailUrl] = useState(post?.thumbnailUrl || "");
+  const [title, setTitle] = useState("");
+  const [excerpt, setExcerpt] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const [tags, setTags] = useState<string[]>(post?.tags || []);
+  const [tags, setTags] = useState<string[]>([]);
   const [status, setStatus] = useState<PostStatus>();
   const [step, setStep] = useState<1 | 2>(1); // 1: 기본 작성, 2: 부가 정보
   const [parentCategory, setParentCategory] = useState<Category>();
   const [subCategory, setSubCategory] = useState<string>("");
-  const [md, setMd] = useState<string>(post?.content || "");
+  const [md, setMd] = useState<string>("");
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [postId, setPostId] = useState<number>(0);
 
   const { isDarkMode } = useDarkModeStore();
+  const { editingPost, editingMode } = usePostEditStore();
   const { createPostMutation, postLoading } = useCreatePost();
+  const { editPostMutation, editLoading } = useEditPost({ postId });
+
+  useEffect(() => {
+    if (editingPost) {
+      setPostId(editingPost.id);
+      setTitle(editingPost.title);
+      setExcerpt(editingPost?.excerpt || "");
+      setMd(editingPost?.contents || "");
+      setThumbnailUrl(editingPost?.thumbnailUrl || "");
+      setTags(editingPost?.hashtags?.map((tag) => tag.hashtag) || []);
+      const parentCategory = getCategoriesData?.find(
+        (category) =>
+          category.categoryTitle === editingPost.category.parentCategoryTitle
+      );
+      setParentCategory(parentCategory);
+      setSubCategory(editingPost.category.id.toString());
+      setStatus(editingPost?.postStatus);
+      setStep(1);
+    }
+  }, [editingPost, getCategoriesData]);
 
   const handleAddCategoryOpen = (open: boolean) => {
     setIsAddCategoryOpen(open);
@@ -152,7 +171,6 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
   const handleSaveDraft = async () => {
     try {
       setIsSubmitting(true);
-
       const postResult = await createPostMutation({
         variables: {
           input: {
@@ -207,7 +225,39 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
     } finally {
       setIsSubmitting(false);
     }
-    // onBack();
+    back();
+  };
+
+  const handleEditPost = async () => {
+    try {
+      setIsSubmitting(true);
+
+      const postResult = await editPostMutation({
+        variables: {
+          input: {
+            id: postId,
+            title,
+            excerpt,
+            contents: md || "",
+            categoryId: +subCategory,
+            postStatus: status,
+          },
+          hashtags: tags,
+        },
+      });
+
+      if (postResult.data?.editPost.ok) {
+        toast.success("포스트가 성공적으로 수정되었습니다.");
+        // setPostConfirmModal(true);
+      } else {
+        toast.error(postResult.data?.editPost.error);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    back();
   };
 
   const handleNextStep = () => {
@@ -234,8 +284,8 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
           {/* Simple Header */}
           <div className="flex items-center justify-between mb-8">
             <button
-              // onClick={onBack}
-              className={`flex items-center space-x-2 transition-colors ${
+              onClick={() => back()}
+              className={`cursor-pointer flex items-center space-x-2 transition-colors ${
                 isDarkMode
                   ? "text-white/70 hover:text-white"
                   : "text-gray-600 hover:text-gray-900"
@@ -395,7 +445,7 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
               임시저장
             </NewButton>
             <NewButton
-              onClick={handlePublish}
+              onClick={editingMode ? handleEditPost : handlePublish}
               className={
                 isDarkMode
                   ? "bg-blue-500 hover:bg-blue-600 text-white"
@@ -403,7 +453,7 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
               }
             >
               <Send className="w-4 h-4 mr-2" />
-              발행하기
+              {editingMode ? "수정하기" : "발행하기"}
             </NewButton>
           </div>
         </div>
@@ -411,7 +461,7 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
         <h2
           className={`text-2xl mb-8 ${isDarkMode ? "text-white" : "text-gray-900"}`}
         >
-          발행 설정
+          {editingMode ? "수정" : "발행"} 설정
         </h2>
 
         <div className="space-y-6">
@@ -448,7 +498,7 @@ const PostWrite = ({ post }: PostEditorPageProps) => {
                   >
                     <SelectValue placeholder="선택하세요" />
                   </SelectTrigger>
-                  <SelectContent modal={false}>
+                  <SelectContent>
                     {getCategoriesData?.map((category) => (
                       <SelectItem
                         key={category.categoryTitle}

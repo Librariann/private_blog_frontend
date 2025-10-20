@@ -34,6 +34,7 @@ import {
   TOGGLE_POST_STATUS_MUTATION,
   DELETE_POST_MUTATION,
   CREATE_POST_MUTATION,
+  EDIT_POST_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -219,4 +220,28 @@ export const useCreatePost = () => {
     },
   });
   return { createPostMutation, postLoading };
+};
+
+export const useEditPost = ({ postId }: { postId: number }) => {
+  const [editPostMutation, { loading: editLoading }] = useMutation(
+    EDIT_POST_MUTATION,
+    {
+      refetchQueries: [
+        {
+          query: GET_POST_BY_ID_QUERY,
+          variables: { postId: Number(postId) },
+        },
+      ],
+      awaitRefetchQueries: true,
+      // 캐시도 함께 업데이트
+      update(cache, { data }) {
+        if (data?.editPost.ok) {
+          cache.evict({ fieldName: "getPostList" });
+          cache.evict({ fieldName: "getPostListByCategoryId" });
+          cache.gc();
+        }
+      },
+    }
+  );
+  return { editPostMutation, editLoading };
 };
