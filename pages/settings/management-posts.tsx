@@ -6,8 +6,6 @@ import {
   Eye,
   EyeOff,
   Search,
-  Filter,
-  Pencil,
   Upload,
 } from "lucide-react";
 import { useState } from "react";
@@ -24,7 +22,7 @@ import {
 import { NewButton } from "@/components/buttons/new-button";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { GlassCardMain } from "@/components/main/main";
-import { GetPostListQuery, PostStatus } from "@/gql/graphql";
+import { PostStatus } from "@/gql/graphql";
 import {
   useDeletePost,
   useGetAllPostList,
@@ -41,6 +39,7 @@ import {
 import { formatDateShort } from "@/utils/utils";
 import { useRouter } from "next/router";
 import { POST_STATUS_OBJECTS } from "@/common/constants";
+import { usePostEditStore } from "@/stores/usePostEditStore";
 
 const tableColumns = [
   { title: "제목", className: "px-6 py-4 text-left" },
@@ -62,6 +61,8 @@ const ManagementPosts = () => {
   const [selectedPostId, setSelectedPostId] = useState<number>();
 
   const { isDarkMode } = useDarkModeStore();
+  const { setEditingPost, setEditingMode } = usePostEditStore();
+
   const posts = useGetAllPostList();
   const { countsData, countsLoading } = useGetCategoryCounts();
   const { togglePostStatusMutation, postStatusToggleLoading } =
@@ -105,8 +106,8 @@ const ManagementPosts = () => {
       <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 mb-6">
         <div>
           <button
-            //   onClick={onBack}
-            className={`flex items-center space-x-2 mb-4 transition-colors ${
+            onClick={() => router.back()}
+            className={`cursor-pointer flex items-center space-x-2 mb-4 transition-colors ${
               isDarkMode
                 ? "text-white/70 hover:text-white"
                 : "text-gray-600 hover:text-gray-900"
@@ -352,7 +353,11 @@ const ManagementPosts = () => {
                             : ""
                         }`}
                         title="수정"
-                        // onClick={() => onEdit && onEdit(post)}
+                        onClick={() => {
+                          setEditingPost(post);
+                          setEditingMode(true);
+                          router.push("/post-write");
+                        }}
                       >
                         <Edit className="w-4 h-4" />
                       </NewButton>

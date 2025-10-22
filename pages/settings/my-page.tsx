@@ -101,7 +101,7 @@ const MyPage = () => {
               <NewButton
                 variant="default"
                 size="lg"
-                className={`mt-4 sm:mt-0 ${
+                className={`mt-4 sm:mt-0 cursor-pointer ${
                   isDarkMode
                     ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
                     : "bg-gray-100 hover:bg-gray-200 text-gray-900"
