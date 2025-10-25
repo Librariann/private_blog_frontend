@@ -221,12 +221,15 @@ function PostWrite() {
       });
 
       if (postResult.data?.createPost.ok) {
+        setOpen(false);
         setPostConfirmModal(true);
       } else {
+        setOpen(false);
         alert(postResult.data?.createPost.error);
       }
     } catch (error) {
       console.error(error);
+      setOpen(false);
       alert("게시물 작성 중 오류가 발생했습니다.");
     }
   };
@@ -384,6 +387,7 @@ function PostWrite() {
         title="게시물 작성"
         message="게시물을 작성하시겠습니까?"
         isCancel={false}
+        loading={postLoading}
       />
 
       <ConfirmModal
