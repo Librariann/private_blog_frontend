@@ -37,7 +37,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
   });
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("/");
-  
+
   useEffect(() => {
     // 클라이언트에서만 router.asPath 사용
     setCurrentPath(router.asPath);
@@ -70,50 +70,45 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
         <div className="mb-8 border-b border-gray-700 pb-4">
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
-        {loading ? (
-          <CategorySkeleton />
-        ) : (
-          <ul className="space-y-3">
+        <ul className="space-y-3">
+          <li
+            className={`hover:bg-gray-600 transition-colors duration-200 ${
+              isHome ? "bg-gray-700" : "hover:bg-gray-700"
+            }`}
+          >
+            <Link
+              href="/"
+              className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+            >
+              <span className="font-medium">전체 보기</span>
+              <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                {sumAllCategoryCounts}
+              </span>
+            </Link>
+          </li>
+          {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
             <li
-              className={`hover:bg-gray-600 transition-colors duration-200 ${
-                isHome ? "bg-gray-700" : "hover:bg-gray-700"
+              key={categories.categoryTitle}
+              className={`hover:bg-gray-700 transition-colors duration-200 ${
+                decodeURIComponent(currentCategory) === categories.categoryTitle
+                  ? "bg-gray-700"
+                  : ""
               }`}
+              onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
             >
               <Link
-                href="/"
+                href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                prefetch={true}
                 className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
               >
-                <span className="font-medium">전체 보기</span>
+                <span>{categories.categoryTitle}</span>
                 <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                  {sumAllCategoryCounts}
+                  {categories.count}
                 </span>
               </Link>
             </li>
-            {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
-              <li
-                key={categories.categoryTitle}
-                className={`hover:bg-gray-700 transition-colors duration-200 ${
-                  decodeURIComponent(currentCategory) ===
-                  categories.categoryTitle
-                    ? "bg-gray-700"
-                    : ""
-                }`}
-                onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
-              >
-                <Link
-                  href={`/${encodeURIComponent(categories.categoryTitle)}`}
-                  prefetch={true}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
-                >
-                  <span>{categories.categoryTitle}</span>
-                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                    {categories.count}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+          ))}
+        </ul>
       </nav>
 
       {/* 모바일 뷰 */}
@@ -149,52 +144,48 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
               </svg>
             </button>
           </div>
-          {loading ? (
-            <CategorySkeleton />
-          ) : (
-            <ul className="space-y-3">
+          <ul className="space-y-3">
+            <li
+              className={`hover:bg-gray-600 transition-colors duration-200 ${
+                isHome ? "bg-gray-700" : "hover:bg-gray-700"
+              }`}
+            >
+              <Link
+                href="/"
+                onClick={onClose}
+                className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+              >
+                <span className="font-medium">전체 보기</span>
+                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                  {sumAllCategoryCounts}
+                </span>
+              </Link>
+            </li>
+            {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
               <li
-                className={`hover:bg-gray-600 transition-colors duration-200 ${
-                  isHome ? "bg-gray-700" : "hover:bg-gray-700"
+                key={categories.categoryTitle}
+                className={`hover:bg-gray-700 transition-colors duration-200 ${
+                  decodeURIComponent(currentCategory) ===
+                  categories.categoryTitle
+                    ? "bg-gray-700"
+                    : ""
                 }`}
+                onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
               >
                 <Link
-                  href="/"
-                  onClick={onClose}
+                  href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                  onClick={handleClick}
+                  prefetch={true}
                   className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
                 >
-                  <span className="font-medium">전체 보기</span>
+                  <span>{categories.categoryTitle}</span>
                   <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                    {sumAllCategoryCounts}
+                    {categories.count}
                   </span>
                 </Link>
               </li>
-              {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
-                <li
-                  key={categories.categoryTitle}
-                  className={`hover:bg-gray-700 transition-colors duration-200 ${
-                    decodeURIComponent(currentCategory) ===
-                    categories.categoryTitle
-                      ? "bg-gray-700"
-                      : ""
-                  }`}
-                  onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
-                >
-                  <Link
-                    href={`/${encodeURIComponent(categories.categoryTitle)}`}
-                    onClick={handleClick}
-                    prefetch={true}
-                    className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
-                  >
-                    <span>{categories.categoryTitle}</span>
-                    <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                      {categories.count}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
+            ))}
+          </ul>
         </nav>
       </div>
     </>
