@@ -70,45 +70,49 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
         <div className="mb-8 border-b border-gray-700 pb-4">
           <h2 className="text-xl font-bold">카테고리</h2>
         </div>
-        <ul className="space-y-3">
-          <li
-            className={`hover:bg-gray-600 transition-colors duration-200 ${
-              isHome ? "bg-gray-700" : "hover:bg-gray-700"
-            }`}
-          >
-            <Link
-              href="/"
-              className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
-            >
-              <span className="font-medium">전체 보기</span>
-              <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                {sumAllCategoryCounts}
-              </span>
-            </Link>
-          </li>
-          {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+{loading && !data ? (
+          <CategorySkeleton />
+        ) : (
+          <ul className="space-y-3">
             <li
-              key={categories.categoryTitle}
-              className={`hover:bg-gray-700 transition-colors duration-200 ${
-                decodeURIComponent(currentCategory) === categories.categoryTitle
-                  ? "bg-gray-700"
-                  : ""
+              className={`hover:bg-gray-600 transition-colors duration-200 ${
+                isHome ? "bg-gray-700" : "hover:bg-gray-700"
               }`}
-              onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
             >
               <Link
-                href={`/${encodeURIComponent(categories.categoryTitle)}`}
-                prefetch={true}
+                href="/"
                 className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
               >
-                <span>{categories.categoryTitle}</span>
+                <span className="font-medium">전체 보기</span>
                 <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                  {categories.count}
+                  {sumAllCategoryCounts}
                 </span>
               </Link>
             </li>
-          ))}
-        </ul>
+            {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+              <li
+                key={categories.categoryTitle}
+                className={`hover:bg-gray-700 transition-colors duration-200 ${
+                  decodeURIComponent(currentCategory) === categories.categoryTitle
+                    ? "bg-gray-700"
+                    : ""
+                }`}
+                onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
+              >
+                <Link
+                  href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                  prefetch={true}
+                  className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+                >
+                  <span>{categories.categoryTitle}</span>
+                  <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                    {categories.count}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </nav>
 
       {/* 모바일 뷰 */}
@@ -144,48 +148,52 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
               </svg>
             </button>
           </div>
-          <ul className="space-y-3">
-            <li
-              className={`hover:bg-gray-600 transition-colors duration-200 ${
-                isHome ? "bg-gray-700" : "hover:bg-gray-700"
-              }`}
-            >
-              <Link
-                href="/"
-                onClick={onClose}
-                className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
-              >
-                <span className="font-medium">전체 보기</span>
-                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                  {sumAllCategoryCounts}
-                </span>
-              </Link>
-            </li>
-            {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+{loading && !data ? (
+            <CategorySkeleton />
+          ) : (
+            <ul className="space-y-3">
               <li
-                key={categories.categoryTitle}
-                className={`hover:bg-gray-700 transition-colors duration-200 ${
-                  decodeURIComponent(currentCategory) ===
-                  categories.categoryTitle
-                    ? "bg-gray-700"
-                    : ""
+                className={`hover:bg-gray-600 transition-colors duration-200 ${
+                  isHome ? "bg-gray-700" : "hover:bg-gray-700"
                 }`}
-                onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
               >
                 <Link
-                  href={`/${encodeURIComponent(categories.categoryTitle)}`}
-                  onClick={handleClick}
-                  prefetch={true}
+                  href="/"
+                  onClick={onClose}
                   className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
                 >
-                  <span>{categories.categoryTitle}</span>
+                  <span className="font-medium">전체 보기</span>
                   <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
-                    {categories.count}
+                    {sumAllCategoryCounts}
                   </span>
                 </Link>
               </li>
-            ))}
-          </ul>
+              {data?.getCategoriesCounts.categoryCounts?.map((categories) => (
+                <li
+                  key={categories.categoryTitle}
+                  className={`hover:bg-gray-700 transition-colors duration-200 ${
+                    decodeURIComponent(currentCategory) ===
+                    categories.categoryTitle
+                      ? "bg-gray-700"
+                      : ""
+                  }`}
+                  onMouseEnter={() => handlePrefetch(categories.categoryTitle)}
+                >
+                  <Link
+                    href={`/${encodeURIComponent(categories.categoryTitle)}`}
+                    onClick={handleClick}
+                    prefetch={true}
+                    className="flex items-center justify-between px-4 py-3 rounded-lg w-full"
+                  >
+                    <span>{categories.categoryTitle}</span>
+                    <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                      {categories.count}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </nav>
       </div>
     </>
