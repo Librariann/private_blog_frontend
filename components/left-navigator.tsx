@@ -32,8 +32,7 @@ const LeftNavigator = ({ isOpen, onClose }: LeftNavigatorProps) => {
     GetCategoriesCountsQuery,
     GetCategoriesCountsQueryVariables
   >(GET_CATEGORIES_COUNTS_QUERY, {
-    fetchPolicy: "cache-and-network",
-    nextFetchPolicy: "cache-first",
+    fetchPolicy: "cache-first",
   });
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("/");
