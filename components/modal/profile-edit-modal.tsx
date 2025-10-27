@@ -120,11 +120,13 @@ const ProfileEditModal = ({ isOpen, onClose, data }: ProfileEditModalProps) => {
             <NewButton
               type="button"
               variant="default"
-              className={
-                isDarkMode
-                  ? "bg-white/10 hover:bg-white/20 border-white/20 text-white"
-                  : ""
-              }
+              className={`
+                cursor-pointer
+                ${
+                  isDarkMode
+                    ? "bg-white/10 hover:bg-white/20 border-white/20 text-white"
+                    : ""
+                }`}
               onClick={() => fileInputRef.current?.click()}
             >
               프로필 이미지 변경

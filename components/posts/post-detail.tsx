@@ -93,8 +93,8 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* Back Button */}
       <button
-        // onClick={onBack}
-        className={`flex items-center space-x-2 mb-4 sm:mb-6 transition-colors ${
+        onClick={() => router.back()}
+        className={`cursor-pointer flex items-center space-x-2 mb-4 sm:mb-6 transition-colors ${
           isDarkMode
             ? "text-white/70 hover:text-white"
             : "text-gray-600 hover:text-gray-900"

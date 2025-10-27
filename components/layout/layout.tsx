@@ -98,7 +98,7 @@ function Layout({ children }: Props) {
               </div>
               {mounted && isLoggedIn && (
                 <div className="fixed bottom-6 right-6">
-                  <Link href="/post-write">
+                  <Link href={`/post-write`}>
                     <PostWriteButton />
                   </Link>
                 </div>

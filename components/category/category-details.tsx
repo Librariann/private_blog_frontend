@@ -37,14 +37,15 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back Button */}
       <button
-        className={`flex items-center space-x-2 mb-6 transition-colors ${
+        onClick={() => router.back()}
+        className={`cursor-pointer flex items-center space-x-2 mb-6 transition-colors ${
           isDarkMode
             ? "text-white/70 hover:text-white"
             : "text-gray-600 hover:text-gray-900"
         }`}
       >
         <ArrowLeft className="w-5 h-5" />
-        <span>홈으로</span>
+        <span>뒤로가기</span>
       </button>
 
       {/* Category Header */}
