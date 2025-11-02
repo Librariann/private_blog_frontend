@@ -64,9 +64,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }
       //그 외 리스트 페이지
     } else if (slugLength > 0 && slug[slugLength - 1]) {
-      category = categories?.find(
-        (category) => category.categoryTitle === slug[slugLength - 1]
-      );
+      category = categories
+        ?.find((category) => category.categoryTitle === slug[slugLength - 2])
+        ?.subCategories?.find(
+          (subCategory) => subCategory.categoryTitle === slug[slugLength - 1]
+        );
     }
 
     if (!category) {
@@ -81,6 +83,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       //하위 카테고리
     } else if (slugLength === 2) {
       postsData = await getPostsByCategoryId(category.id);
+      console.log(postsData);
     }
 
     return {

@@ -163,8 +163,7 @@ const AllCategoriesPage = () => {
                         `/post/${parentCategory.categoryTitle}/${subCategory.categoryTitle}`
                       )
                     }
-                    // onClick={() => onCategoryClick(subCategory.name)}
-                    className={`group p-4 rounded-xl text-left transition-all ${
+                    className={`cursor-pointer group p-4 rounded-xl text-left transition-all ${
                       isDarkMode
                         ? "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/30"
                         : "bg-white/60 hover:bg-white border border-gray-200 hover:border-blue-300 hover:shadow-md"
