@@ -89,7 +89,13 @@ export const GET_CATEGORIES = gql`
         categoryTitle
         depth
         parentCategoryId
+        parentCategoryTitle
         sortOrder
+        subCategories {
+          id
+          categoryTitle
+          sortOrder
+        }
       }
     }
   }
@@ -242,6 +248,16 @@ export const DELETE_POST_MUTATION = gql`
     deletePost(postId: $postId) {
       ok
       error
+    }
+  }
+`;
+
+export const CREATE_POST_MUTATION = gql`
+  mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {
+    createPost(input: $input, hashtags: $hashtags) {
+      ok
+      error
+      postId
     }
   }
 `;
