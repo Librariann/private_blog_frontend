@@ -226,3 +226,9 @@ html {
     background-color: var(--color-lime-700);
   }
 }
+
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+  overflow: visible !important;
+}
