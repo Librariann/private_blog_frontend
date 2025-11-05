@@ -341,11 +341,7 @@ const PostEdit = () => {
           </div>
 
           <div className="flex justify-end mt-4">
-            <div
-              onClick={() =>
-                isValid && !loading && !editLoading && setOpen(true)
-              }
-            >
+            <div onClick={() => !loading && !editLoading && setOpen(true)}>
               <Button
                 canClick={!loading && !editLoading}
                 loading={loading || editLoading}
