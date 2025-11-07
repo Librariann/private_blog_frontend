@@ -19,6 +19,7 @@ import {
 import { useMe } from "@/hooks/useMe";
 import { useRouter } from "next/router";
 import PostDetailSkeleton from "@/components/skeleton/post-detail-skeleton";
+import ConfirmModal from "@/components/modal/confirm-modal";
 
 export type PostProps = {
   post: {
@@ -97,6 +98,14 @@ const UPDATE_POST_HITS_MUTATION = gql`
   }
 `;
 
+const DELETE_POST_MUTATION = gql`
+  mutation deletePost($postId: Int!) {
+    deletePost(postId: $postId) {
+      ok
+    }
+  }
+`;
+
 const EditerMarkdown = dynamic(
   () =>
     import("@uiw/react-md-editor").then((mod) => {
@@ -107,9 +116,11 @@ const EditerMarkdown = dynamic(
 
 const PostDetail = ({ post }: PostProps) => {
   const [mounted, setMounted] = useState(false);
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
+  const [deleteCheckConfirmModal, setDeleteCheckConfirmModal] = useState(false);
   const router = useRouter();
   const { id } = router.query;
-  
+
   // useQuery로 실시간 데이터 가져오기
   const { data: postData, loading } = useQuery<
     GetPostByIdQuery,
@@ -120,11 +131,23 @@ const PostDetail = ({ post }: PostProps) => {
   });
 
   const currentPost = postData?.getPostById?.post || post;
-  
+
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
     UpdatePostHitsMutationVariables
   >(UPDATE_POST_HITS_MUTATION, {
+    update(cache) {
+      // 메인 페이지와 카테고리 페이지의 캐시 무효화
+      cache.evict({ fieldName: "getPostList" });
+      cache.evict({ fieldName: "getPostListByCategoryId" });
+      cache.gc();
+    },
+  });
+
+  const [deletePostMutation] = useMutation<
+    UpdatePostHitsMutation,
+    UpdatePostHitsMutationVariables
+  >(DELETE_POST_MUTATION, {
     update(cache) {
       // 메인 페이지와 카테고리 페이지의 캐시 무효화
       cache.evict({ fieldName: "getPostList" });
@@ -139,7 +162,7 @@ const PostDetail = ({ post }: PostProps) => {
 
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return;
-    
+
     const updateHits = async () => {
       //마지막 조회시간 확인
       const lastViewTime = localStorage.getItem(`post-${post?.id}-lastView`);
@@ -164,9 +187,35 @@ const PostDetail = ({ post }: PostProps) => {
 
   const { data } = useMe();
   const userId = data?.me?.id;
-  
+
   const handleEditPost = () => {
     router.push(`/post-edit?id=${currentPost?.id}`);
+  };
+
+  const handleDeletePost = async () => {
+    handleDeleteConfirm();
+    try {
+      await deletePostMutation({
+        variables: {
+          postId: post?.id,
+        },
+      });
+      deleteCheckModal();
+    } catch (error) {
+      console.error("포스트 삭제 실패:", error);
+    }
+  };
+
+  const handleDeleteConfirm = () => {
+    setDeleteConfirmModal(!deleteConfirmModal);
+  };
+
+  const rediredtAfterDelete = () => {
+    router.push("/");
+  };
+
+  const deleteCheckModal = () => {
+    setDeleteCheckConfirmModal(!deleteCheckConfirmModal);
   };
 
   if (loading || !currentPost) {
@@ -196,12 +245,20 @@ const PostDetail = ({ post }: PostProps) => {
             {mounted && <span>작성일: {formattedDate}</span>}
           </div>
           {mounted && userId === currentPost.user?.id && (
-            <div
-              className="cursor-pointer text-blue-600 hover:text-blue-800"
-              onClick={handleEditPost}
-            >
-              수정
-            </div>
+            <>
+              <div
+                className="cursor-pointer text-blue-600 hover:text-blue-800"
+                onClick={handleEditPost}
+              >
+                수정
+              </div>
+              <div
+                className="cursor-pointer text-red-600 hover:text-red-800"
+                onClick={handleDeleteConfirm}
+              >
+                삭제
+              </div>
+            </>
           )}
         </div>
         {/* 해시태그 */}
@@ -221,6 +278,31 @@ const PostDetail = ({ post }: PostProps) => {
       </div>
       <CommentsWrite />
       <Comments comments={currentPost.comments || []} />
+      <ConfirmModal
+        isOpen={deleteConfirmModal}
+        onClose={() => {
+          setDeleteConfirmModal(false);
+        }}
+        onConfirm={() => {
+          handleDeletePost();
+        }}
+        title="게시물 삭제"
+        message="게시물을 삭제하시겠습니까?"
+        isCancel={false}
+      />
+
+      <ConfirmModal
+        isOpen={deleteCheckConfirmModal}
+        onClose={() => {
+          rediredtAfterDelete();
+        }}
+        onConfirm={() => {
+          rediredtAfterDelete();
+        }}
+        title="삭제 완료"
+        message="게시물이 삭제되었습니다."
+        isCancel={true}
+      />
     </div>
   );
 };
@@ -282,7 +364,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       props: {
         post: data.getPostById.post,
       },
-      revalidate: 60, // 60초마다 재생성 (댓글, 조회수 업데이트)
+      revalidate: 30, // 60초마다 재생성 (댓글, 조회수 업데이트)
     };
   } catch (error) {
     console.error("getStaticProps Error:", error);
