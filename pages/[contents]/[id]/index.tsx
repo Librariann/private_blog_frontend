@@ -245,7 +245,7 @@ const PostDetail = ({ post }: PostProps) => {
             {mounted && <span>작성일: {formattedDate}</span>}
           </div>
           {mounted && userId === currentPost.user?.id && (
-            <>
+            <div className="flex items-center space-x-2">
               <div
                 className="cursor-pointer text-blue-600 hover:text-blue-800"
                 onClick={handleEditPost}
@@ -258,7 +258,7 @@ const PostDetail = ({ post }: PostProps) => {
               >
                 삭제
               </div>
-            </>
+            </div>
           )}
         </div>
         {/* 해시태그 */}
