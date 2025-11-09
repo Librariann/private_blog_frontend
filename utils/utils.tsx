@@ -10,7 +10,6 @@ export async function uploadImageToServer(
     type === "original"
       ? process.env.NEXT_PUBLIC_FILE_UPLOAD_URI
       : process.env.NEXT_PUBLIC_PROFILE_IMAGE_UPLOAD_URI;
-  console.log(uploadUri);
   if (!uploadUri) {
     throw new Error("Upload server URL is not configured");
   }

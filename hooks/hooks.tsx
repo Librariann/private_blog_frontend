@@ -1,4 +1,6 @@
 import {
+  CreatePostMutation,
+  CreatePostMutationVariables,
   DeletePostMutation,
   DeletePostMutationVariables,
   GetAllPopularHashTagsQuery,
@@ -31,6 +33,7 @@ import {
   GET_ALL_POST_LIST_QUERY,
   TOGGLE_POST_STATUS_MUTATION,
   DELETE_POST_MUTATION,
+  CREATE_POST_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -185,4 +188,35 @@ export const useDeletePost = () => {
     awaitRefetchQueries: true,
   });
   return { deletePostMutation, postDeleteLoading };
+};
+
+export const useCreatePost = () => {
+  const [createPostMutation, { loading: postLoading }] = useMutation<
+    CreatePostMutation,
+    CreatePostMutationVariables
+  >(CREATE_POST_MUTATION, {
+    update(cache, { data: mutationResult }) {
+      if (mutationResult?.createPost.ok) {
+        cache.modify({
+          fields: {
+            getPostList(existing = {}) {
+              cache.evict({ fieldName: "getPostList" });
+              return existing;
+            },
+            getCategoriesCounts(existing = {}) {
+              cache.evict({ fieldName: "getCategoriesCounts" });
+              return existing;
+            },
+          },
+        });
+        cache.gc();
+      } else {
+        console.log(
+          "❌ Post creation failed:",
+          mutationResult?.createPost.error
+        );
+      }
+    },
+  });
+  return { createPostMutation, postLoading };
 };

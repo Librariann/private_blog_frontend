@@ -1,19 +1,37 @@
-"use client";
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
-import dynamic from "next/dynamic";
-import Button from "@/components/buttons/button";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
-import ConfirmModal from "@/components/modal/confirm-modal";
+import { NewButton } from "@/components/buttons/new-button";
+import { GlassCardMain } from "@/components/main/main";
+import { Badge } from "@/components/ui/badge";
 import {
-  CreatePostMutation,
-  CreatePostMutationVariables,
-  GetCategoriesQuery,
-  GetCategoriesQueryVariables,
-} from "@/gql/graphql";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import {
+  ArrowLeft,
+  Save,
+  Eye,
+  Send,
+  Image as ImageIcon,
+  X,
+  Plus,
+  Code,
+  ArrowLeftIcon,
+  SplitSquareHorizontal,
+  ArrowRight,
+} from "lucide-react";
+import { useState } from "react";
+import dynamic from "next/dynamic";
 import {
   commands,
   ICommand,
@@ -21,24 +39,17 @@ import {
   TextState,
 } from "@uiw/react-md-editor";
 import { uploadImageToServer } from "@/utils/utils";
-import WritingAnimation from "@/components/loading/writing-animation";
-import { GET_CATEGORIES } from "@/lib/queries";
 import { toast } from "react-toastify";
+import { useCreatePost, useGetCategories } from "@/hooks/hooks";
+import { Category, PostStatus } from "@/gql/graphql";
+import CreateCategoryModal from "@/components/modal/create-category-modal";
+import WritingAnimation from "@/components/loading/writing-animation";
 
-export const CREATE_POST_MUTATION = gql`
-  mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {
-    createPost(input: $input, hashtags: $hashtags) {
-      ok
-      error
-      postId
-    }
-  }
-`;
-
-export type postingProps = {
-  title: string;
-  categoryId: number;
-};
+interface PostEditorPageProps {
+  onBack: () => void;
+  categoryHierarchy: any[];
+  post?: any; // 수정 모드일 때 기존 포스트 데이터
+}
 
 function insertAtSelection(
   state: TextState,
@@ -98,124 +109,66 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
 });
 
-function PostWrite() {
-  const router = useRouter();
+const PostWrite = ({ post }: PostEditorPageProps) => {
+  const getCategories = useGetCategories();
+  const getCategoriesData = getCategories?.getCategories.categories;
 
-  const [createPostMutation, { loading: postLoading }] = useMutation<
-    CreatePostMutation,
-    CreatePostMutationVariables
-  >(CREATE_POST_MUTATION, {
-    update(cache, { data: mutationResult }) {
-      if (mutationResult?.createPost.ok) {
-        cache.modify({
-          fields: {
-            getPostList(existing = {}) {
-              cache.evict({ fieldName: "getPostList" });
-              return existing;
-            },
-            getCategoriesCounts(existing = {}) {
-              cache.evict({ fieldName: "getCategoriesCounts" });
-              return existing;
-            },
-          },
-        });
-        cache.gc();
-      } else {
-        console.log(
-          "❌ Post creation failed:",
-          mutationResult?.createPost.error
-        );
-      }
-    },
-  });
-
-  const { data } = useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(
-    GET_CATEGORIES,
-    {
-      fetchPolicy: "cache-and-network",
-      nextFetchPolicy: "cache-first",
-      ssr: false, // SSR 비활성화
-    }
-  );
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<postingProps>({
-    mode: "onChange",
-  });
-  const [open, setOpen] = useState(false);
-  const [md, setMd] = useState<string | undefined>("");
-  const [selectedCategory, setSelectedCategory] = useState(1);
-  const [hashtags, setHashtags] = useState<string[]>([]);
-  const [hashtagInput, setHashtagInput] = useState("");
-  const [postConfirmModal, setPostConfirmModal] = useState(false);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [title, setTitle] = useState(post?.title || "");
+  const [excerpt, setExcerpt] = useState(post?.excerpt || "");
+  const [thumbnailUrl, setThumbnailUrl] = useState(post?.thumbnailUrl || "");
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<string[]>(post?.tags || []);
+  const [status, setStatus] = useState<PostStatus>();
+  const [step, setStep] = useState<1 | 2>(1); // 1: 기본 작성, 2: 부가 정보
+  const [parentCategory, setParentCategory] = useState<Category>();
+  const [subCategory, setSubCategory] = useState<string>("");
+  const [md, setMd] = useState<string>(post?.content || "");
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleHashtagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (
-      e.key === "Enter" &&
-      hashtagInput.trim() &&
-      !e.nativeEvent.isComposing
-    ) {
+  const { isDarkMode } = useDarkModeStore();
+  const { createPostMutation, postLoading } = useCreatePost();
+
+  const handleAddCategoryOpen = (open: boolean) => {
+    setIsAddCategoryOpen(open);
+  };
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && tagInput.trim() && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      if (!hashtags.includes(hashtagInput.trim())) {
-        setHashtags([...hashtags, hashtagInput.trim()]);
+      if (!tags.includes(tagInput.trim())) {
+        setTags([...tags, tagInput.trim()]);
+        setTagInput("");
+      } else {
+        toast.error("이미 추가된 태그입니다.");
       }
-      setHashtagInput("");
     }
   };
 
-  const removeHashtag = (tagToRemove: string) => {
-    setHashtags(hashtags.filter((tag) => tag !== tagToRemove));
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setThumbnailFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setThumbnailPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-    e.target.value = "";
-  };
-
-  const removeThumbnail = () => {
-    setThumbnailFile(null);
-    setThumbnailPreview(null);
-  };
-
-  const onSubmit = async (data: postingProps) => {
+  const handleSaveDraft = async () => {
     try {
       setIsSubmitting(true);
-      setOpen(false);
-
-      const { title } = data;
-      let thumbnailUrl = "";
-      if (thumbnailFile) {
-        thumbnailUrl = await uploadImageToServer(thumbnailFile);
-      }
 
       const postResult = await createPostMutation({
         variables: {
           input: {
             title,
+            excerpt,
             contents: md || "",
-            categoryId: selectedCategory,
-            thumbnailUrl,
+            categoryId: +subCategory,
+            postStatus: PostStatus.Draft,
           },
-          hashtags,
+          hashtags: tags,
         },
       });
 
       if (postResult.data?.createPost.ok) {
-        setPostConfirmModal(true);
+        toast.info("포스트가 임시저장 됐습니다");
+        // setPostConfirmModal(true);
       } else {
         toast.error(postResult.data?.createPost.error);
       }
@@ -226,179 +179,460 @@ function PostWrite() {
     }
   };
 
-  const redirect = () => {
-    // if (process.env.NODE_ENV === "production") {
-    // window.location.href = "/";
-    // } else {
-    router.push("/");
-    // }
+  const handlePublish = async () => {
+    try {
+      setIsSubmitting(true);
+
+      const postResult = await createPostMutation({
+        variables: {
+          input: {
+            title,
+            excerpt,
+            contents: md || "",
+            categoryId: +subCategory,
+            postStatus: status,
+          },
+          hashtags: tags,
+        },
+      });
+
+      if (postResult.data?.createPost.ok) {
+        toast.success("포스트가 성공적으로 생성되었습니다.");
+        // setPostConfirmModal(true);
+      } else {
+        toast.error(postResult.data?.createPost.error);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    // onBack();
   };
 
-  return (
-    <div className="w-full min-h-screen px-4 md:px-8 py-4 md:py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="space-y-4 md:space-y-6">
-          <input
-            {...register("title", { required: "제목을 입력해주세요" })}
-            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-            placeholder="제목을 입력하세요"
-          />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(Number(e.target.value))}
-            className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-          >
-            {data?.getCategories?.categories?.map((value) => {
-              return (
-                <option key={value.id} value={value.id}>
-                  {value.categoryTitle}
-                </option>
-              );
-            })}
-          </select>
-          <div className="flex flex-col space-y-2">
-            <input
-              type="text"
-              value={hashtagInput}
-              onChange={(e) => setHashtagInput(e.target.value)}
-              onKeyDown={handleHashtagInput}
-              className="w-full p-3 text-base md:text-lg border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-              placeholder="해시태그를 입력하고 Enter를 누르세요"
-            />
-            <div className="flex flex-wrap gap-2">
-              {hashtags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full flex items-center"
-                >
-                  #{tag}
-                  <button
-                    type="button"
-                    onClick={() => removeHashtag(tag)}
-                    className="ml-2 text-blue-600 hover:text-blue-800"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-          <div
-            className="rounded-lg shadow-md overflow-hidden"
-            data-color-mode="dark"
-          >
-            {typeof window !== "undefined" && (
-              <MDEditor
-                value={md}
-                onChange={setMd}
-                autoFocus={false}
-                height={
-                  typeof window !== "undefined" && window.innerWidth < 768
-                    ? 400
-                    : 800
-                }
-                className="border-0"
-                preview="live"
-                commands={[...commands.getCommands(), imageUploadCommand]}
-              />
-            )}
-          </div>
+  const handleNextStep = () => {
+    if (!title) {
+      toast.error("제목을 입력해주세요.");
+      return;
+    }
+    if (!excerpt) {
+      toast.error("요약을 입력해주세요.");
+      return;
+    }
+    if (!md) {
+      toast.error("내용을 입력해주세요.");
+      return;
+    }
+    setStep(2);
+  };
 
-          {/* 썸네일 업로드 섹션 */}
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
-              썸네일 이미지
-            </label>
-            <div className="flex items-center space-x-4">
-              <label
-                htmlFor="fileInput"
-                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-lg hover:bg-blue-50 cursor-pointer"
+  // Step 1: 기본 작성 (제목, 태그, 내용)
+  if (step === 1) {
+    return (
+      <div className="min-h-screen pb-8">
+        <div className="max-w-full mx-auto px-4 sm:px-8 lg:px-16 py-4 sm:py-8">
+          {/* Simple Header */}
+          <div className="flex items-center justify-between mb-8">
+            <button
+              // onClick={onBack}
+              className={`flex items-center space-x-2 transition-colors ${
+                isDarkMode
+                  ? "text-white/70 hover:text-white"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>나가기</span>
+            </button>
+
+            <div className="flex gap-2">
+              <NewButton
+                onClick={handleNextStep}
+                className={`
+                  cursor-pointer
+                  ${
+                    isDarkMode
+                      ? "bg-blue-500 hover:bg-blue-600 text-white"
+                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                  }
+                `}
               >
-                썸네일 추가
-              </label>
-              <input
-                id="fileInput"
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailChange}
-                className="hidden"
+                다음 단계
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </NewButton>
+            </div>
+          </div>
+
+          {/* Title Input */}
+          <div className="mb-6 w-[50%]">
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="제목을 입력해주세요"
+              className={`border-0 border-b rounded-none px-0 !text-5xl font-bold py-4 h-auto dark:bg-input/0 ${
+                isDarkMode
+                  ? "bg-transparent border-white/50 text-white placeholder:text-white/80 focus-visible:ring-0 focus-visible:border-white/80"
+                  : "bg-transparent border-gray-200 focus-visible:ring-0 focus-visible:border-gray-400"
+              }`}
+            />
+          </div>
+          {/* Excerpt */}
+          <div className={`rounded-2xl w-[50%] mb-6`}>
+            <Label
+              className={`mb-3 block ${isDarkMode ? "text-white" : "text-gray-900"}`}
+            >
+              요약{" "}
+              <span
+                className={`text-xs ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+              >
+                {excerpt.length}/200자
+              </span>
+            </Label>
+            <Input
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              onKeyDown={handleAddTag}
+              placeholder="포스트의 간략한 요약을 작성하면 사람들이 보기 편해져요"
+              className={
+                isDarkMode
+                  ? "bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                  : "bg-white border-gray-200"
+              }
+            />
+          </div>
+
+          {/* Tags Input */}
+          <div className="mb-8">
+            <div className="flex gap-2 mb-3 w-[50%]">
+              <Input
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleAddTag}
+                placeholder="태그를 입력해주세요 (엔터로 입력할 수 있어요)"
+                className={
+                  isDarkMode
+                    ? "bg-transparent border-white/10 text-white placeholder:text-white/40"
+                    : "bg-transparent border-gray-200"
+                }
               />
-              {thumbnailPreview && (
-                <button
-                  type="button"
-                  onClick={removeThumbnail}
-                  className="px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-300 rounded-lg hover:bg-red-50"
-                >
-                  제거
-                </button>
-              )}
             </div>
 
-            {/* 썸네일 미리보기 */}
-            {thumbnailPreview && (
-              <div className="mt-3">
-                <div className="relative inline-block">
-                  <img
-                    src={thumbnailPreview}
-                    alt="썸네일 미리보기"
-                    className="w-48 h-32 object-cover rounded-lg border shadow-xs"
-                  />
-                  <div className="absolute top-2 right-2">
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 backdrop-blur-sm w-fit">
+                {tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className={`${
+                      isDarkMode
+                        ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                        : "bg-blue-100 text-blue-700 border-blue-200"
+                    } pl-3 pr-1 py-1`}
+                  >
+                    #{tag}
                     <button
-                      type="button"
-                      onClick={removeThumbnail}
-                      className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                      onClick={() => handleRemoveTag(tag)}
+                      className="ml-2 hover:bg-white/20 rounded-full p-0.5"
                     >
-                      ×
+                      <X className="w-3 h-3" />
                     </button>
-                  </div>
-                </div>
+                  </Badge>
+                ))}
               </div>
             )}
           </div>
 
-          <div className="flex justify-end mt-4">
-            <div onClick={() => isValid && !postLoading && setOpen(true)}>
-              <Button
-                canClick={isValid && !postLoading}
-                loading={postLoading}
-                actionText="게시물 생성"
-              />
-            </div>
+          {/* Content Editor with Split View */}
+          <div className="mb-8">
+            {/* Editor */}
+            <MDEditor
+              value={md}
+              onChange={(val) => setMd(val || "")}
+              autoFocus={false}
+              height={
+                typeof window !== "undefined" && window.innerWidth < 768
+                  ? 400
+                  : 800
+              }
+              className="border-0"
+              preview="live"
+              commands={[...commands.getCommands(), imageUploadCommand]}
+            />
           </div>
         </div>
       </div>
-      <ConfirmModal
-        isOpen={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-        onConfirm={() => {
-          handleSubmit(onSubmit)();
-        }}
-        title="게시물 작성"
-        message="게시물을 작성하시겠습니까?"
-        isCancel={false}
-        loading={postLoading}
-      />
+    );
+  }
 
-      <ConfirmModal
-        isOpen={postConfirmModal}
-        onClose={() => {
-          setPostConfirmModal(false);
-        }}
-        onConfirm={() => {
-          redirect();
-        }}
-        title="작성 완료"
-        message="게시물이 작성되었습니다."
-        isCancel={true}
-      />
+  // Step 2: 부가 정보 (요약, 썸네일, 카테고리 등)
+  return (
+    <div className="min-h-screen pb-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <NewButton
+            variant="ghost"
+            onClick={() => setStep(1)}
+            className={
+              isDarkMode
+                ? "text-white/70 hover:text-white hover:bg-white/10"
+                : ""
+            }
+          >
+            <ArrowLeftIcon className="w-4 h-4 mr-2" />
+            이전 단계
+          </NewButton>
 
+          <div className="flex gap-2">
+            <NewButton
+              variant="outline"
+              onClick={handleSaveDraft}
+              className={
+                isDarkMode ? "border-white/20 text-white hover:bg-white/10" : ""
+              }
+            >
+              <Save className="w-4 h-4 mr-2" />
+              임시저장
+            </NewButton>
+            <NewButton
+              onClick={handlePublish}
+              className={
+                isDarkMode
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }
+            >
+              <Send className="w-4 h-4 mr-2" />
+              발행하기
+            </NewButton>
+          </div>
+        </div>
+
+        <h2
+          className={`text-2xl mb-8 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+        >
+          발행 설정
+        </h2>
+
+        <div className="space-y-6">
+          {/* Categories */}
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
+            <h3
+              className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+            >
+              카테고리
+            </h3>
+
+            <div className="space-y-4">
+              <div>
+                <Label
+                  className={`mb-2 block ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
+                >
+                  상위 카테고리 *
+                </Label>
+                <Select
+                  value={parentCategory?.categoryTitle}
+                  onValueChange={(value: string) => {
+                    const category = getCategoriesData?.find(
+                      (category) => category.categoryTitle === value
+                    );
+                    setParentCategory(category);
+                  }}
+                >
+                  <SelectTrigger
+                    className={
+                      isDarkMode
+                        ? "bg-white/5 border-white/20 text-white"
+                        : "bg-white border-gray-200"
+                    }
+                  >
+                    <SelectValue placeholder="선택하세요" />
+                  </SelectTrigger>
+                  <SelectContent modal={false}>
+                    {getCategoriesData?.map((category) => (
+                      <SelectItem
+                        key={category.categoryTitle}
+                        value={category.categoryTitle}
+                      >
+                        {category.categoryTitle}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <NewButton
+                variant="outline"
+                onClick={() => setIsAddCategoryOpen(true)}
+                className={`w-full ${
+                  isDarkMode
+                    ? "border-white/20 text-white hover:bg-white/10"
+                    : ""
+                }`}
+              >
+                <Plus className="w-4 h-4 mr-2" />새 카테고리 만들기
+              </NewButton>
+
+              {parentCategory && (
+                <div>
+                  <Label
+                    className={`mb-2 block ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
+                  >
+                    하위 카테고리 *
+                  </Label>
+                  <Select value={subCategory} onValueChange={setSubCategory}>
+                    <SelectTrigger
+                      className={
+                        isDarkMode
+                          ? "bg-white/5 border-white/20 text-white"
+                          : "bg-white border-gray-200"
+                      }
+                    >
+                      <SelectValue placeholder="하위 카테고리를 선택해주세요" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {parentCategory?.subCategories?.map((subCategory) => (
+                        <SelectItem
+                          key={subCategory.categoryTitle}
+                          value={subCategory.id.toString()}
+                        >
+                          {subCategory.categoryTitle}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+          </GlassCardMain>
+
+          {/* Thumbnail */}
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
+            <h3
+              className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+            >
+              썸네일
+            </h3>
+
+            <div className="space-y-3">
+              <Input
+                value={thumbnailUrl}
+                onChange={(e) => setThumbnailUrl(e.target.value)}
+                placeholder="이미지 URL을 입력하세요"
+                className={
+                  isDarkMode
+                    ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                    : "bg-white border-gray-200"
+                }
+              />
+
+              {thumbnailUrl && (
+                <div className="relative aspect-video rounded-lg overflow-hidden">
+                  <img
+                    src={thumbnailUrl}
+                    alt="Thumbnail preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400";
+                    }}
+                  />
+                </div>
+              )}
+
+              {!thumbnailUrl && (
+                <div
+                  className={`aspect-video rounded-lg border-2 border-dashed flex items-center justify-center ${
+                    isDarkMode ? "border-white/20" : "border-gray-300"
+                  }`}
+                >
+                  <div className="text-center">
+                    <ImageIcon
+                      className={`w-12 h-12 mx-auto mb-2 ${
+                        isDarkMode ? "text-white/30" : "text-gray-400"
+                      }`}
+                    />
+                    <p
+                      className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+                    >
+                      썸네일 미리보기
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </GlassCardMain>
+
+          {/* Status */}
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
+            <h3
+              className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+            >
+              공개 설정
+            </h3>
+
+            <Select
+              value={status}
+              onValueChange={(val: PostStatus) => setStatus(val)}
+            >
+              <SelectTrigger
+                className={
+                  isDarkMode
+                    ? "bg-white/5 border-white/20 text-white"
+                    : "bg-white border-gray-200"
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={PostStatus.Published}>공개</SelectItem>
+                <SelectItem value={PostStatus.Private}>비공개</SelectItem>
+                <SelectItem value={PostStatus.Draft}>임시저장</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <p
+              className={`text-sm mt-2 ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
+            >
+              {status === PostStatus.Draft
+                ? "임시저장된 글은 나만 볼 수 있습니다"
+                : "공개된 글은 모두가 볼 수 있습니다"}
+            </p>
+          </GlassCardMain>
+
+          {/* Preview Summary */}
+          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
+            <h3
+              className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+            >
+              📝 작성 내용 요약
+            </h3>
+            <div
+              className={`space-y-2 text-sm ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
+            >
+              <p>• 제목: {title || "(미입력)"}</p>
+              <p>• 태그: {tags.length > 0 ? tags.join(", ") : "(없음)"}</p>
+              <p>
+                • 카테고리:{" "}
+                {/* {parentCategory && subCategory
+                  ? `${parentCategory} > ${subCategory}`
+                  : "(미선택)"} */}
+              </p>
+              <p>• 내용: {md ? `${md.length}자` : "(미입력)"}</p>
+            </div>
+          </GlassCardMain>
+        </div>
+
+        {/* Add Category Dialog */}
+        <CreateCategoryModal
+          isAddCategoryOpen={isAddCategoryOpen}
+          handleAddCategoryOpen={handleAddCategoryOpen}
+        />
+      </div>
       {/* 로딩 애니메이션 */}
       {isSubmitting && <WritingAnimation />}
     </div>
   );
-}
+};
 
 export default PostWrite;

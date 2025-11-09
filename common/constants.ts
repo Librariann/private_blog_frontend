@@ -1,4 +1,5 @@
 import { PostStatus } from "@/gql/graphql";
+import { ICommand, TextAreaTextApi, TextState } from "@uiw/react-md-editor";
 type statusType = {
   statusName: string;
   buttonStatus:
