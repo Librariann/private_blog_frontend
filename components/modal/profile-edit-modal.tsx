@@ -8,7 +8,6 @@ import { Input } from "../ui/input";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { MeType } from "@/hooks/useMe";
 import { useUpdateUserProfile } from "@/hooks/hooks";
-import { UpdateUserProfileInput } from "@/gql/graphql";
 import { toast } from "react-toastify";
 import { uploadImageToServer } from "@/utils/utils";
 

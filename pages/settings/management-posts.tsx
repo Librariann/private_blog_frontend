@@ -42,6 +42,16 @@ import { formatDateShort } from "@/utils/utils";
 import { useRouter } from "next/router";
 import { POST_STATUS_OBJECTS } from "@/common/constants";
 
+const tableColumns = [
+  { title: "제목", className: "px-6 py-4 text-left" },
+  { title: "카테고리", className: "px-6 py-4 text-left" },
+  { title: "날짜", className: "px-6 py-4 text-left" },
+  { title: "조회수", className: "px-6 py-4 text-center" },
+  { title: "댓글", className: "px-6 py-4 text-center" },
+  { title: "상태", className: "px-6 py-4 text-center" },
+  { title: "관리", className: "px-6 py-4 text-center" },
+];
+
 const ManagementPosts = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -138,12 +148,15 @@ const ManagementPosts = () => {
               </p>
             </div>
             <NewButton
-              className={
-                isDarkMode
-                  ? "bg-blue-500 hover:bg-blue-600 text-white"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }
-              // onClick={onCreateNew}
+              className={`
+                cursor-pointer
+                ${
+                  isDarkMode
+                    ? "bg-blue-500 hover:bg-blue-600 text-white"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }
+              `}
+              onClick={() => router.push("/post-write")}
             >
               <Plus className="w-4 h-4" />새 글쓰기
             </NewButton>
@@ -237,41 +250,14 @@ const ManagementPosts = () => {
               className={`border-b ${isDarkMode ? "border-white/10" : "border-gray-200"}`}
             >
               <tr>
-                <th
-                  className={`px-6 py-4 text-left ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  제목
-                </th>
-                <th
-                  className={`px-6 py-4 text-left ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  카테고리
-                </th>
-                <th
-                  className={`px-6 py-4 text-left ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  날짜
-                </th>
-                <th
-                  className={`px-6 py-4 text-center ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  조회수
-                </th>
-                <th
-                  className={`px-6 py-4 text-center ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  댓글
-                </th>
-                <th
-                  className={`px-6 py-4 text-center ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  상태
-                </th>
-                <th
-                  className={`px-6 py-4 text-center ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
-                >
-                  관리
-                </th>
+                {tableColumns.map((column) => (
+                  <th
+                    key={column.title}
+                    className={`${column.className} ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
+                  >
+                    {column.title}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
