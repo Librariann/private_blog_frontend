@@ -1,17 +1,18 @@
 import type { AppProps } from "next/app";
 import Layout from "../components/layout/layout";
-import "../styles/globals.css";
 import { createApolloClient } from "@/apollo";
 import { ApolloProvider } from "@apollo/client";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import "aos/dist/aos.css";
 import "../styles/markdown.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
 import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
