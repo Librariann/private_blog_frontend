@@ -75,8 +75,8 @@ function Layout({ children }: Props) {
               onMenuToggle={handleMobileMenuClose}
               onToggleTheme={onToggleTheme}
             />
-            <div className="grow" style={{ height: "calc(100vh - 64px)" }}>
-              <div className="flex flex-row h-full">
+            <div className="grow">
+              <div className="flex flex-row">
                 {/* <div className="xl:block xl:w-64 p-4">
                 <LeftNavigator
                   isOpen={isMobileMenuOpen}
