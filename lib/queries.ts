@@ -142,6 +142,7 @@ export const GET_POST_LIST_QUERY = gql`
         excerpt
         hits
         thumbnailUrl
+        createdAt
         category {
           id
           categoryTitle

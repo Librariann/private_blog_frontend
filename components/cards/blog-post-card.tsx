@@ -1,12 +1,14 @@
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { PostsProps } from "@/pages";
+import { GetPostListQuery } from "@/gql/graphql";
+import { ko } from "date-fns/locale";
+import { formatDistanceToNow } from "date-fns";
 
-interface BlogPostCardProps {
-  post: PostsProps;
+type BlogPostCardProps = {
+  post: NonNullable<GetPostListQuery["getPostList"]["posts"]>[number];
   isDarkMode: boolean;
   onClick: () => void;
-}
+};
 
 export function BlogPostCard({ post, isDarkMode, onClick }: BlogPostCardProps) {
   return (
@@ -34,7 +36,13 @@ export function BlogPostCard({ post, isDarkMode, onClick }: BlogPostCardProps) {
         >
           <div className="flex items-center space-x-1">
             <Calendar className="w-4 h-4" />
-            {/* <span>{post.date}</span> */}
+            <span>
+              {new Date(post.createdAt).toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
           </div>
           <div className="flex items-center space-x-1">
             <Clock className="w-4 h-4" />

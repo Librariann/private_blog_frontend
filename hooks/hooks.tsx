@@ -1,8 +1,20 @@
-import { GetCategoriesQuery, GetCategoriesQueryVariables } from "@/gql/graphql";
+import {
+  GetAllPopularHashTagsQuery,
+  GetAllPopularHashTagsQueryVariables,
+  GetCategoriesCountsQuery,
+  GetCategoriesCountsQueryVariables,
+  GetCategoriesQuery,
+  GetCategoriesQueryVariables,
+  GetPostListQuery,
+  GetPostListQueryVariables,
+} from "@/gql/graphql";
 import {
   CREATE_COMMENT_MUTATION,
   GET_POST_BY_ID_QUERY,
   GET_CATEGORIES,
+  GET_POST_LIST_QUERY,
+  GET_POPULAR_HASHTAG_QUERY,
+  GET_CATEGORIES_COUNTS_QUERY,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -24,6 +36,21 @@ export function useGetCategories() {
   return data;
 }
 
+export function useGetCategoryCounts() {
+  const { data, loading } = useQuery<
+    GetCategoriesCountsQuery,
+    GetCategoriesCountsQueryVariables
+  >(GET_CATEGORIES_COUNTS_QUERY, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+  });
+
+  return {
+    countsData: data?.getCategoriesCounts.categoryCounts,
+    countsLoading: loading,
+  };
+}
+
 export const useCreateComment = ({ id }: { id: number }) => {
   const [createCommentMutation, { loading: commentLoading }] = useMutation<
     CreateCommentMutation,
@@ -38,4 +65,28 @@ export const useCreateComment = ({ id }: { id: number }) => {
     awaitRefetchQueries: true,
   });
   return { createCommentMutation, commentLoading };
+};
+
+export const useGetPostList = () => {
+  const { data } = useQuery<GetPostListQuery, GetPostListQueryVariables>(
+    GET_POST_LIST_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-first",
+      ssr: false, // SSR 비활성화
+    }
+  );
+  return data?.getPostList?.posts || [];
+};
+
+export const useGetPopularHashTagList = () => {
+  const { data } = useQuery<
+    GetAllPopularHashTagsQuery,
+    GetAllPopularHashTagsQueryVariables
+  >(GET_POPULAR_HASHTAG_QUERY, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+    ssr: false, // SSR 비활성화
+  });
+  return data?.getAllPopularHashTags.hashtags || [];
 };

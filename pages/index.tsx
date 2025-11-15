@@ -1,28 +1,7 @@
-import { createApolloClient } from "@/apollo";
-import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
-import { GetPostListQuery, GetPostListQueryVariables } from "@/gql/graphql";
+import { GetPostListQuery } from "@/gql/graphql";
 import Main from "@/components/main/main";
 import { getPopularHashTagDatas, getPostDatas } from "@/lib/posts";
-
-export type PostsProps = {
-  id: number;
-  title: string;
-  contents: string;
-  excerpt: string | null;
-  hits: number;
-  thumbnailUrl?: string | null;
-  category: {
-    categoryTitle: string;
-    parentCategoryTitle: string;
-  };
-  comments: {
-    comment?: string | null;
-  }[]; // 배열 타입으로 수정
-  hashtags: {
-    hashtag?: string | null;
-  }[]; // 배열 타입으로 수정
-};
 
 export type popularHashTagsProps = {
   hashtag: string;
@@ -56,7 +35,7 @@ const Home = ({
   posts,
   popularHashTags,
 }: {
-  posts: PostsProps[];
+  posts: GetPostListQuery["getPostList"]["posts"];
   popularHashTags: popularHashTagsProps[];
 }) => {
   return <Main posts={posts} popularHashTags={popularHashTags} />;

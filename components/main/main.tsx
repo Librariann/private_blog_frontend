@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
 import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { popularHashTagsProps, PostsProps } from "@/pages";
+import { popularHashTagsProps } from "@/pages";
 import { BlogPostCard } from "../cards/blog-post-card";
-import {
-  GetCategoriesCountsQuery,
-  GetCategoriesCountsQueryVariables,
-} from "@/gql/graphql";
+import { GetPostListQuery } from "@/gql/graphql";
 import { useQuery } from "@apollo/client";
-import { GET_CATEGORIES_COUNTS_QUERY } from "@/lib/queries";
 import Mobile from "./mobile";
 import Desktop from "./desktop";
 import { useRouter } from "next/router";
+import { useGetCategoryCounts } from "@/hooks/hooks";
 
 const Main = ({
   posts,
   popularHashTags,
 }: {
-  posts: PostsProps[];
+  posts: GetPostListQuery["getPostList"]["posts"];
   popularHashTags: popularHashTagsProps[];
 }) => {
   const router = useRouter();
@@ -44,24 +41,17 @@ const Main = ({
     new Set()
   );
   const [categories, setCategories] = useState<any[]>([]);
-  const { loading, data: getCategoryDatas } = useQuery<
-    GetCategoriesCountsQuery,
-    GetCategoriesCountsQueryVariables
-  >(GET_CATEGORIES_COUNTS_QUERY, {
-    fetchPolicy: "cache-and-network",
-    nextFetchPolicy: "cache-first",
-  });
+  const { countsData, countsLoading } = useGetCategoryCounts();
 
   useEffect(() => {
-    if (!loading) {
-      const categories =
-        getCategoryDatas?.getCategoriesCounts?.categoryCounts || [];
+    if (!countsLoading) {
+      const categories = countsData || [];
       const expandCategory = categories[0]?.categoryTitle;
 
       setExpandedCategories(new Set([expandCategory]));
       setCategories(categories);
     }
-  }, [loading, getCategoryDatas]);
+  }, [countsLoading, countsData]);
 
   const toggleCategoryExpand = (categoryName: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -98,7 +88,7 @@ const Main = ({
             <h2
               className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
             >
-              {posts[0]?.title}
+              {posts?.[0]?.title}
             </h2>
             <p
               className={`mb-6 ${
@@ -111,7 +101,7 @@ const Main = ({
             <button
               onClick={() =>
                 router.push(
-                  `/post/${posts[0].category.parentCategoryTitle}/${posts[0].category.categoryTitle}/@Post-${posts[0].id}`
+                  `/post/${posts?.[0].category.parentCategoryTitle}/${posts?.[0].category.categoryTitle}/@Post-${posts?.[0].id}`
                 )
               }
               className={`px-6 py-3 rounded-lg transition-all ${
@@ -135,7 +125,7 @@ const Main = ({
 
           {/* Blog Posts */}
           <div className="space-y-6">
-            {posts.slice(0, 5).map((post) => (
+            {posts?.slice(0, 5).map((post) => (
               <BlogPostCard
                 key={post.id}
                 post={post}
@@ -150,11 +140,14 @@ const Main = ({
           </div>
 
           <button
-            className={`w-full px-6 py-4 rounded-xl transition-all ${
+            className={`w-full px-6 py-4 rounded-xl transition-all cursor-pointer ${
               isDarkMode
                 ? "glass-card-hover border border-white/10 text-white"
                 : "glass-card-light-hover border border-gray-200 text-gray-900"
             }`}
+            onClick={() => {
+              router.push("/all-posts-page");
+            }}
           >
             모든 포스트 보기 →
           </button>

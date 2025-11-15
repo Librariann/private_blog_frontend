@@ -10,14 +10,15 @@ import {
   Sun,
   X,
 } from "lucide-react";
+import { useRouter } from "next/router";
 
 const Header = ({
   isDarkMode,
   onNavigateHome,
   onToggleTheme,
-  onNavigateToAllPosts,
   onNavigateToAllCategories,
 }: any) => {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const handleNavigation = (action: () => void) => {
     action();
@@ -49,45 +50,50 @@ const Header = ({
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
               <button
-                onClick={onNavigateHome}
-                className={
-                  isDarkMode
-                    ? "text-white hover:text-white/80 transition-colors"
-                    : "text-gray-900 hover:text-blue-600 transition-colors"
-                }
+                onClick={() => router.push("/")}
+                className={`cursor-pointer
+                  ${
+                    isDarkMode
+                      ? "text-white hover:text-white/80 transition-colors"
+                      : "text-gray-900 hover:text-blue-600 transition-colors"
+                  }
+                `}
               >
                 홈
               </button>
               <button
-                onClick={onNavigateToAllPosts}
-                className={
-                  isDarkMode
-                    ? "text-white/70 hover:text-white transition-colors"
-                    : "text-gray-600 hover:text-gray-900 transition-colors"
-                }
+                onClick={() => router.push("/all-posts-page")}
+                className={`cursor-pointer 
+                  ${
+                    isDarkMode
+                      ? "text-white/70 hover:text-white transition-colors"
+                      : "text-gray-600 hover:text-gray-900 transition-colors"
+                  }`}
               >
                 포스트
               </button>
               <button
-                onClick={onNavigateToAllCategories}
-                className={
-                  isDarkMode
-                    ? "text-white/70 hover:text-white transition-colors"
-                    : "text-gray-600 hover:text-gray-900 transition-colors"
-                }
+                onClick={() => router.push("/all-categories-page")}
+                className={`cursor-pointer
+                  ${
+                    isDarkMode
+                      ? "text-white/70 hover:text-white transition-colors"
+                      : "text-gray-600 hover:text-gray-900 transition-colors"
+                  }`}
               >
                 카테고리
               </button>
-              <a
-                href="#"
-                className={
-                  isDarkMode
-                    ? "text-white/70 hover:text-white transition-colors"
-                    : "text-gray-600 hover:text-gray-900 transition-colors"
-                }
+              <button
+                onClick={() => router.push("/about")}
+                className={`cursor-pointer
+                  ${
+                    isDarkMode
+                      ? "text-white/70 hover:text-white transition-colors"
+                      : "text-gray-600 hover:text-gray-900 transition-colors"
+                  }`}
               >
                 소개
-              </a>
+              </button>
             </nav>
 
             {/* Actions */}
