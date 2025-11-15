@@ -1,8 +1,9 @@
 import { ChevronDown, LucideProps } from "lucide-react";
-import ProfileSidebar from "../sidebar/profile-side-bar";
+import ProfileSidebar from "./profile-side-bar";
 import { AnimatePresence, motion } from "framer-motion";
 import { CategoryCount } from "@/gql/graphql";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
+import { popularHashTagsProps } from "@/pages";
 
 export type DesktopAndMobileProps = {
   isDarkMode: boolean;
@@ -15,6 +16,7 @@ export type DesktopAndMobileProps = {
   }[];
   expandedCategories: Set<string>;
   toggleCategoryExpand: (categoryName: string) => void;
+  popularHashTags: popularHashTagsProps[];
 };
 
 const Desktop = ({
@@ -23,7 +25,9 @@ const Desktop = ({
   iconList,
   expandedCategories,
   toggleCategoryExpand,
+  popularHashTags,
 }: DesktopAndMobileProps) => {
+  console.log(popularHashTags);
   return (
     <aside className="hidden lg:block lg:col-span-4 space-y-6">
       <ProfileSidebar isDarkMode={isDarkMode} />
@@ -141,25 +145,16 @@ const Desktop = ({
           인기 태그
         </h3>
         <div className="flex flex-wrap gap-2">
-          {[
-            "React",
-            "TypeScript",
-            "Next.js",
-            "Node.js",
-            "Docker",
-            "PostgreSQL",
-            "AWS",
-            "GraphQL",
-          ].map((tag) => (
+          {popularHashTags.map((tag) => (
             <span
-              key={tag}
+              key={tag.hashtag}
               className={`px-3 py-1 backdrop-blur-sm rounded-full border transition-all cursor-pointer ${
                 isDarkMode
                   ? "bg-white/10 text-white border-white/20 hover:bg-white/20"
                   : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
               }`}
             >
-              #{tag}
+              #{tag.hashtag}
             </span>
           ))}
         </div>

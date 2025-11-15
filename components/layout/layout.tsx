@@ -62,7 +62,7 @@ function Layout({ children }: Props) {
               {isDarkMode ? (
                 <>
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-slate-900 to-black"></div>
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1604781109199-ced99b89b0f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2RpbmclMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYyOTcxMjYyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')] bg-cover bg-center opacity-5"></div>
+                  <div className="absolute inset-0 bg-[url('/images/darkmode-background.jpeg')] bg-cover bg-center opacity-5"></div>
                   <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/20 via-transparent to-purple-950/20"></div>
                 </>
               ) : (

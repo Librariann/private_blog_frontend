@@ -3,32 +3,7 @@ import { gql } from "@apollo/client";
 import { GetStaticProps } from "next";
 import { GetPostListQuery, GetPostListQueryVariables } from "@/gql/graphql";
 import Main from "@/components/main/main";
-
-export const GET_POST_LIST_QUERY = gql`
-  query getPostList {
-    getPostList {
-      posts {
-        id
-        title
-        contents
-        excerpt
-        hits
-        thumbnailUrl
-        category {
-          id
-          categoryTitle
-          parentCategoryTitle
-        }
-        comments {
-          comment
-        }
-        hashtags {
-          hashtag
-        }
-      }
-    }
-  }
-`;
+import { getPopularHashTagDatas, getPostDatas } from "@/lib/posts";
 
 export type PostsProps = {
   id: number;
@@ -49,20 +24,20 @@ export type PostsProps = {
   }[]; // 배열 타입으로 수정
 };
 
+export type popularHashTagsProps = {
+  hashtag: string;
+  count: number;
+};
+
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const apolloClient = createApolloClient();
-    const { data } = await apolloClient.query<
-      GetPostListQuery,
-      GetPostListQueryVariables
-    >({
-      query: GET_POST_LIST_QUERY,
-      fetchPolicy: "network-only",
-    });
+    const postDatas = await getPostDatas();
+    const popularHashTagDatas = await getPopularHashTagDatas();
 
     return {
       props: {
-        posts: data.getPostList.posts || [],
+        posts: postDatas,
+        popularHashTags: popularHashTagDatas,
       },
       revalidate: 60, // 60초마다 재생성
     };
@@ -77,21 +52,14 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 };
 
-const Home = ({ posts }: { posts: PostsProps[] }) => {
-  return <Main posts={posts} />;
-  // if (!posts || posts.length === 0) {
-  //   return <div className="p-10 text-center">게시물이 없습니다.</div>;
-  // }
-
-  // return (
-  //   <div className="p-10">
-  //     <ul className="flex flex-wrap justify-start">
-  //       {posts.map((post) => {
-  //         return <Posts key={post.id} post={post} />;
-  //       })}
-  //     </ul>
-  //   </div>
-  // );
+const Home = ({
+  posts,
+  popularHashTags,
+}: {
+  posts: PostsProps[];
+  popularHashTags: popularHashTagsProps[];
+}) => {
+  return <Main posts={posts} popularHashTags={popularHashTags} />;
 };
 
 export default Home;

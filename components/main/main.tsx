@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { PostsProps } from "@/pages";
+import { popularHashTagsProps, PostsProps } from "@/pages";
 import { BlogPostCard } from "../cards/blog-post-card";
 import {
   GetCategoriesCountsQuery,
@@ -13,7 +13,14 @@ import Mobile from "./mobile";
 import Desktop from "./desktop";
 import { useRouter } from "next/router";
 
-const Main = ({ posts }: { posts: PostsProps[] }) => {
+const Main = ({
+  posts,
+  popularHashTags,
+}: {
+  posts: PostsProps[];
+  popularHashTags: popularHashTagsProps[];
+}) => {
+  console.log(popularHashTags);
   const router = useRouter();
   const iconList = [
     {
@@ -161,6 +168,7 @@ const Main = ({ posts }: { posts: PostsProps[] }) => {
           iconList={iconList}
           expandedCategories={expandedCategories}
           toggleCategoryExpand={toggleCategoryExpand}
+          popularHashTags={popularHashTags}
         />
       </div>
     </main>

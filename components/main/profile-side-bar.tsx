@@ -76,10 +76,10 @@ const ProfileSidebar = ({ isDarkMode }: ProfileSidebarProps) => {
             </div>
             <div>
               <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-                89
+                127
               </div>
               <div className={isDarkMode ? "text-white/60" : "text-gray-500"}>
-                Likes
+                Comments
               </div>
             </div>
           </div>

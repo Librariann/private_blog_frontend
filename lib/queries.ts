@@ -131,3 +131,40 @@ export const CREATE_COMMENT_MUTATION = gql`
     }
   }
 `;
+
+export const GET_POST_LIST_QUERY = gql`
+  query getPostList {
+    getPostList {
+      posts {
+        id
+        title
+        contents
+        excerpt
+        hits
+        thumbnailUrl
+        category {
+          id
+          categoryTitle
+          parentCategoryTitle
+        }
+        comments {
+          comment
+        }
+        hashtags {
+          hashtag
+        }
+      }
+    }
+  }
+`;
+
+export const GET_POPULAR_HASHTAG_QUERY = gql`
+  query getAllPopularHashTags {
+    getAllPopularHashTags {
+      hashtags {
+        hashtag
+        count
+      }
+    }
+  }
+`;
