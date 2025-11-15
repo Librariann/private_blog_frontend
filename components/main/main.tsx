@@ -20,7 +20,6 @@ const Main = ({
   posts: PostsProps[];
   popularHashTags: popularHashTagsProps[];
 }) => {
-  console.log(popularHashTags);
   const router = useRouter();
   const iconList = [
     {

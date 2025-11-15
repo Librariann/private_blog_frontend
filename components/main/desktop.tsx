@@ -16,7 +16,7 @@ export type DesktopAndMobileProps = {
   }[];
   expandedCategories: Set<string>;
   toggleCategoryExpand: (categoryName: string) => void;
-  popularHashTags: popularHashTagsProps[];
+  popularHashTags?: popularHashTagsProps[];
 };
 
 const Desktop = ({
@@ -27,7 +27,6 @@ const Desktop = ({
   toggleCategoryExpand,
   popularHashTags,
 }: DesktopAndMobileProps) => {
-  console.log(popularHashTags);
   return (
     <aside className="hidden lg:block lg:col-span-4 space-y-6">
       <ProfileSidebar isDarkMode={isDarkMode} />
