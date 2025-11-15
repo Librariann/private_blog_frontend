@@ -144,7 +144,7 @@ const Desktop = ({
           인기 태그
         </h3>
         <div className="flex flex-wrap gap-2">
-          {popularHashTags.map((tag) => (
+          {popularHashTags?.map((tag) => (
             <span
               key={tag.hashtag}
               className={`px-3 py-1 backdrop-blur-sm rounded-full border transition-all cursor-pointer ${
