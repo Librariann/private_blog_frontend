@@ -23,6 +23,7 @@ import {
 import { uploadImageToServer } from "@/utils/utils";
 import WritingAnimation from "@/components/loading/writing-animation";
 import { GET_CATEGORIES } from "@/lib/queries";
+import { toast } from "react-toastify";
 
 export const CREATE_POST_MUTATION = gql`
   mutation createPost($input: CreatePostInput!, $hashtags: [String!]) {
@@ -182,7 +183,6 @@ function PostWrite() {
       };
       reader.readAsDataURL(file);
     }
-    // Reset input value to allow selecting the same file again
     e.target.value = "";
   };
 
@@ -217,22 +217,21 @@ function PostWrite() {
       if (postResult.data?.createPost.ok) {
         setPostConfirmModal(true);
       } else {
-        alert(postResult.data?.createPost.error);
+        toast.error(postResult.data?.createPost.error);
       }
     } catch (error) {
       console.error(error);
-      alert("게시물 작성 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const redirect = () => {
-    if (process.env.NODE_ENV === "production") {
-      window.location.href = "/";
-    } else {
-      router.push("/");
-    }
+    // if (process.env.NODE_ENV === "production") {
+    // window.location.href = "/";
+    // } else {
+    router.push("/");
+    // }
   };
 
   return (

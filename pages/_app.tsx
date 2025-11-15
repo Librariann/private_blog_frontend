@@ -6,7 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import "aos/dist/aos.css";
-import "../styles/edit.css";
+import "../styles/markdown.css";
 import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

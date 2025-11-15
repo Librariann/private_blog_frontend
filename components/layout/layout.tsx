@@ -83,7 +83,7 @@ function Layout({ children }: Props) {
                   onClose={handleMobileMenuClose}
                 />
               </div> */}
-                <div className="w-full overflow-y-auto">{children}</div>
+                <div className="w-full">{children}</div>
               </div>
               {mounted && isLoggedIn && (
                 <div className="fixed bottom-6 right-6">
