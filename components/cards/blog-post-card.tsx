@@ -1,16 +1,16 @@
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { GetPostListQuery } from "@/gql/graphql";
-import { ko } from "date-fns/locale";
-import { formatDistanceToNow } from "date-fns";
+import { Post } from "@/gql/graphql";
+import { useDarkModeStore } from "@/stores/useDarkmodStore";
 
 type BlogPostCardProps = {
-  post: NonNullable<GetPostListQuery["getPostList"]["posts"]>[number];
-  isDarkMode: boolean;
-  onClick: () => void;
+  post: Post;
+  onClick?: () => void;
 };
 
-export function BlogPostCard({ post, isDarkMode, onClick }: BlogPostCardProps) {
+export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
+  const { isDarkMode } = useDarkModeStore();
+
   return (
     <article
       onClick={onClick}
@@ -46,7 +46,7 @@ export function BlogPostCard({ post, isDarkMode, onClick }: BlogPostCardProps) {
           </div>
           <div className="flex items-center space-x-1">
             <Clock className="w-4 h-4" />
-            {/* <span>{post.readTime}</span> */}
+            <span>{post.readTime}분</span>
           </div>
         </div>
       </div>
