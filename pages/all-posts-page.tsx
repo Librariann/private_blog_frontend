@@ -19,6 +19,7 @@ const AllPostsPage = () => {
   const router = useRouter();
   const posts = useGetPostList();
   const popularHashTags = useGetPopularHashTagList();
+
   const { countsData } = useGetCategoryCounts();
   const { isDarkMode } = useDarkModeStore();
 

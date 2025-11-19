@@ -9,7 +9,6 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
   const hashtagMaps = new Map<string, number>();
   const router = useRouter();
   const { slug } = router.query;
-  console.log(slug);
 
   posts
     .flatMap((post) => post.hashtags)
