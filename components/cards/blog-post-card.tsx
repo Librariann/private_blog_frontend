@@ -25,7 +25,7 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
   return (
     <article
       onClick={onClick}
-      className={`group rounded-xl p-6 cursor-pointer transition-all duration-300 border ${
+      className={`backdrop-blur-xs group rounded-xl p-6 cursor-pointer transition-all duration-300 border ${
         isDarkMode
           ? "glass-card-hover border-white/10 hover:border-white/30"
           : "glass-card-light-hover border-gray-200 hover:border-blue-300"
