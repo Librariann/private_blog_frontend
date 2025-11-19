@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import Header from "../header";
-import LeftNavigator from "../left-navigator";
 import PostWriteButton from "../post-write-button";
 import { isLoggedInVar } from "@/apollo";
 import { useReactiveVar } from "@apollo/client";
@@ -80,12 +79,6 @@ function Layout({ children }: Props) {
             />
             <div className="grow">
               <div className="flex flex-row">
-                {/* <div className="xl:block xl:w-64 p-4">
-                <LeftNavigator
-                  isOpen={isMobileMenuOpen}
-                  onClose={handleMobileMenuClose}
-                />
-              </div> */}
                 <div className="w-full">{children}</div>
               </div>
               {mounted && isLoggedIn && (

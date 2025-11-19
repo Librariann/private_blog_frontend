@@ -273,7 +273,6 @@ const AllPostsPage = () => {
                     <BlogPostCard
                       key={post.id}
                       post={post}
-                      isDarkMode={isDarkMode}
                       onClick={() =>
                         router.push(
                           `/post/${post.category.parentCategoryTitle}/${post.category.categoryTitle}/@Post-${post.id}`

@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 
-const menuList = ["/", "/all-posts-page", "/all-categories-page", "/about"];
-
 const Header = ({
   isDarkMode,
   onNavigateHome,
@@ -207,7 +205,7 @@ const Header = ({
                 홈
               </button>
               <button
-                onClick={() => handleNavigation(onNavigateToAllPosts)}
+                onClick={() => router.push("/all-posts-page")}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"

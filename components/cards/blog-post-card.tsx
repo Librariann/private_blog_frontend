@@ -1,10 +1,21 @@
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Post } from "@/gql/graphql";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 
 type BlogPostCardProps = {
-  post: Post;
+  post: {
+    id: number;
+    title: string;
+    excerpt?: string | null;
+    createdAt?: any;
+    readTime?: number;
+    category: {
+      categoryTitle: string;
+    };
+    hashtags: Array<{
+      hashtag: string;
+    }>;
+  };
   onClick?: () => void;
 };
 
@@ -34,20 +45,24 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
         <div
           className={`flex items-center space-x-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
         >
-          <div className="flex items-center space-x-1">
-            <Calendar className="w-4 h-4" />
-            <span>
-              {new Date(post.createdAt).toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Clock className="w-4 h-4" />
-            <span>{post.readTime}분</span>
-          </div>
+          {post.createdAt && (
+            <div className="flex items-center space-x-1">
+              <Calendar className="w-4 h-4" />
+              <span>
+                {new Date(post.createdAt).toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
+          )}
+          {post.readTime && (
+            <div className="flex items-center space-x-1">
+              <Clock className="w-4 h-4" />
+              <span>{post.readTime}분</span>
+            </div>
+          )}
         </div>
       </div>
 
