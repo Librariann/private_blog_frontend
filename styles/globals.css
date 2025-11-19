@@ -198,6 +198,8 @@ html {
     -webkit-backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    isolation: isolate;
+    will-change: backdrop-filter;
   }
 
   .glass-card-hover {
@@ -205,6 +207,8 @@ html {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.1);
+    isolation: isolate;
+    will-change: backdrop-filter;
   }
 
   .glass-card-hover:hover {
