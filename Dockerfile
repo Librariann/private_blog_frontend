@@ -1,5 +1,5 @@
 # 1단계: Next.js 빌드
-FROM node:18-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # 2단계: 프로덕션 실행 환경
-FROM node:18-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 

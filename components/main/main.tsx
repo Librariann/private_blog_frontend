@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { popularHashTagsProps } from "@/pages";
-import { BlogPostCard } from "../cards/blog-post-card";
+import { BlogPostCard, glassCardTypes } from "../cards/blog-post-card";
 import { GetPostListQuery, Post } from "@/gql/graphql";
 import Mobile from "./mobile";
 import Desktop from "./desktop";
 import { useRouter } from "next/router";
 import { useGetCategoryCounts } from "@/hooks/hooks";
+import styled from "styled-components";
 
 const Main = ({
   posts,
@@ -67,11 +68,7 @@ const Main = ({
         {/* Main Content */}
         <div className="lg:col-span-8 space-y-6">
           {/* Featured Post */}
-          <div
-            className={`rounded-2xl p-8 ${
-              isDarkMode ? "glass-card" : "glass-card-light"
-            }`}
-          >
+          <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8">
             <div className="flex items-center space-x-2 mb-4">
               <Rocket
                 className={`w-5 h-5 ${
@@ -111,7 +108,7 @@ const Main = ({
             >
               Read More
             </button>
-          </div>
+          </GlassCardMain>
 
           {/* Sidebar - Mobile Only */}
           <Mobile
@@ -164,5 +161,22 @@ const Main = ({
     </main>
   );
 };
+
+export const GlassCardMain = styled.div<glassCardTypes>`
+  background: ${(props) =>
+    props.isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.7)"};
+  backdrop-filter: ${(props) =>
+    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+  -webkit-backdrop-filter: ${(props) =>
+    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+  border: ${(props) =>
+    props.isDarkMode
+      ? "1px solid rgba(255, 255, 255, 0.2)"
+      : "1px solid rgba(0, 0, 0, 0.05)"};
+  box-shadow: ${(props) =>
+    props.isDarkMode
+      ? "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
+      : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
+`;
 
 export default Main;

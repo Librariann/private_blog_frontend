@@ -2,14 +2,15 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { DesktopAndMobileProps } from "./desktop";
+import { useDarkModeStore } from "@/stores/useDarkmodStore";
 
 const Mobile = ({
-  isDarkMode,
   categories,
   iconList,
   expandedCategories,
   toggleCategoryExpand,
 }: DesktopAndMobileProps) => {
+  const { isDarkMode } = useDarkModeStore();
   return (
     <>
       {/* Categories Section - Mobile Only */}

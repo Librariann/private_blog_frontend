@@ -19,6 +19,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ["@uiw/react-md-editor", "@uiw/react-markdown-preview"],
   // Vercel caching Settings
   headers: async () => {
     return [

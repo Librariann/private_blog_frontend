@@ -1,6 +1,3 @@
-import { LOCAL_STORAGE_TOKEN, handlePathes } from "@/common/constants";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import clsx, { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -19,7 +16,6 @@ export async function uploadImageToServer(file: File): Promise<string> {
     const res = await fetch(uploadUri, {
       method: "POST",
       body: form,
-      // Don't set Content-Type header - let browser set it with boundary for FormData
     });
 
     if (!res.ok) {

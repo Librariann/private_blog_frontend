@@ -5,9 +5,10 @@ import { CategoryCount } from "@/gql/graphql";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { popularHashTagsProps } from "@/pages";
 import { useRouter } from "next/router";
+import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { GlassCardMain } from "./main";
 
 export type DesktopAndMobileProps = {
-  isDarkMode: boolean;
   categories: CategoryCount[];
   iconList: {
     icon: ForwardRefExoticComponent<
@@ -21,7 +22,6 @@ export type DesktopAndMobileProps = {
 };
 
 const Desktop = ({
-  isDarkMode,
   categories,
   iconList,
   expandedCategories,
@@ -29,16 +29,13 @@ const Desktop = ({
   popularHashTags,
 }: DesktopAndMobileProps) => {
   const router = useRouter();
+  const { isDarkMode } = useDarkModeStore();
   return (
     <aside className="hidden lg:block lg:col-span-4 space-y-6">
-      <ProfileSidebar isDarkMode={isDarkMode} />
+      <ProfileSidebar />
 
       {/* Categories */}
-      <div
-        className={`rounded-2xl p-6 ${
-          isDarkMode ? "glass-card" : "glass-card-light"
-        }`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 ">
         <h3 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
           카테고리
         </h3>
@@ -143,13 +140,8 @@ const Desktop = ({
             );
           })}
         </div>
-      </div>
-
-      <div
-        className={`rounded-2xl p-6 ${
-          isDarkMode ? "glass-card" : "glass-card-light"
-        }`}
-      >
+      </GlassCardMain>
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 ">
         <h3 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
           인기 태그
         </h3>
@@ -167,7 +159,7 @@ const Desktop = ({
             </span>
           ))}
         </div>
-      </div>
+      </GlassCardMain>
     </aside>
   );
 };

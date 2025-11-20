@@ -1,6 +1,7 @@
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import styled from "styled-components";
 
 type BlogPostCardProps = {
   post: {
@@ -23,12 +24,13 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
   const { isDarkMode } = useDarkModeStore();
 
   return (
-    <article
+    <GlassCard
+      isDarkMode={isDarkMode}
       onClick={onClick}
       className={`group rounded-xl p-6 cursor-pointer transition-all duration-300 border ${
         isDarkMode
-          ? "glass-card-hover border-white/10 hover:border-white/30"
-          : "glass-card-light-hover border-gray-200 hover:border-blue-300"
+          ? "border-white/10 hover:border-white/30"
+          : "border-gray-200 hover:border-blue-300"
       }`}
     >
       <div className="flex items-start justify-between mb-3">
@@ -104,6 +106,37 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
-    </article>
+    </GlassCard>
   );
 }
+
+export type glassCardTypes = {
+  isDarkMode?: boolean;
+};
+
+const GlassCard = styled.article<glassCardTypes>`
+  background: ${(props) =>
+    props.isDarkMode === true
+      ? "rgba(255, 255, 255, 0.08)"
+      : "rgba(255, 255, 255, 0.6)"};
+  backdrop-filter: ${(props) =>
+    props.isDarkMode === true ? "blur(4px)" : "blur(10px)"};
+  -webkit-backdrop-filter: ${(props) =>
+    props.isDarkMode === true ? "blur(4px)" : "blur(10px)"};
+  box-shadow: ${(props) =>
+    props.isDarkMode === true
+      ? "0 4px 16px 0 rgba(0, 0, 0, 0.1)"
+      : "0 4px 16px 0 rgba(0, 0, 0, 0.06)"};
+
+  &:hover {
+    background: ${(props) =>
+      props.isDarkMode === true
+        ? "rgba(255, 255, 255, 0.15)"
+        : "rgba(255, 255, 255, 0.85)"};
+    box-shadow: ${(props) =>
+      props.isDarkMode === true
+        ? "0 8px 32px 0 rgba(0, 0, 0, 0.2)"
+        : "0 12px 40px 0 rgba(0, 0, 0, 0.12)"};
+    transform: translateY(-2px);
+  }
+`;

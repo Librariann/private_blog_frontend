@@ -1,15 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MapPin, Link as LinkIcon } from "lucide-react";
+import { GlassCardMain } from "./main";
+import { useDarkModeStore } from "@/stores/useDarkmodStore";
 
-interface ProfileSidebarProps {
-  isDarkMode: boolean;
-}
-
-const ProfileSidebar = ({ isDarkMode }: ProfileSidebarProps) => {
+const ProfileSidebar = () => {
+  const { isDarkMode } = useDarkModeStore();
   return (
-    <div
-      className={`rounded-2xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-    >
+    <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6">
       <div className="text-center">
         <Avatar
           className={`w-24 h-24 mx-auto mb-4 ring-4 ${isDarkMode ? "ring-white/20" : "ring-blue-200"}`}
@@ -85,7 +82,7 @@ const ProfileSidebar = ({ isDarkMode }: ProfileSidebarProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </GlassCardMain>
   );
 };
 

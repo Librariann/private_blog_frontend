@@ -190,41 +190,6 @@ html {
   font-size: var(--font-size);
 }
 
-/* Glassmorphism styles */
-@utility glass-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-  isolation: isolate;
-  will-change: backdrop-filter;
-}
-@utility glass-card-hover {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.1);
-  isolation: isolate;
-  will-change: backdrop-filter;
-}
-
-/* Light mode glassmorphism */
-@utility glass-card-light {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
-}
-
-@utility glass-card-light-hover {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.06);
-}
-
 /* Animated gradient background */
 @keyframes gradient-shift {
   0% {
