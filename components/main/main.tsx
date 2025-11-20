@@ -112,7 +112,6 @@ const Main = ({
 
           {/* Sidebar - Mobile Only */}
           <Mobile
-            isDarkMode={isDarkMode}
             categories={categories}
             iconList={iconList}
             expandedCategories={expandedCategories}
@@ -150,7 +149,6 @@ const Main = ({
 
         {/* Sidebar - Desktop Only */}
         <Desktop
-          isDarkMode={isDarkMode}
           categories={categories}
           iconList={iconList}
           expandedCategories={expandedCategories}
