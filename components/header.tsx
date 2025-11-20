@@ -11,6 +11,9 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/router";
+import { glassCardTypes } from "./cards/blog-post-card";
+import styled from "styled-components";
+import { GlassCardMain } from "./main/main";
 
 const Header = ({
   isDarkMode,
@@ -31,8 +34,9 @@ const Header = ({
 
   return (
     <>
-      <header
-        className={`sticky top-0 z-50 border-b ${isDarkMode ? "glass-card border-white/10" : "glass-card-light border-gray-200"}`}
+      <GlassCardMain
+        isDarkMode={isDarkMode}
+        className="sticky top-0 z-50 border-b"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -177,21 +181,18 @@ const Header = ({
             </div>
           </div>
         </div>
-      </header>
+      </GlassCardMain>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
+          <GlassMotionCardMain
+            isDarkMode={isDarkMode}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className={`md:hidden fixed top-16 left-0 right-0 z-40 border-b overflow-hidden ${
-              isDarkMode
-                ? "glass-card border-white/10"
-                : "glass-card-light border-gray-200"
-            }`}
+            className="md:hidden fixed top-16 left-0 right-0 z-40 border-b overflow-hidden"
           >
             <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
               <button
@@ -277,11 +278,28 @@ const Header = ({
                 </button>
               </div>
             </nav>
-          </motion.div>
+          </GlassMotionCardMain>
         )}
       </AnimatePresence>
     </>
   );
 };
+
+export const GlassMotionCardMain = styled(motion.div)<glassCardTypes>`
+  background: ${(props) =>
+    props.isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.7)"};
+  backdrop-filter: ${(props) =>
+    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+  -webkit-backdrop-filter: ${(props) =>
+    props.isDarkMode ? "blur(4px)" : "blur(10px)"};
+  border: ${(props) =>
+    props.isDarkMode
+      ? "1px solid rgba(255, 255, 255, 0.2)"
+      : "1px solid rgba(0, 0, 0, 0.05)"};
+  box-shadow: ${(props) =>
+    props.isDarkMode
+      ? "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
+      : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
+`;
 
 export default Header;

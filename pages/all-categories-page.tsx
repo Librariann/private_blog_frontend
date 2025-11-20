@@ -1,3 +1,4 @@
+import { GlassCardMain } from "@/components/main/main";
 import {
   useGetCategoryCounts,
   useGetPopularHashTagList,
@@ -38,22 +39,18 @@ const AllCategoriesPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
-      <div
-        className={`rounded-2xl p-8 mb-8 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <h1 className={isDarkMode ? "text-white mb-2" : "text-gray-900 mb-2"}>
           카테고리
         </h1>
         <p className={isDarkMode ? "text-white/60" : "text-gray-500"}>
           관심 있는 주제별로 포스트를 탐색해보세요
         </p>
-      </div>
+      </GlassCardMain>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div
-          className={`rounded-xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
+        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -62,10 +59,8 @@ const AllCategoriesPage = () => {
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
             {categories.countsData?.length}개
           </div>
-        </div>
-        <div
-          className={`rounded-xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
+        </GlassCardMain>
+        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -74,10 +69,8 @@ const AllCategoriesPage = () => {
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
             {totalSubCategories}개
           </div>
-        </div>
-        <div
-          className={`rounded-xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
+        </GlassCardMain>
+        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -86,7 +79,7 @@ const AllCategoriesPage = () => {
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
             {posts.length}개
           </div>
-        </div>
+        </GlassCardMain>
       </div>
 
       {/* Category Hierarchy */}
@@ -99,9 +92,10 @@ const AllCategoriesPage = () => {
           const latestPost = getLatestPost(parentCategory.categoryTitle);
 
           return (
-            <div
+            <GlassCardMain
               key={parentCategory.categoryTitle}
-              className={`rounded-2xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
+              isDarkMode={isDarkMode}
+              className="rounded-2xl p-6"
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
@@ -211,15 +205,13 @@ const AllCategoriesPage = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </GlassCardMain>
           );
         })}
       </div>
 
       {/* Popular Topics */}
-      <div
-        className={`rounded-2xl p-6 mt-8 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-8">
         <h2 className={isDarkMode ? "text-white mb-6" : "text-gray-900 mb-6"}>
           인기 주제
         </h2>
@@ -242,7 +234,7 @@ const AllCategoriesPage = () => {
             </div>
           ))}
         </div>
-      </div>
+      </GlassCardMain>
     </div>
   );
 };

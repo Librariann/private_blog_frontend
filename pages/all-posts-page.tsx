@@ -9,6 +9,7 @@ import { BlogPostCard } from "@/components/cards/blog-post-card";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown, Search } from "lucide-react";
+import { GlassCardMain } from "@/components/main/main";
 
 const AllPostsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,23 +47,19 @@ const AllPostsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
-      <div
-        className={`rounded-2xl p-8 mb-8 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <h1 className={isDarkMode ? "text-white mb-2" : "text-gray-900 mb-2"}>
           모든 포스트
         </h1>
         <p className={isDarkMode ? "text-white/60" : "text-gray-500"}>
           {posts.length}개의 포스트를 읽어보세요
         </p>
-      </div>
+      </GlassCardMain>
 
       {/* Search and Filter */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         <div className="lg:col-span-4">
-          <div
-            className={`rounded-xl p-4 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-          >
+          <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-4">
             <div className="flex items-center space-x-3">
               <Search
                 className={`w-5 h-5 ${isDarkMode ? "text-white/60" : "text-gray-400"}`}
@@ -79,7 +76,7 @@ const AllPostsPage = () => {
                 }`}
               />
             </div>
-          </div>
+          </GlassCardMain>
         </div>
 
         {/* 검색필터 추후 구현 */}
@@ -99,9 +96,7 @@ const AllPostsPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1">
-          <div
-            className={`rounded-2xl p-6 sticky top-24 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-          >
+          <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-4">
             <h3
               className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}
             >
@@ -241,14 +236,12 @@ const AllPostsPage = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </GlassCardMain>
         </div>
 
         {/* Posts Grid */}
         <div className="lg:col-span-3">
-          <div
-            className={`rounded-2xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-          >
+          <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2
@@ -290,7 +283,7 @@ const AllPostsPage = () => {
                 <p className="mt-2">다른 키워드로 검색해보세요.</p>
               </div>
             )}
-          </div>
+          </GlassCardMain>
         </div>
       </div>
     </div>
