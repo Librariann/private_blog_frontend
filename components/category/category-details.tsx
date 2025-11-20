@@ -3,6 +3,7 @@ import { ArrowLeft, Code2 } from "lucide-react";
 import { BlogPostCard } from "../cards/blog-post-card";
 import { Post } from "@/gql/graphql";
 import { useRouter } from "next/router";
+import { GlassCardMain } from "../main/main";
 
 const CategoryDetails = ({ posts }: { posts: Post[] }) => {
   const { isDarkMode } = useDarkModeStore();
@@ -47,9 +48,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
       </button>
 
       {/* Category Header */}
-      <div
-        className={`rounded-2xl p-8 mb-8 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
         <div className="flex items-center space-x-4 mb-4">
           <div
             className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center`}
@@ -71,13 +70,11 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
           {slug?.[1]} 개발과 관련된 최신 기술 트렌드, 팁, 그리고 실무 경험을
           공유합니다.
         </p>
-      </div>
+      </GlassCardMain>
 
       {/* Category Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div
-          className={`rounded-xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
+        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -86,10 +83,9 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
             {posts.length}개
           </div>
-        </div>
-        <div
-          className={`rounded-xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
+        </GlassCardMain>
+
+        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -98,10 +94,9 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
             {postTotalViews.toLocaleString()}
           </div>
-        </div>
-        <div
-          className={`rounded-xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
+        </GlassCardMain>
+
+        <GlassCardMain isDarkMode={isDarkMode} className="rounded-xl p-6">
           <div
             className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
@@ -110,13 +105,11 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
             {avgReadTime}분
           </div>
-        </div>
+        </GlassCardMain>
       </div>
 
       {/* Posts List */}
-      <div
-        className={`rounded-2xl p-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6">
         <h2 className={isDarkMode ? "text-white mb-6" : "text-gray-900 mb-6"}>
           모든 포스트
         </h2>
@@ -141,12 +134,10 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
             <p>아직 포스트가 없습니다.</p>
           </div>
         )}
-      </div>
+      </GlassCardMain>
 
       {/* Popular Tags in Category */}
-      <div
-        className={`rounded-2xl p-6 mt-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-      >
+      <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-6">
         <h3 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
           인기 태그
         </h3>
@@ -164,7 +155,7 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
             </span>
           ))}
         </div>
-      </div>
+      </GlassCardMain>
     </div>
   );
 };
