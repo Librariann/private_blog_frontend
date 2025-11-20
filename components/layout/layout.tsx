@@ -74,8 +74,8 @@ function Layout({ children }: Props) {
 
             <Header
               isDarkMode={isDarkMode}
-              onMenuToggle={handleMobileMenuClose}
               onToggleTheme={onToggleTheme}
+              isLoggedIn={isLoggedIn}
             />
             <div className="grow">
               <div className="flex flex-row">

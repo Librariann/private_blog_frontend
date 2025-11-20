@@ -14,13 +14,15 @@ import { useRouter } from "next/router";
 import { glassCardTypes } from "./cards/blog-post-card";
 import styled from "styled-components";
 import { GlassCardMain } from "./main/main";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-const Header = ({
-  isDarkMode,
-  onNavigateHome,
-  onToggleTheme,
-  onNavigateToAllCategories,
-}: any) => {
+type HeaderProps = {
+  isDarkMode: boolean;
+  onToggleTheme: () => void;
+  isLoggedIn: boolean;
+};
+
+const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const handleNavigation = (action: () => void) => {
@@ -142,6 +144,22 @@ const Header = ({
                   <Moon className="w-5 h-5" />
                 )}
               </button>
+              {isLoggedIn && (
+                <button
+                  onClick={() => {
+                    router.push("/my-page");
+                  }}
+                  className={`hidden sm:block cursor-pointer ${isDarkMode ? "text-white/70 hover:text-white transition-colors" : "text-gray-600 hover:text-gray-900 transition-colors"}`}
+                  aria-label="User profile"
+                >
+                  <Avatar className="w-8 h-8 ring-2 ring-offset-2 ring-offset-transparent hover:ring-blue-500 transition-all">
+                    <AvatarImage src="https://images.unsplash.com/photo-1517309561013-16f6e4020305?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXZlbG9wZXIlMjBwcm9maWxlfGVufDF8fHx8MTc2MzAwOTM0NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" />
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs">
+                      Dev
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              )}
               <div className="hidden lg:flex items-center space-x-2">
                 <a
                   href="#"
@@ -196,7 +214,7 @@ const Header = ({
           >
             <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
               <button
-                onClick={() => handleNavigation(onNavigateHome)}
+                onClick={() => console.log("mobile home")}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white hover:bg-white/10"
@@ -216,7 +234,7 @@ const Header = ({
                 포스트
               </button>
               <button
-                onClick={() => handleNavigation(onNavigateToAllCategories)}
+                onClick={() => console.log(category)}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
