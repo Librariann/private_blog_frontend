@@ -5,6 +5,7 @@ import CommentsList from "./comments-list";
 import CommentsWriteForm from "./comments-write-form";
 import { useState } from "react";
 import { Comment } from "@/gql/graphql";
+import { GlassCardMain } from "../main/main";
 
 const COMMENTS_PER_LOAD = 5;
 
@@ -32,9 +33,7 @@ const Comments = ({ comments }: CommentType) => {
 
   const hasMoreComments = displayedCommentsCount < commentsList.length;
   return (
-    <div
-      className={`rounded-2xl p-8 mb-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-    >
+    <GlassCardMain isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-6">
       <div className="flex items-center space-x-2 mb-6">
         <MessageCircle
           className={`w-5 h-5 ${isDarkMode ? "text-white" : "text-gray-900"}`}
@@ -70,7 +69,7 @@ const Comments = ({ comments }: CommentType) => {
           </ReadMoreButton>
         </div>
       )}
-    </div>
+    </GlassCardMain>
   );
 };
 

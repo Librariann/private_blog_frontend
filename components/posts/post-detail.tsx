@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import Comments from "../comments/comments";
 import PostNavigation from "./post-navigation";
 import PostTags from "./post-tags";
+import { GlassCardMain } from "../main/main";
 
 type topicProps = {
   id: string;
@@ -87,8 +88,9 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
       </button>
 
       {/* Post Header */}
-      <article
-        className={`rounded-2xl p-6 sm:p-8 mb-6 ${isDarkMode ? "glass-card" : "glass-card-light"}`}
+      <GlassCardMain
+        isDarkMode={isDarkMode}
+        className="rounded-2xl p-6 sm:p-8 mb-6"
       >
         <div className="mb-6">
           <Badge
@@ -222,7 +224,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
 
         {/* Tags */}
         <PostTags post={post} />
-      </article>
+      </GlassCardMain>
 
       {/* Comments Section */}
       <Comments comments={post.comments} />
