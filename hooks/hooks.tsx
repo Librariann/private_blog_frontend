@@ -23,7 +23,6 @@ import {
   UPDATE_USER_MUTATION,
   GET_USER_BY_NICKNAME_QUERY,
 } from "@/lib/queries";
-import { ME_QUERY } from "./useMe";
 import { useQuery } from "@apollo/client";
 import {
   CreateCommentMutation,
