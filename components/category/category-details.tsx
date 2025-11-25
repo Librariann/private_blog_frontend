@@ -14,8 +14,8 @@ const CategoryDetails = ({ posts }: { posts: Post[] }) => {
   posts
     .flatMap((post) => post.hashtags)
     .forEach((tag) => {
-      const count = hashtagMaps.get(tag.hashtag) || 0;
-      hashtagMaps.set(tag.hashtag, count + 1);
+      const count = hashtagMaps.get(tag?.hashtag || "") || 0;
+      hashtagMaps.set(tag?.hashtag || "", count + 1);
     });
 
   const postHashTags = Array.from(hashtagMaps.entries())
