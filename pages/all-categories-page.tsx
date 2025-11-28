@@ -153,7 +153,7 @@ const AllCategoriesPage = () => {
                         );
                       });
 
-                      return sortedPost?.[0].title;
+                      return sortedPost?.[0].title || "최근 포스트가 없습니다.";
                     })}
                   </div>
                 </div>
