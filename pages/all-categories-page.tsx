@@ -129,23 +129,21 @@ const AllCategoriesPage = () => {
                 )}
               </div>
 
-              {parentPostCount > 0 && (
+              <div
+                className={`mb-4 px-4 py-3 rounded-lg ${
+                  isDarkMode
+                    ? "bg-white/5 border border-white/10"
+                    : "bg-gray-50 border border-gray-200"
+                }`}
+              >
                 <div
-                  className={`mb-4 px-4 py-3 rounded-lg ${
-                    isDarkMode
-                      ? "bg-white/5 border border-white/10"
-                      : "bg-gray-50 border border-gray-200"
-                  }`}
+                  className={`mb-1 ${isDarkMode ? "text-white/50" : "text-gray-400"}`}
                 >
-                  <div
-                    className={`mb-1 ${isDarkMode ? "text-white/50" : "text-gray-400"}`}
-                  >
-                    최근 포스트
-                  </div>
-                  <div
-                    className={isDarkMode ? "text-white/80" : "text-gray-700"}
-                  >
-                    {parentCategory.subCategories?.map((subCategory) => {
+                  최근 포스트
+                </div>
+                <div className={isDarkMode ? "text-white/80" : "text-gray-700"}>
+                  {parentCategory.subCategories
+                    ?.map((subCategory) => {
                       const sortedPost = subCategory.post?.toSorted((a, b) => {
                         return (
                           new Date(b.createdAt).getTime() -
@@ -153,13 +151,16 @@ const AllCategoriesPage = () => {
                         );
                       });
 
+                      return sortedPost?.[0];
+                    })
+                    .toSorted((a, b) => {
                       return (
-                        sortedPost?.[0]?.title || "최근 포스트가 없습니다."
+                        new Date(b?.createdAt).getTime() -
+                        new Date(a?.createdAt).getTime()
                       );
-                    })}
-                  </div>
+                    })?.[0]?.title || "최근 포스트가 없습니다."}
                 </div>
-              )}
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {parentCategory?.subCategories?.map((subCategory) => (
