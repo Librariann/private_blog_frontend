@@ -38,7 +38,6 @@ const ManagementCategories = () => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>();
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryType[0]>();
-  const [isParent, setIsParent] = useState<boolean>(false);
   const handleAddCategoryOpen = (open: boolean) => {
     setIsAddModalOpen(open);
   };
@@ -180,7 +179,6 @@ const ManagementCategories = () => {
                       onClick={() => {
                         handleEditModalOpen(true);
                         setSelectedCategory(parentCategory);
-                        setIsParent(true);
                       }}
                       className={`
                         cursor-pointer
@@ -198,7 +196,6 @@ const ManagementCategories = () => {
                       onClick={() => {
                         handleDeleteDialogOpen(true);
                         setSelectedCategory(parentCategory);
-                        setIsParent(true);
                       }}
                       className={`
                         cursor-pointer
@@ -258,7 +255,6 @@ const ManagementCategories = () => {
                                 onClick={() => {
                                   handleEditModalOpen(true);
                                   setSelectedCategory(subCategory);
-                                  setIsParent(false);
                                 }}
                                 className={`
                                   cursor-pointer
@@ -276,7 +272,6 @@ const ManagementCategories = () => {
                                 onClick={() => {
                                   handleDeleteDialogOpen(true);
                                   setSelectedCategory(subCategory);
-                                  setIsParent(false);
                                 }}
                                 className={`
                                   cursor-pointer
@@ -323,7 +318,6 @@ const ManagementCategories = () => {
           isDeleteDialogOpen={isDeleteDialogOpen}
           handleDeleteDialogOpen={handleDeleteDialogOpen}
           selectedCategory={selectedCategory}
-          isParent={isParent}
         />
       )}
     </div>

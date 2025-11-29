@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Category, CategoryCount } from "@/gql/graphql";
 import { useDeleteCategory } from "@/hooks/hooks";
 import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
@@ -16,14 +15,12 @@ import { toast } from "react-toastify";
 type DeleteCategoryModalProps = {
   isDeleteDialogOpen: boolean;
   handleDeleteDialogOpen: (open: boolean) => void;
-  isParent: boolean;
   selectedCategory: SelectedCategoryType[0];
 };
 
 const DeleteCategoryModal = ({
   isDeleteDialogOpen,
   handleDeleteDialogOpen,
-  isParent,
   selectedCategory,
 }: DeleteCategoryModalProps) => {
   const { isDarkMode } = useDarkModeStore();
@@ -35,7 +32,6 @@ const DeleteCategoryModal = ({
       deleteCategoryMutation({
         variables: {
           categoryId: selectedCategory?.id,
-          isParent,
         },
       });
       handleDeleteDialogOpen(false);

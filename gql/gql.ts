@@ -32,7 +32,7 @@ const documents = {
     "\n  mutation editPost($input: EditPostInput!, $hashtags: [String!]) {\n    editPost(input: $input, hashtags: $hashtags) {\n      ok\n      error\n    }\n  }\n": types.EditPostDocument,
     "\n  mutation createCategory($input: CreateCategoryInput!) {\n    createCategory(input: $input) {\n      ok\n      error\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  mutation editCategory($input: EditCategoryInput!) {\n    editCategory(input: $input) {\n      ok\n      error\n    }\n  }\n": types.EditCategoryDocument,
-    "\n  mutation deleteCategory($categoryId: Int!, $isParent: Boolean!) {\n    deleteCategory(categoryId: $categoryId, isParent: $isParent) {\n      ok\n      error\n    }\n  }\n": types.DeleteCategoryDocument,
+    "\n  mutation deleteCategory($categoryId: Int!) {\n    deleteCategory(categoryId: $categoryId) {\n      ok\n      error\n    }\n  }\n": types.DeleteCategoryDocument,
     "\n  query findOneCategoryById($categoryId: Int!) {\n    findOneCategoryById(categoryId: $categoryId) {\n      ok\n      error\n      category {\n        id\n        categoryTitle\n        icon\n        iconColor\n      }\n    }\n  }\n": types.FindOneCategoryByIdDocument,
     "\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
@@ -131,7 +131,7 @@ export function graphql(source: "\n  mutation editCategory($input: EditCategoryI
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation deleteCategory($categoryId: Int!, $isParent: Boolean!) {\n    deleteCategory(categoryId: $categoryId, isParent: $isParent) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation deleteCategory($categoryId: Int!, $isParent: Boolean!) {\n    deleteCategory(categoryId: $categoryId, isParent: $isParent) {\n      ok\n      error\n    }\n  }\n"];
+export function graphql(source: "\n  mutation deleteCategory($categoryId: Int!) {\n    deleteCategory(categoryId: $categoryId) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation deleteCategory($categoryId: Int!) {\n    deleteCategory(categoryId: $categoryId) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -59,7 +59,9 @@ const EditCategoryModal = ({
       setGlobalLoading(true);
       const input = {
         id: editCategory.id,
-        categoryTitle: editCategory.categoryTitle,
+        ...(editCategory.categoryTitle !== selectedCategory.categoryTitle && {
+          categoryTitle: editCategory.categoryTitle,
+        }),
         icon: editCategory.icon,
         iconColor: editCategory.iconColor,
       };

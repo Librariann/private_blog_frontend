@@ -291,8 +291,8 @@ export const EDIT_CATEGORY_MUTATION = gql`
 `;
 
 export const DELETE_CATEGORY_MUTATION = gql`
-  mutation deleteCategory($categoryId: Int!, $isParent: Boolean!) {
-    deleteCategory(categoryId: $categoryId, isParent: $isParent) {
+  mutation deleteCategory($categoryId: Int!) {
+    deleteCategory(categoryId: $categoryId) {
       ok
       error
     }

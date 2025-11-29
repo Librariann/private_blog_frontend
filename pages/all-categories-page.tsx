@@ -13,6 +13,7 @@ const AllCategoriesPage = () => {
   const router = useRouter();
   const { isDarkMode } = useDarkModeStore();
   const { categories } = useGetCategories();
+  console.log(categories);
   const popularHashTags = useGetPopularHashTagList();
   const totalSubCategories = categories?.reduce(
     (sum, category) =>
