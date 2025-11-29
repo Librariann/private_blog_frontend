@@ -114,7 +114,7 @@ const CategoryDetails = ({
             평균 읽기 시간
           </div>
           <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-            {avgReadTime}분
+            {avgReadTime ? avgReadTime : 0}분
           </div>
         </GlassCardMain>
       </div>
@@ -142,7 +142,7 @@ const CategoryDetails = ({
           <div
             className={`text-center py-12 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
-            <p>아직 포스트가 없습니다.</p>
+            <p>아직 포스트가 없어요 곧 올라올거에요 😅</p>
           </div>
         )}
       </GlassCardMain>
