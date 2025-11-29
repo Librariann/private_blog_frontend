@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import {
   getCategories,
   getCategoriesCounts,
@@ -23,7 +23,29 @@ type ListProps = {
 
 export type ContentsProps = DetailProps | ListProps;
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const data = await getCategories();
+    const categories = Array.isArray(data) ? data : [];
+    const paths = categories
+      .filter((category) => category && category.categoryTitle)
+      .map((category) => ({
+        params: { slug: [category.categoryTitle] },
+      }));
+
+    return {
+      paths,
+      fallback: "blocking",
+    };
+  } catch (error) {
+    return {
+      paths: [],
+      fallback: "blocking",
+    };
+  }
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slugLength = params?.slug?.length || 0;
   const slug = params?.slug || [];
 
@@ -32,7 +54,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     let postsData;
     const categories = await getCategories();
 
-    // 블로그 상세페이지
+    //블로그 상세페이지
     if (slugLength > 0 && slug[slugLength - 1]?.startsWith("@Post-")) {
       const lastSlug = slug[slugLength - 1];
       const postIdPart = lastSlug.split("-")[1];
@@ -40,14 +62,29 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         postsData = await getPostById(+postIdPart);
         return { props: { type: "detail", post: postsData } };
       }
+      //그 외 리스트 페이지
     } else if (slugLength > 0 && slug[slugLength - 1]) {
-      // 하위 카테고리
       category = categories
         ?.find((category) => category.categoryTitle === slug[slugLength - 2])
         ?.subCategories?.find(
           (subCategory) => subCategory.categoryTitle === slug[slugLength - 1]
         );
     }
+    console.log("--------------------------");
+    console.log(categories);
+    console.log(category, slug[slugLength - 2], slug[slugLength - 1]);
+    console.log("--------------------------");
+
+    console.log("@@@@@@@@@@@@@@@@@@@@@");
+    console.log(
+      categories.map((category) =>
+        category.subCategories?.map((subCategory) => {
+          console.log(subCategory.categoryTitle);
+          return subCategory.categoryTitle;
+        })
+      )
+    );
+    console.log("@@@@@@@@@@@@@@@@@@@@@");
 
     if (!category) {
       return {
@@ -55,9 +92,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       };
     }
 
-    // 최상위 카테고리
+    //최상위 카테고리
     if (slugLength === 1) {
       postsData = await getPostsByParentCategoryId(category.id || 0);
+      //하위 카테고리
     } else if (slugLength === 2) {
       postsData = await getPostsByCategoryId(category.id);
     }
@@ -67,10 +105,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         posts: postsData || [],
         categoryId: category.id,
       },
+      revalidate: 60, // 60초마다 재생성
     };
   } catch (error) {
     return {
       notFound: true,
+      revalidate: 60,
     };
   }
 };
