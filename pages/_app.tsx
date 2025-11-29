@@ -12,16 +12,36 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
 import "../styles/globals.css";
+import { useLoadingStore } from "@/stores/useLoadingStore";
+import { GlobalLoading } from "@/components/loading/global-loading";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
   const { setUserInfo } = useUserInfoStore();
+  const { globalLoading, setGlobalLoading } = useLoadingStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (pageProps.userInfo) {
       setUserInfo(pageProps.userInfo);
     }
   }, [pageProps.userInfo, setUserInfo]);
+
+  useEffect(() => {
+    const handleStart = () => setGlobalLoading(true);
+    const handleComplete = () => setGlobalLoading(false);
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleComplete);
+    router.events.on("routeChangeError", handleComplete);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleComplete);
+      router.events.off("routeChangeError", handleComplete);
+    };
+  }, [router, setGlobalLoading]);
 
   return (
     <ApolloProvider client={apolloClient}>
@@ -65,6 +85,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         pauseOnHover
         theme="colored"
       />
+      {globalLoading && <GlobalLoading />}
       <Layout>
         <Component {...pageProps} />
       </Layout>
