@@ -16,12 +16,14 @@ type DeleteCategoryModalProps = {
   isDeleteDialogOpen: boolean;
   handleDeleteDialogOpen: (open: boolean) => void;
   selectedCategory: SelectedCategoryType[0];
+  isParent: boolean;
 };
 
 const DeleteCategoryModal = ({
   isDeleteDialogOpen,
   handleDeleteDialogOpen,
   selectedCategory,
+  isParent,
 }: DeleteCategoryModalProps) => {
   const { isDarkMode } = useDarkModeStore();
   const { deleteCategoryMutation } = useDeleteCategory();

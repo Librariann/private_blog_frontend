@@ -36,6 +36,7 @@ const ManagementCategories = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>();
+  const [isParent, setIsParent] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryType[0]>();
   const handleAddCategoryOpen = (open: boolean) => {
@@ -196,6 +197,7 @@ const ManagementCategories = () => {
                       onClick={() => {
                         handleDeleteDialogOpen(true);
                         setSelectedCategory(parentCategory);
+                        setIsParent(true);
                       }}
                       className={`
                         cursor-pointer
@@ -272,6 +274,7 @@ const ManagementCategories = () => {
                                 onClick={() => {
                                   handleDeleteDialogOpen(true);
                                   setSelectedCategory(subCategory);
+                                  setIsParent(false);
                                 }}
                                 className={`
                                   cursor-pointer
@@ -318,6 +321,7 @@ const ManagementCategories = () => {
           isDeleteDialogOpen={isDeleteDialogOpen}
           handleDeleteDialogOpen={handleDeleteDialogOpen}
           selectedCategory={selectedCategory}
+          isParent={isParent}
         />
       )}
     </div>
