@@ -1,5 +1,5 @@
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Edit,
   Eye,
@@ -37,17 +37,19 @@ const MyPage = () => {
   const { isDarkMode } = useDarkModeStore();
   const { data, error } = useMe();
 
-  if (data === undefined && error === "Token has expired") {
+  const userData = useMemo(() => data?.me, [data]);
+
+  if (userData === undefined && error === "Token has expired") {
     return null;
   }
 
-  const allPostLength = data?.me?.posts?.filter(
+  const allPostLength = userData?.posts?.filter(
     (post) => post.postStatus === "PUBLISHED"
   ).length;
-  const allPostViews = data?.me?.posts
+  const allPostViews = userData?.posts
     ?.filter((post) => post.postStatus === "PUBLISHED")
     .reduce((acc, post) => acc + post.hits, 0);
-  const allCommentsLength = data?.me?.posts
+  const allCommentsLength = userData?.posts
     ?.filter((post) => post.postStatus === "PUBLISHED")
     .reduce((acc, post) => acc + post.comments.length, 0);
   userStats[0].value = allPostLength?.toString() || "0"; //작성한 포스트 갯수
@@ -79,7 +81,7 @@ const MyPage = () => {
           <Avatar
             className={`w-24 h-24 sm:w-32 sm:h-32 ring-4 ${isDarkMode ? "ring-white/20" : "ring-blue-200"}`}
           >
-            <AvatarImage src={`${data?.me?.profileImage || ""}`} />
+            <AvatarImage src={`${userData?.profileImage || ""}`} />
             <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl">
               Dev
             </AvatarFallback>
@@ -92,10 +94,10 @@ const MyPage = () => {
                 <h1
                   className={`mb-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
                 >
-                  {data?.me?.nickname}
+                  {userData?.nickname}
                 </h1>
                 <p className={isDarkMode ? "text-white/70" : "text-gray-600"}>
-                  {data?.me?.role}
+                  {userData?.role}
                 </p>
               </div>
               <NewButton
@@ -116,7 +118,7 @@ const MyPage = () => {
             <p
               className={`mb-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
             >
-              {data?.me?.introduce}
+              {userData?.introduce}
             </p>
 
             <div
@@ -124,16 +126,16 @@ const MyPage = () => {
             >
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
-                <span>{data?.me?.email}</span>
+                <span>{userData?.email}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4" />
-                <span>{data?.me?.location}</span>
+                <span>{userData?.location}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <LinkIcon className="w-4 h-4" />
                 <a
-                  href={`${data?.me?.website}`}
+                  href={`${userData?.website}`}
                   target="_blank"
                   className={`transition-colors ${
                     isDarkMode
@@ -141,13 +143,13 @@ const MyPage = () => {
                       : "text-blue-600 hover:text-blue-700"
                   }`}
                 >
-                  {data?.me?.website}
+                  {userData?.website}
                 </a>
               </div>
               <div className="flex items-center space-x-2">
                 <Calendar className="w-4 h-4" />
                 <span>
-                  {new Date(data?.me?.createdAt!).toLocaleDateString("ko-KR", {
+                  {new Date(userData?.createdAt!).toLocaleDateString("ko-KR", {
                     year: "numeric",
                     month: "long",
                   })}{" "}
@@ -191,7 +193,7 @@ const MyPage = () => {
           최근 작성한 공개 글
         </h2>
         <div className="space-y-3">
-          {data?.me?.posts
+          {userData?.posts
             ?.filter((post) => post.postStatus === "PUBLISHED")
             .slice(0, 5)
             .map((post, index) => (

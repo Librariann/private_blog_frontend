@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { popularHashTagsProps, UserInfoType } from "@/pages";
@@ -23,14 +23,15 @@ const Main = ({
     new Set()
   );
   const { categories, categoriesLoading } = useGetCategories();
+  const categoriesMemo = useMemo(() => categories, [categories]);
 
   useEffect(() => {
     if (!categoriesLoading) {
-      const expandCategory = categories[0]?.categoryTitle;
+      const expandCategory = categoriesMemo[0]?.categoryTitle;
 
       setExpandedCategories(new Set([expandCategory]));
     }
-  }, [categories, categoriesLoading]);
+  }, [categoriesMemo, categoriesLoading]);
 
   const toggleCategoryExpand = (categoryName: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -91,7 +92,7 @@ const Main = ({
 
           {/* Sidebar - Mobile Only */}
           <Mobile
-            categories={categories}
+            categories={categoriesMemo}
             expandedCategories={expandedCategories}
             toggleCategoryExpand={toggleCategoryExpand}
           />
@@ -127,7 +128,7 @@ const Main = ({
 
         {/* Sidebar - Desktop Only */}
         <Desktop
-          categories={categories}
+          categories={categoriesMemo}
           expandedCategories={expandedCategories}
           toggleCategoryExpand={toggleCategoryExpand}
           popularHashTags={popularHashTags}
