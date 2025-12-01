@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { popularHashTagsProps, UserInfoType } from "@/pages";
@@ -156,4 +156,4 @@ export const GlassCardMain = styled.div<glassCardTypes>`
       : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
 `;
 
-export default Main;
+export const MemoizedMain = React.memo(Main);

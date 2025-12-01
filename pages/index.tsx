@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
-import { Post, User, UserProfileByNickNameQuery } from "@/gql/graphql";
-import Main from "@/components/main/main";
+import { Post, UserProfileByNickNameQuery } from "@/gql/graphql";
+import { MemoizedMain } from "@/components/main/main";
 import { getPopularHashTagDatas, getPostDatas, getUserInfo } from "@/lib/posts";
 import { useQuery } from "@apollo/client";
 import { GET_POST_LIST_QUERY } from "@/lib/queries";
@@ -48,11 +48,11 @@ const Home = ({
   userInfo: UserInfoType;
 }) => {
   // Apollo로 클라이언트에서 데이터 가져오기
-  const { data } = useQuery(GET_POST_LIST_QUERY);
+  const { data } = useQuery(GET_POST_LIST_QUERY, {});
 
   const postsDatas = data?.getPostList?.posts || posts;
 
-  return <Main posts={postsDatas} popularHashTags={popularHashTags} />;
+  return <MemoizedMain posts={postsDatas} popularHashTags={popularHashTags} />;
 };
 
 export default Home;
