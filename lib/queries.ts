@@ -86,12 +86,20 @@ export const GET_CATEGORIES = gql`
         sortOrder
         icon
         iconColor
+        parentCategory {
+          id
+          categoryTitle
+        }
         subCategories {
           id
           categoryTitle
           icon
           iconColor
           sortOrder
+          parentCategory {
+            id
+            categoryTitle
+          }
           post {
             id
             title

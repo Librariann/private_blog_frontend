@@ -10,7 +10,14 @@ import {
 import IconPicker from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEditCategory } from "@/hooks/hooks";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useEditCategory, useGetCategories } from "@/hooks/hooks";
 import { SelectedCategoryType } from "@/pages/settings/management-categories";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useLoadingStore } from "@/stores/useLoadingStore";
@@ -20,9 +27,10 @@ import { toast } from "react-toastify";
 
 type EditCategoryType = {
   id: number;
-  categoryTitle: string;
-  icon: string;
-  iconColor: string;
+  categoryTitle?: string;
+  parentCategoryId?: number;
+  icon?: string;
+  iconColor?: string;
 };
 
 type EditCategoryModalProps = {
@@ -42,15 +50,20 @@ const EditCategoryModal = ({
   const [editCategory, setEditCategory] = useState<EditCategoryType>({
     id: 0,
     categoryTitle: "",
+    parentCategoryId: 0,
     icon: "",
     iconColor: "",
   });
+
+  const { categories } = useGetCategories();
+
   useEffect(() => {
     setEditCategory({
       id: selectedCategory.id,
       categoryTitle: selectedCategory.categoryTitle,
-      icon: selectedCategory.icon || "",
-      iconColor: selectedCategory.iconColor || "",
+      parentCategoryId: selectedCategory.parentCategory?.id,
+      icon: selectedCategory?.icon || "",
+      iconColor: selectedCategory?.iconColor || "",
     });
   }, [selectedCategory]);
 
@@ -58,12 +71,20 @@ const EditCategoryModal = ({
     try {
       setGlobalLoading(true);
       const input = {
-        id: editCategory.id,
-        ...(editCategory.categoryTitle !== selectedCategory.categoryTitle && {
-          categoryTitle: editCategory.categoryTitle,
+        id: editCategory?.id!,
+        ...(editCategory?.categoryTitle !== selectedCategory.categoryTitle && {
+          categoryTitle: editCategory?.categoryTitle,
         }),
-        icon: editCategory.icon,
-        iconColor: editCategory.iconColor,
+        ...(editCategory?.icon !== selectedCategory.icon && {
+          icon: editCategory?.icon,
+        }),
+        ...(editCategory?.iconColor !== selectedCategory.iconColor && {
+          iconColor: editCategory?.iconColor,
+        }),
+        ...(editCategory?.parentCategoryId !==
+          selectedCategory.parentCategory?.id && {
+          parentCategoryId: editCategory?.parentCategoryId,
+        }),
       };
 
       const result = await editCategoryMutation({
@@ -82,6 +103,13 @@ const EditCategoryModal = ({
       setGlobalLoading(false);
       handleEditModalOpen(false);
     }
+  };
+
+  const handleEditCategoryChange = (key: string, value: string | number) => {
+    setEditCategory({
+      ...editCategory,
+      [key]: value,
+    });
   };
 
   return (
@@ -126,6 +154,34 @@ const EditCategoryModal = ({
                   : "bg-white border-gray-200"
               }
             />
+          </div>
+          <div className="space-y-2">
+            <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
+              카테고리 유형
+            </Label>
+            <Select
+              value={editCategory?.parentCategoryId?.toString()}
+              onValueChange={(value) => {
+                handleEditCategoryChange("parentCategoryId", +value);
+              }}
+            >
+              <SelectTrigger
+                className={
+                  isDarkMode
+                    ? "bg-white/5 border-white/20 text-white"
+                    : "bg-white border-gray-200"
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {categories?.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.categoryTitle}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <>
