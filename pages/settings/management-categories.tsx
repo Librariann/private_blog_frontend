@@ -71,8 +71,8 @@ const ManagementCategories = () => {
       {/* Header */}
       <div className="mb-6">
         <button
-          onClick={() => back}
-          className={`flex items-center space-x-2 mb-4 transition-colors ${
+          onClick={() => back()}
+          className={`flex items-center space-x-2 mb-4 transition-colors cursor-pointer ${
             isDarkMode
               ? "text-white/70 hover:text-white"
               : "text-gray-600 hover:text-gray-900"
