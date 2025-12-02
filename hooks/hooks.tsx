@@ -27,6 +27,8 @@ import {
   GetPostListQueryVariables,
   TogglePostStatusMutation,
   TogglePostStatusMutationVariables,
+  UpdatePostHitsMutation,
+  UpdatePostHitsMutationVariables,
   UpdateUserProfileMutation,
   UpdateUserProfileMutationVariables,
   UserProfileQuery,
@@ -53,6 +55,7 @@ import {
   DELETE_CATEGORY_MUTATION,
   GET_COMMENTS_QUERY,
   DELETE_COMMENT_MUTATION,
+  UPDATE_POST_HITS_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -221,9 +224,6 @@ export const useCreatePost = () => {
       {
         query: GET_POST_LIST_QUERY,
       },
-      {
-        query: GET_CATEGORIES_COUNTS_QUERY,
-      },
     ],
     awaitRefetchQueries: true,
     update(cache, { data: mutationResult }) {
@@ -277,9 +277,6 @@ export const useCreateCategory = () => {
       {
         query: GET_CATEGORIES,
       },
-      {
-        query: GET_CATEGORIES_COUNTS_QUERY,
-      },
     ],
     awaitRefetchQueries: true,
   });
@@ -294,9 +291,6 @@ export const useEditCategory = () => {
     refetchQueries: [
       {
         query: GET_CATEGORIES,
-      },
-      {
-        query: GET_CATEGORIES_COUNTS_QUERY,
       },
     ],
     awaitRefetchQueries: true,
@@ -362,4 +356,30 @@ export const useDeleteCommentByAdmin = () => {
       awaitRefetchQueries: true,
     });
   return { deleteCommentByAdminMutation, commentLoading };
+};
+
+export const useUpdatePostHits = ({
+  postId,
+  nickname,
+}: {
+  postId: number;
+  nickname: string;
+}) => {
+  const [updatePostHitsMutation] = useMutation<
+    UpdatePostHitsMutation,
+    UpdatePostHitsMutationVariables
+  >(UPDATE_POST_HITS_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_POST_BY_ID_QUERY,
+        variables: { postId: Number(postId) },
+      },
+      {
+        query: GET_USER_BY_NICKNAME_QUERY,
+        variables: { userNickName: nickname || "librarian" },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { updatePostHitsMutation };
 };

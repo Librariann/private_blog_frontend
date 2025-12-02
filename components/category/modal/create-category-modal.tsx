@@ -95,7 +95,6 @@ const CreateCategoryModal = ({
       handleAddCategoryOpen(false);
       setNewCategory(newCategoryBaseData);
     } catch (e) {
-      console.log(e);
       toast.error("카테고리 생성 실패!");
     } finally {
       setGlobalLoading(false);

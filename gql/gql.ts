@@ -36,6 +36,7 @@ const documents = {
     "\n  query findOneCategoryById($categoryId: Int!) {\n    findOneCategoryById(categoryId: $categoryId) {\n      ok\n      error\n      category {\n        id\n        categoryTitle\n        icon\n        iconColor\n        description\n      }\n    }\n  }\n": types.FindOneCategoryByIdDocument,
     "\n  query getComments {\n    getComments {\n      ok\n      error\n      comments {\n        id\n        comment\n        annonymousId\n        createdAt\n        post {\n          id\n          title\n        }\n      }\n    }\n  }\n": types.GetCommentsDocument,
     "\n  mutation deleteCommentByAdmin($id: Int!) {\n    deleteCommentByAdmin(id: $id) {\n      ok\n      error\n    }\n  }\n": types.DeleteCommentByAdminDocument,
+    "\n  mutation updatePostHits($postId: Int!) {\n    updatePostHits(postId: $postId) {\n      ok\n      error\n    }\n  }\n": types.UpdatePostHitsDocument,
     "\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
 };
@@ -146,6 +147,10 @@ export function graphql(source: "\n  query getComments {\n    getComments {\n   
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation deleteCommentByAdmin($id: Int!) {\n    deleteCommentByAdmin(id: $id) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation deleteCommentByAdmin($id: Int!) {\n    deleteCommentByAdmin(id: $id) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updatePostHits($postId: Int!) {\n    updatePostHits(postId: $postId) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation updatePostHits($postId: Int!) {\n    updatePostHits(postId: $postId) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

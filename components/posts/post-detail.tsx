@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { remark } from "remark";
 import rehypeSlug from "rehype-slug";
+import { useUpdatePostHits } from "@/hooks/hooks";
 
 type topicProps = {
   id: string;
@@ -29,6 +30,9 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   const [isTocOpen, setIsTocOpen] = useState(true);
   const router = useRouter();
   const postData = post?.post;
+  const { updatePostHitsMutation } = useUpdatePostHits({
+    postId: postData?.id!,
+  });
   useEffect(() => {
     if (
       postData?.postStatus !== "PUBLISHED" &&
@@ -82,6 +86,31 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
       }),
     { ssr: false }
   );
+
+  useEffect(() => {
+    const updateHits = async () => {
+      //마지막 조회시간 확인
+      const lastViewTime = localStorage.getItem(
+        `post-${postData?.id}-lastView`
+      );
+      const now = new Date().getTime();
+      // 마지막 조회시간이 1일 이상 지났으면 조회수 증가
+      if (!lastViewTime || now - parseInt(lastViewTime) > 24 * 60 * 60 * 1000) {
+        try {
+          await updatePostHitsMutation({
+            variables: {
+              postId: postData?.id!,
+            },
+          });
+          // 현재 시간을 저장
+          localStorage.setItem(`post-${postData?.id}-lastView`, now.toString());
+        } catch (error) {
+          console.error("조회수 업데이트 실패:", error);
+        }
+      }
+    };
+    updateHits();
+  }, [updatePostHitsMutation, postData?.id]);
 
   const extractHeadings = (markdown: string) => {
     const tree = remark().parse(markdown); // await 제거

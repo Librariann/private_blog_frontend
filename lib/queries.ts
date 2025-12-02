@@ -371,3 +371,12 @@ export const DELETE_COMMENT_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_POST_HITS_MUTATION = gql`
+  mutation updatePostHits($postId: Int!) {
+    updatePostHits(postId: $postId) {
+      ok
+      error
+    }
+  }
+`;

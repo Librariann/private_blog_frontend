@@ -78,7 +78,6 @@ export const imageUploadCommand: ICommand = {
         api.setSelectionRange({ start, end });
         api.replaceSelection(md);
       } catch (e) {
-        console.log(e);
         // 실패 시 플레이스홀더 제거
         const start = state.selection.start;
         const end = start + placeholder.length;

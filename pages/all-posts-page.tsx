@@ -23,7 +23,6 @@ const AllPostsPage = () => {
   const posts = useGetPostList();
   const popularHashTags = useGetPopularHashTagList();
 
-  console.log("render count", categories, categories?.[0]?.subCategories);
   const { isDarkMode } = useDarkModeStore();
 
   const filteredPosts = posts.filter((post) => {
