@@ -15,6 +15,7 @@ import "../styles/globals.css";
 import { useLoadingStore } from "@/stores/useLoadingStore";
 import { GlobalLoading } from "@/components/loading/global-loading";
 import { useRouter } from "next/router";
+import GlobalLoading2 from "@/components/loading/global-loading2";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
@@ -85,7 +86,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         pauseOnHover
         theme="colored"
       />
-      {globalLoading && <GlobalLoading />}
+      {globalLoading && <GlobalLoading2 />}
       <Layout>
         <Component {...pageProps} />
       </Layout>

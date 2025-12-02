@@ -16,6 +16,7 @@ import Footer from "../footer";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useMe } from "@/hooks/useMe";
 import { toast } from "react-toastify";
+import GlobalLoading2 from "../loading/global-loading2";
 
 type Props = {
   children: React.ReactNode;
@@ -65,7 +66,7 @@ function Layout({ children }: Props) {
     <div className="p-0 font-sans flex flex-col min-h-screen">
       {isLayoutVisible && mounted ? (
         <>
-          {globalLoading && <GlobalLoading />}
+          {globalLoading && <GlobalLoading2 />}
           <div
             className={`min-h-screen relative overflow-hidden ${
               isDarkMode ? "dark" : "light"
