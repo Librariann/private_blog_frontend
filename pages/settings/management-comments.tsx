@@ -3,15 +3,7 @@ import DeleteConfirmModal from "@/components/comments/modal/delete-confirm-modal
 import { GlassCardMain } from "@/components/main/main";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/text-area";
 import { GetCommentsQuery } from "@/gql/graphql";
 import { useGetComments } from "@/hooks/hooks";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
@@ -26,23 +18,15 @@ export type CommentType = NonNullable<
 
 const ManagementComments = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isReplyDialogOpen, setIsReplyDialogOpen] = useState(false);
   const [selectedComment, setSelectedComment] = useState<CommentType | null>(
     null
   );
-  const [replyContent, setReplyContent] = useState("");
   const { isDarkMode } = useDarkModeStore();
   const { back } = useRouter();
   const data = useGetComments();
 
   const memoizedComments = React.useMemo(() => data || [], [data]);
-  const handleDeleteComment = () => {
-    // TODO: 실제 삭제 로직
-    console.log("Deleting comment:", selectedComment);
-    setIsDeleteDialogOpen(false);
-  };
 
   //대댓글 기능은 추후 추가
   //   const handleReplyComment = () => {
@@ -56,17 +40,12 @@ const ManagementComments = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const openReplyDialog = (comment: CommentType) => {
-    setSelectedComment(comment);
-    setIsReplyDialogOpen(true);
-  };
-
   // Filter comments
   const filteredComments = memoizedComments.filter((comment) => {
     const matchesSearch =
       comment.annonymousId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      comment.comment.toLowerCase().includes(searchQuery.toLowerCase());
-    // comment.postTitle.toLowerCase().includes(searchQuery.toLowerCase());
+      comment.comment.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      comment.post?.title.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
