@@ -1,8 +1,11 @@
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { PostDetailPageProps } from "./post-detail";
 import { Tag } from "lucide-react";
 
-const PostTags = ({ post }: PostDetailPageProps) => {
+type tagsType = {
+  hashtags: { hashtag: string }[];
+};
+
+const PostTags = ({ hashtags }: tagsType) => {
   const { isDarkMode } = useDarkModeStore();
   return (
     <div className="mt-8 pt-6 border-t border-white/10">
@@ -15,9 +18,9 @@ const PostTags = ({ post }: PostDetailPageProps) => {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {post?.hashtags?.map((tag) => (
+        {hashtags.map((tag, index) => (
           <span
-            key={tag.id}
+            key={index}
             className={`px-3 py-1 backdrop-blur-sm rounded-full border transition-all cursor-pointer ${
               isDarkMode
                 ? "bg-white/10 text-white border-white/20 hover:bg-white/20"

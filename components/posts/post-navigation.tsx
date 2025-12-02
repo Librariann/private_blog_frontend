@@ -3,7 +3,10 @@ import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/router";
 
-type navationType = Pick<Post, "id" | "title" | "createdAt" | "readTime">;
+type navationType = Pick<
+  Post,
+  "id" | "title" | "createdAt" | "readTime"
+> | null;
 
 export type PostNavigationProps = {
   post: {
@@ -18,9 +21,9 @@ export type PostNavigationProps = {
         categoryTitle: string;
       } | null;
     } | null;
-  }; // 또는 postType 재사용
-  prevPost: navationType | null;
-  nextPost: navationType | null;
+  };
+  prevPost: navationType;
+  nextPost: navationType;
 };
 
 const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {

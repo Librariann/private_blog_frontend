@@ -233,11 +233,11 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         </div>
 
         {/* Tags */}
-        <PostTags post={post} />
+        <PostTags hashtags={postData?.hashtags ?? []} />
       </GlassCardMain>
 
       {/* Comments Section */}
-      <Comments comments={postData?.comments || []} />
+      <Comments comments={postData?.comments ?? []} />
 
       {/* Previous/Next Posts Navigation */}
       {postData && (post?.prevPost || post?.nextPost) && (
