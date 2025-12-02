@@ -1,5 +1,6 @@
 import { GetPostByIdQuery, Post } from "@/gql/graphql";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { formatDateShort } from "@/utils/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/router";
 
@@ -53,7 +54,7 @@ const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
           <p
             className={`mt-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
-            {prevPost.createdAt} • {prevPost.readTime}
+            {formatDateShort(prevPost?.createdAt)} • {nextPost?.readTime}분
           </p>
         </button>
       ) : (
@@ -91,7 +92,7 @@ const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
           <p
             className={`mt-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
-            {nextPost?.createdAt} • {nextPost?.readTime}
+            {formatDateShort(nextPost?.createdAt)} • {nextPost?.readTime}분
           </p>
         </button>
       ) : (
