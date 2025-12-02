@@ -47,8 +47,8 @@ const CommentsWriteForm = ({
     const commentResult = await createCommentMutation({
       variables: {
         input: {
-          commentId: commentAuthor,
-          commentPassword: commentPassword,
+          annonymousId: commentAuthor,
+          annonymousPassword: commentPassword,
           comment: newComment,
           postId: +postId,
         },
