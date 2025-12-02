@@ -1,5 +1,5 @@
 import { ArrowLeft, Calendar, Clock, List } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "../ui/badge";
 import { GetPostByIdQuery, Post } from "@/gql/graphql";
@@ -12,6 +12,8 @@ import { GlassCardMain } from "../main/main";
 import { useMe } from "@/hooks/useMe";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { remark } from "remark";
+import rehypeSlug from "rehype-slug";
 
 type topicProps = {
   id: string;
@@ -59,7 +61,6 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
       const offset = 100; // 헤더 높이만큼 여유
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-      console.log(offsetPosition);
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
@@ -74,12 +75,38 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
     day: "numeric",
   });
 
-  const EditerMarkdown = dynamic(
+  const EditorMarkdown = dynamic(
     () =>
       import("@uiw/react-md-editor").then((mod) => {
         return mod.default.Markdown;
       }),
     { ssr: false }
+  );
+
+  const extractHeadings = (markdown: string) => {
+    const tree = remark().parse(markdown); // await 제거
+    const headings: any[] = [];
+
+    tree.children.forEach((node: any) => {
+      if (node.type === "heading" && node.depth < 2) {
+        const text = node.children[0]?.value || "";
+        headings.push({
+          level: node.depth,
+          text: text,
+          id: text
+            .replace(/[^a-zA-Z0-9가-힣\s]/g, "")
+            .toLowerCase()
+            .replace(/\s+/g, "-"),
+        });
+      }
+    });
+
+    return headings;
+  };
+
+  const headings = useMemo(
+    () => extractHeadings(postData?.contents || ""),
+    [postData?.contents]
   );
 
   return (
@@ -188,14 +215,14 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                     className={`px-6 pb-4 border-t ${isDarkMode ? "border-white/10" : "border-gray-200"}`}
                   >
                     <nav className="space-y-2 mt-4">
-                      {tocItems.map((item, index) => (
+                      {headings.map((item, index) => (
                         <motion.button
                           key={item.id}
                           initial={{ x: -10, opacity: 0 }}
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ duration: 0.2, delay: index * 0.05 }}
                           onClick={() => scrollToSection(item.id)}
-                          className={`w-full text-left px-4 py-2 rounded-lg transition-all ${
+                          className={`w-full text-left px-4 py-2 rounded-lg transition-all cursor-pointer ${
                             isDarkMode
                               ? "text-white/70 hover:bg-white/10 hover:text-white"
                               : "text-gray-600 hover:bg-white hover:text-gray-900"
@@ -209,7 +236,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                             >
                               {index + 1}.
                             </span>
-                            <span>{item.title}</span>
+                            <span>{item.text}</span>
                           </div>
                         </motion.button>
                       ))}
@@ -225,10 +252,11 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         <div
           className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
         >
-          <EditerMarkdown
+          <EditorMarkdown
             source={postData?.contents}
             data-color-mode={isDarkMode ? "dark" : "light"}
             style={{ backgroundColor: "transparent" }}
+            rehypePlugins={[rehypeSlug]}
           />
         </div>
 
