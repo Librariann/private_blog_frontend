@@ -18,7 +18,7 @@ const DeleteConfirmModal = ({
   isDeleteDialogOpen,
   setIsDeleteDialogOpen,
 }: {
-  selectedComment: CommentType;
+  selectedComment: CommentType | null;
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: (open: boolean) => void;
 }) => {
@@ -26,6 +26,7 @@ const DeleteConfirmModal = ({
   const { deleteCommentByAdminMutation } = useDeleteCommentByAdmin();
 
   const onDeleteCommentByAdmin = async () => {
+    if (!selectedComment) return;
     const result = await deleteCommentByAdminMutation({
       variables: { id: selectedComment.id },
     });
