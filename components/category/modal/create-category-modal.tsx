@@ -38,6 +38,7 @@ type newCategoryTypes = {
   parentCategoryId: string;
   icon: string;
   color: string;
+  description: string;
 };
 
 const newCategoryBaseData: newCategoryTypes = {
@@ -46,6 +47,7 @@ const newCategoryBaseData: newCategoryTypes = {
   parentCategoryId: "",
   icon: "code",
   color: "from-blue-500 to-blue-600",
+  description: "",
 };
 
 const CreateCategoryModal = ({
@@ -74,6 +76,7 @@ const CreateCategoryModal = ({
         categoryTitle: newCategory.categoryTitle,
         icon: newCategory.icon,
         iconColor: newCategory.color,
+        description: newCategory.description,
         ...(newCategory.parentCategoryId && {
           parentCategoryId: +newCategory.parentCategoryId,
         }),
@@ -91,7 +94,8 @@ const CreateCategoryModal = ({
       }
       handleAddCategoryOpen(false);
       setNewCategory(newCategoryBaseData);
-    } catch {
+    } catch (e) {
+      console.log(e);
       toast.error("카테고리 생성 실패!");
     } finally {
       setGlobalLoading(false);
@@ -105,7 +109,7 @@ const CreateCategoryModal = ({
     >
       <DialogContent
         onInteractOutside={(e) => e.preventDefault()}
-        className={`max-w-md ${
+        className={`max-w-md max-h-[90vh] overflow-y-auto ${
           isDarkMode
             ? "bg-white/10 backdrop-blur-xs border-white/20"
             : "backdrop-blur-xs border-gray-200"
@@ -191,6 +195,22 @@ const CreateCategoryModal = ({
                 handleNewCategory("categoryTitle", e.target.value)
               }
               placeholder="예: Machine Learning"
+              className={
+                isDarkMode
+                  ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                  : "bg-white border-gray-200"
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
+              카테고리 설명
+            </Label>
+            <Input
+              value={newCategory.description}
+              onChange={(e) => handleNewCategory("description", e.target.value)}
+              placeholder="카테고리에 대한 설명을 입력해주세요"
               className={
                 isDarkMode
                   ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"

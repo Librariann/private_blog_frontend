@@ -86,6 +86,7 @@ export const GET_CATEGORIES = gql`
         sortOrder
         icon
         iconColor
+        description
         parentCategory {
           id
           categoryTitle
@@ -96,9 +97,14 @@ export const GET_CATEGORIES = gql`
           icon
           iconColor
           sortOrder
+          description
           parentCategory {
             id
             categoryTitle
+            sortOrder
+            icon
+            iconColor
+            description
           }
           post {
             id
@@ -317,6 +323,7 @@ export const FIND_ONE_CATEGORY_BY_ID_QUERY = gql`
         categoryTitle
         icon
         iconColor
+        description
       }
     }
   }

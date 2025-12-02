@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { GlassCardMain } from "../main/main";
 import { useFindOneCategoryById } from "@/hooks/hooks";
 import { DynamicIcon } from "lucide-react/dynamic";
+import { useMemo } from "react";
 
 const CategoryDetails = ({
   posts,
@@ -19,6 +20,7 @@ const CategoryDetails = ({
   const router = useRouter();
   const { slug } = router.query;
   const category = useFindOneCategoryById({ categoryId });
+  const categoryMemoized = useMemo(() => category, [category]);
 
   posts
     ?.flatMap((post) => post.hashtags)
@@ -78,8 +80,7 @@ const CategoryDetails = ({
           </div>
         </div>
         <p className={isDarkMode ? "text-white/70" : "text-gray-600"}>
-          {slug?.[1]} 개발과 관련된 최신 기술 트렌드, 팁, 그리고 실무 경험을
-          공유합니다.
+          {categoryMemoized?.description}
         </p>
       </GlassCardMain>
 

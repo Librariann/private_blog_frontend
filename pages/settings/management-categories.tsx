@@ -39,6 +39,7 @@ const ManagementCategories = () => {
   const [isParent, setIsParent] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryType[0]>();
+
   const handleAddCategoryOpen = (open: boolean) => {
     setIsAddModalOpen(open);
   };

@@ -31,6 +31,7 @@ type EditCategoryType = {
   parentCategoryId?: number;
   icon?: string;
   iconColor?: string;
+  description?: string;
 };
 
 type EditCategoryModalProps = {
@@ -53,6 +54,7 @@ const EditCategoryModal = ({
     parentCategoryId: 0,
     icon: "",
     iconColor: "",
+    description: "",
   });
 
   const { categories } = useGetCategories();
@@ -64,6 +66,7 @@ const EditCategoryModal = ({
       parentCategoryId: selectedCategory.parentCategory?.id,
       icon: selectedCategory?.icon || "",
       iconColor: selectedCategory?.iconColor || "",
+      description: selectedCategory?.description || "",
     });
   }, [selectedCategory]);
 
@@ -84,6 +87,9 @@ const EditCategoryModal = ({
         ...(editCategory?.parentCategoryId !==
           selectedCategory.parentCategory?.id && {
           parentCategoryId: editCategory?.parentCategoryId,
+        }),
+        ...(editCategory?.description !== selectedCategory.description && {
+          description: editCategory?.description,
         }),
       };
 
@@ -118,7 +124,7 @@ const EditCategoryModal = ({
       onOpenChange={() => handleEditModalOpen(false)}
     >
       <DialogContent
-        className={`max-w-md ${
+        className={`max-w-md max-w-md max-h-[90vh] overflow-y-auto ${
           isDarkMode
             ? "bg-white/10 backdrop-blur-xs border-white/20"
             : "backdrop-blur-xs border-gray-200"
@@ -182,6 +188,24 @@ const EditCategoryModal = ({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className={isDarkMode ? "text-white" : "text-gray-900"}>
+              카테고리 설명
+            </Label>
+            <Input
+              value={editCategory.description}
+              onChange={(e) =>
+                handleEditCategoryChange("description", e.target.value)
+              }
+              placeholder="카테고리에 대한 설명을 입력해주세요"
+              className={
+                isDarkMode
+                  ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                  : "bg-white border-gray-200"
+              }
+            />
           </div>
 
           <>
