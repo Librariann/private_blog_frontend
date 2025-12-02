@@ -363,7 +363,7 @@ export const useUpdatePostHits = ({
   nickname,
 }: {
   postId: number;
-  nickname: string;
+  nickname?: string;
 }) => {
   const [updatePostHitsMutation] = useMutation<
     UpdatePostHitsMutation,
