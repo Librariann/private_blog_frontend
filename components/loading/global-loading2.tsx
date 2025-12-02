@@ -4,14 +4,16 @@ import styled from "styled-components";
 const GlobalLoading2 = () => {
   return (
     <StyledWrapper>
-      <div className="loader">
-        <div className="loader-square" />
-        <div className="loader-square" />
-        <div className="loader-square" />
-        <div className="loader-square" />
-        <div className="loader-square" />
-        <div className="loader-square" />
-        <div className="loader-square" />
+      <div className="loadingOverlay">
+        <div className="loader">
+          <div className="loader-square" />
+          <div className="loader-square" />
+          <div className="loader-square" />
+          <div className="loader-square" />
+          <div className="loader-square" />
+          <div className="loader-square" />
+          <div className="loader-square" />
+        </div>
       </div>
     </StyledWrapper>
   );
@@ -103,6 +105,19 @@ const StyledWrapper = styled.div`
       left: 0;
       top: 0;
     }
+  }
+
+  .loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
   }
 
   .loader {
