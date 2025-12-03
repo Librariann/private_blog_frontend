@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://librarian-blog.dev/sitemap.xml
