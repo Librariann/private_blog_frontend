@@ -194,6 +194,14 @@ export const GET_POST_LIST_WITH_LIMIT_QUERY = gql`
         id
         title
         excerpt
+        category {
+          id
+          categoryTitle
+          parentCategory {
+            id
+            categoryTitle
+          }
+        }
       }
     }
   }
