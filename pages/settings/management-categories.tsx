@@ -56,8 +56,8 @@ const ManagementCategories = () => {
     []
   );
   const [lastDragInfo, setLastDragInfo] = useState<DragInfo>(null);
-  const { editSortCategory } = useEditSortCategoryMutation();
   const [dragApprove, setDragApprove] = useState(false);
+  const { editSortCategory } = useEditSortCategoryMutation();
 
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryType[0]>();
@@ -112,7 +112,7 @@ const ManagementCategories = () => {
     // Parent 카테고리인지 Sub 카테고리인지 판단
     setLocalCategories((prevCategories) => {
       if (!prevCategories) return prevCategories;
-      setDragApprove(true);
+
       // Parent 카테고리 드래그인 경우
       const oldParentIndex = prevCategories.findIndex(
         (value) => value.id.toString() === activeId
@@ -124,13 +124,6 @@ const ManagementCategories = () => {
       const targetParent = prevCategories.find((parent) =>
         parent.subCategories?.find((sub) => sub.id.toString() === activeId)
       );
-
-      if (targetParent) {
-        setLastDragInfo({
-          type: "sub",
-          subCategories: targetParent?.subCategories,
-        });
-      }
 
       if (oldParentIndex !== -1 && newParentIndex !== -1) {
         return arrayMove(prevCategories, oldParentIndex, newParentIndex);
@@ -169,8 +162,19 @@ const ManagementCategories = () => {
         return parent;
       });
 
+      const updatedParent = newCategories.find(
+        (category) => category.id === targetParent?.id
+      );
+      if (updatedParent?.subCategories) {
+        setLastDragInfo({
+          type: "sub",
+          subCategories: updatedParent.subCategories,
+        });
+      }
+
       return newCategories;
     });
+    setDragApprove(true);
   };
 
   const handleEditSortCategory = async () => {
@@ -215,7 +219,7 @@ const ManagementCategories = () => {
       setLastDragInfo(null);
       setDragApprove(false);
     }
-  }, [dragApprove]);
+  }, [dragApprove, lastDragInfo]);
 
   return (
     <>
