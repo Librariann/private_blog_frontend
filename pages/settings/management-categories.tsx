@@ -211,22 +211,23 @@ const ManagementCategories = () => {
   };
 
   useEffect(() => {
+    if (!dragApprove) return;
+
     setGlobalLoading(true);
-    if (dragApprove) {
-      handleEditSortCategory()
-        .then((success) => {
-          if (success) {
-            toast.success("순서가 바뀌었습니다!");
-          } else {
-            toast.error("데이터를 확인해주세요");
-          }
-        })
-        .finally(() => {
-          setLastDragInfo(null);
-          setDragApprove(false);
-          setGlobalLoading(false);
-        });
-    }
+
+    handleEditSortCategory()
+      .then((success) => {
+        if (success) {
+          toast.success("순서가 바뀌었습니다!");
+        } else {
+          toast.error("데이터를 확인해주세요");
+        }
+      })
+      .finally(() => {
+        setLastDragInfo(null);
+        setDragApprove(false);
+        setGlobalLoading(false);
+      });
   }, [dragApprove]);
 
   return (
