@@ -1,5 +1,10 @@
 import { GetStaticProps } from "next";
-import { Post, UserProfileByNickNameQuery } from "@/gql/graphql";
+import {
+  GetPostListQuery,
+  GetPostListQueryVariables,
+  Post,
+  UserProfileByNickNameQuery,
+} from "@/gql/graphql";
 import { MemoizedMain } from "@/components/main/main";
 import { getPopularHashTagDatas, getPostDatas, getUserInfo } from "@/lib/posts";
 import { useQuery } from "@apollo/client";
@@ -22,7 +27,8 @@ export const getStaticProps: GetStaticProps = async () => {
 
     return {
       props: {
-        posts: postDatas,
+        posts: postDatas?.posts || [],
+        featuredPost: postDatas?.featuredPost || {},
         popularHashTags: popularHashTagDatas,
         userInfo: userInfo,
       },
@@ -42,17 +48,25 @@ export const getStaticProps: GetStaticProps = async () => {
 const Home = ({
   posts,
   popularHashTags,
+  featuredPost,
 }: {
   posts: Post[];
   popularHashTags: popularHashTagsProps[];
   userInfo: UserInfoType;
+  featuredPost: Post;
 }) => {
   // Apollo로 클라이언트에서 데이터 가져오기
   const { data } = useQuery(GET_POST_LIST_QUERY);
 
-  const postsDatas = data?.getPostList?.posts || posts;
+  const postsDatas: Post[] = data?.getPostList?.post || posts;
 
-  return <MemoizedMain posts={postsDatas} popularHashTags={popularHashTags} />;
+  return (
+    <MemoizedMain
+      posts={postsDatas}
+      popularHashTags={popularHashTags}
+      featuredPost={featuredPost}
+    />
+  );
 };
 
 export default Home;

@@ -7,18 +7,12 @@ import {
   EyeOff,
   Search,
   Upload,
+  Focus,
+  CircleCheckBig,
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { NewButton } from "@/components/buttons/new-button";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { GlassCardMain } from "@/components/main/main";
@@ -28,6 +22,7 @@ import {
   useGetAllPostList,
   useGetCategories,
   useTogglePostStatus,
+  useUpdateFeaturedPostMutation,
 } from "@/hooks/hooks";
 import {
   Select,
@@ -68,10 +63,10 @@ const ManagementPosts = () => {
 
   const posts = useGetAllPostList();
   const { categories, categoriesLoading } = useGetCategories();
-  const { togglePostStatusMutation, postStatusToggleLoading } =
-    useTogglePostStatus();
-  const { deletePostMutation, postDeleteLoading } = useDeletePost();
+  const { togglePostStatusMutation } = useTogglePostStatus();
+  const { deletePostMutation } = useDeletePost();
   const { setGlobalLoading } = useLoadingStore();
+  const { updateFeaturedPost } = useUpdateFeaturedPostMutation();
 
   const handleDeletePost = async () => {
     try {
@@ -112,6 +107,22 @@ const ManagementPosts = () => {
     setSelectedPost(postTitle);
     setSelectedPostId(postId);
     setIsDeleteDialogOpen(true);
+  };
+
+  const handleUpdateFeatuedPost = async (postId: number) => {
+    setGlobalLoading(true);
+    const result = await updateFeaturedPost({
+      variables: {
+        postId,
+      },
+    });
+
+    if (result.data?.updateFeaturedPost.ok) {
+      toast.success(result.data?.updateFeaturedPost.message);
+    } else {
+      toast.error(result.data?.updateFeaturedPost.error);
+    }
+    setGlobalLoading(false);
   };
 
   // Filter posts
@@ -372,7 +383,31 @@ const ManagementPosts = () => {
                           <Eye className="w-4 h-4" />
                         )}
                       </NewButton>
-
+                      {post.postStatus === "PUBLISHED" && (
+                        <NewButton
+                          variant="ghost"
+                          size="sm"
+                          className={`cursor-pointer ${
+                            isDarkMode
+                              ? "text-white/70 hover:text-white hover:bg-white/10"
+                              : ""
+                          }`}
+                          title="featured"
+                          onClick={() => {
+                            if (post.featureYn === "N") {
+                              handleUpdateFeatuedPost(post.id);
+                            } else {
+                              toast.error("이미 설정 되어 있습니다.");
+                            }
+                          }}
+                        >
+                          {post.featureYn === "N" ? (
+                            <Focus className="w-4 h-4" />
+                          ) : (
+                            <CircleCheckBig className="w-4 h-4" />
+                          )}
+                        </NewButton>
+                      )}
                       <NewButton
                         variant="ghost"
                         size="sm"
@@ -390,6 +425,7 @@ const ManagementPosts = () => {
                       >
                         <Edit className="w-4 h-4" />
                       </NewButton>
+
                       <NewButton
                         variant="ghost"
                         size="sm"

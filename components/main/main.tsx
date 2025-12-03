@@ -15,9 +15,11 @@ import { useUserInfoStore } from "@/stores/useUserInfoStore";
 const Main = ({
   posts,
   popularHashTags,
+  featuredPost,
 }: {
   posts: Post[];
   popularHashTags: popularHashTagsProps[];
+  featuredPost: Post;
 }) => {
   const router = useRouter();
   const { isDarkMode } = useDarkModeStore();
@@ -81,23 +83,22 @@ const Main = ({
               <h2
                 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
               >
-                {posts?.[0]?.title}
+                {featuredPost.title}
               </h2>
               <p
                 className={`mb-6 ${
                   isDarkMode ? "text-white/70" : "text-gray-600"
                 }`}
               >
-                React 19에서 추가된 Server Components, Actions, 그리고 새로운
-                Hooks에 대해 알아봅니다.
+                {featuredPost.excerpt}
               </p>
               <button
                 onClick={() =>
                   router.push(
-                    `/post/${posts?.[0].category?.parentCategory?.categoryTitle}/${posts?.[0].category?.categoryTitle}/@Post-${posts?.[0].id}`
+                    `/post/${featuredPost.category?.parentCategory?.categoryTitle}/${featuredPost.category?.categoryTitle}/@Post-${featuredPost.id}`
                   )
                 }
-                className={`px-6 py-3 rounded-lg transition-all ${
+                className={`px-6 py-3 rounded-lg transition-all cursor-pointer ${
                   isDarkMode
                     ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 text-white border border-white/20"
                     : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"

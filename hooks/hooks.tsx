@@ -19,16 +19,18 @@ import {
   GetAllPopularHashTagsQueryVariables,
   GetAllPostListQuery,
   GetAllPostListQueryVariables,
-  GetCategoriesCountsQuery,
-  GetCategoriesCountsQueryVariables,
   GetCategoriesQuery,
   GetCategoriesQueryVariables,
   GetCommentsQuery,
   GetCommentsQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  GetPostListWithLimitQuery,
+  GetPostListWithLimitQueryVariables,
   TogglePostStatusMutation,
   TogglePostStatusMutationVariables,
+  UpdateFeaturedPostMutation,
+  UpdateFeaturedPostMutationVariables,
   UpdatePostHitsMutation,
   UpdatePostHitsMutationVariables,
   UpdateUserProfileMutation,
@@ -42,7 +44,6 @@ import {
   GET_CATEGORIES,
   GET_POST_LIST_QUERY,
   GET_POPULAR_HASHTAG_QUERY,
-  GET_CATEGORIES_COUNTS_QUERY,
   GET_USER_QUERY,
   UPDATE_USER_MUTATION,
   GET_USER_BY_NICKNAME_QUERY,
@@ -59,6 +60,8 @@ import {
   DELETE_COMMENT_MUTATION,
   UPDATE_POST_HITS_MUTATION,
   EDIT_SORT_CATEGORY_ORDER_MUTATION,
+  UPDATE_FEATURED_POST_MUTATION,
+  GET_POST_LIST_WITH_LIMIT_QUERY,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -81,21 +84,6 @@ export function useGetCategories() {
   return {
     categories: data?.getCategories.categories || [],
     categoriesLoading: loading,
-  };
-}
-
-export function useGetCategoryCounts() {
-  const { data, loading } = useQuery<
-    GetCategoriesCountsQuery,
-    GetCategoriesCountsQueryVariables
-  >(GET_CATEGORIES_COUNTS_QUERY, {
-    fetchPolicy: "cache-and-network",
-    nextFetchPolicy: "cache-first",
-  });
-
-  return {
-    countsData: data?.getCategoriesCounts.categoryCounts,
-    countsLoading: loading,
   };
 }
 
@@ -125,6 +113,21 @@ export const useGetPostList = () => {
     }
   );
   return data?.getPostList?.posts || [];
+};
+
+export const useGetPostListWithLimit = () => {
+  const { data } = useQuery<
+    GetPostListWithLimitQuery,
+    GetPostListWithLimitQueryVariables
+  >(GET_POST_LIST_WITH_LIMIT_QUERY, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+    ssr: false, // SSR 비활성화
+  });
+  return {
+    posts: data?.getPostListWithLimit.posts,
+    featuredPost: data?.getPostListWithLimit.featuredPost,
+  };
 };
 
 export const useGetPopularHashTagList = () => {
@@ -237,8 +240,8 @@ export const useCreatePost = () => {
               cache.evict({ fieldName: "getPostList" });
               return existing;
             },
-            getCategoriesCounts(existing = {}) {
-              cache.evict({ fieldName: "getCategoriesCounts" });
+            getCategories(existing = {}) {
+              cache.evict({ fieldName: "getCategories" });
               return existing;
             },
           },
@@ -400,4 +403,19 @@ export const useEditSortCategoryMutation = () => {
     awaitRefetchQueries: true,
   });
   return { editSortCategory };
+};
+
+export const useUpdateFeaturedPostMutation = () => {
+  const [updateFeaturedPost] = useMutation<
+    UpdateFeaturedPostMutation,
+    UpdateFeaturedPostMutationVariables
+  >(UPDATE_FEATURED_POST_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_ALL_POST_LIST_QUERY,
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { updateFeaturedPost };
 };

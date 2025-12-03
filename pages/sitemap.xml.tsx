@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const posts = await getPostDatas();
   const categories = await getCategories();
 
-  const sitemap = generateSiteMap(posts, categories);
+  const sitemap = generateSiteMap(posts.posts, categories);
 
   res.setHeader("Content-Type", "text/xml");
   res.write(sitemap);

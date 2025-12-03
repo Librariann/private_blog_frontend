@@ -1,7 +1,6 @@
 import { createApolloClient } from "@/apollo";
 import {
   GET_CATEGORIES,
-  GET_CATEGORIES_COUNTS_QUERY,
   GET_POPULAR_HASHTAG_QUERY,
   GET_POST_BY_CATEGORYID_QUERY,
   GET_POST_BY_ID_QUERY,
@@ -12,8 +11,6 @@ import {
 import {
   GetAllPopularHashTagsQuery,
   GetAllPopularHashTagsQueryVariables,
-  GetCategoriesCountsQuery,
-  GetCategoriesCountsQueryVariables,
   GetCategoriesQuery,
   GetCategoriesQueryVariables,
   GetPostByIdQuery,
@@ -64,22 +61,6 @@ export async function getPostsByParentCategoryId(categoryId: number) {
   }
 }
 
-export async function getCategoriesCounts() {
-  try {
-    const { data } = await apolloClient.query<
-      GetCategoriesCountsQuery,
-      GetCategoriesCountsQueryVariables
-    >({
-      query: GET_CATEGORIES_COUNTS_QUERY,
-      fetchPolicy: "cache-first",
-    });
-
-    return data.getCategoriesCounts?.categoryCounts || [];
-  } catch (error) {
-    return [];
-  }
-}
-
 export async function getCategories() {
   try {
     const { data } = await apolloClient.query<
@@ -122,7 +103,10 @@ export async function getPostDatas() {
     query: GET_POST_LIST_QUERY,
     fetchPolicy: "cache-first",
   });
-  return data.getPostList?.posts || [];
+  return {
+    posts: data?.getPostList.posts,
+    featuredPost: data?.getPostList.featuredPost,
+  };
 }
 
 export async function getPopularHashTagDatas() {

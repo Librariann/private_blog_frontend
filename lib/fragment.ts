@@ -12,6 +12,7 @@ export const POST_FIELDS_FRAGMENT = gql`
     updatedAt
     readTime
     postStatus
+    featureYn
     category {
       id
       categoryTitle

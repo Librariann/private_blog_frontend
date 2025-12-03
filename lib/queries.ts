@@ -57,24 +57,6 @@ export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
   }
 `;
 
-export const GET_CATEGORIES_COUNTS_QUERY = gql`
-  query getCategoriesCounts {
-    getCategoriesCounts {
-      ok
-      categoryCounts {
-        id
-        categoryTitle
-        icon
-        iconColor
-        subCategories {
-          id
-          categoryTitle
-        }
-      }
-    }
-  }
-`;
-
 export const GET_CATEGORIES = gql`
   query getCategories {
     getCategories {
@@ -183,6 +165,35 @@ export const GET_POST_LIST_QUERY = gql`
     getPostList {
       posts {
         ...PostFields
+      }
+      featuredPost {
+        id
+        title
+        excerpt
+        category {
+          id
+          categoryTitle
+          parentCategory {
+            id
+            categoryTitle
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_POST_LIST_WITH_LIMIT_QUERY = gql`
+  ${POST_FIELDS_FRAGMENT}
+  query getPostListWithLimit {
+    getPostListWithLimit {
+      posts {
+        ...PostFields
+      }
+      featuredPost {
+        id
+        title
+        excerpt
       }
     }
   }
@@ -386,6 +397,16 @@ export const EDIT_SORT_CATEGORY_ORDER_MUTATION = gql`
   mutation editSortCategory($input: EditSortCategoryInput!) {
     editSortCategory(input: $input) {
       ok
+    }
+  }
+`;
+
+export const UPDATE_FEATURED_POST_MUTATION = gql`
+  mutation updateFeaturedPost($postId: Int!) {
+    updateFeaturedPost(postId: $postId) {
+      ok
+      message
+      error
     }
   }
 `;

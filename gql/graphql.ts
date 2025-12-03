@@ -73,7 +73,7 @@ export type CreateAccountInput = {
 export type CreateAccountOutput = {
   __typename?: 'CreateAccountOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -91,7 +91,7 @@ export type CreateCategoryOutput = {
   __typename?: 'CreateCategoryOutput';
   categoryId?: Maybe<Scalars['Int']['output']>;
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -106,7 +106,7 @@ export type CreateCommentOutput = {
   __typename?: 'CreateCommentOutput';
   commentId: Scalars['Int']['output'];
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -119,7 +119,7 @@ export type CreateHashTagOutput = {
   __typename?: 'CreateHashTagOutput';
   error?: Maybe<Scalars['String']['output']>;
   hashtagId: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -135,7 +135,7 @@ export type CreatePostInput = {
 export type CreatePostOutput = {
   __typename?: 'CreatePostOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
   postId: Scalars['Int']['output'];
 };
@@ -143,7 +143,7 @@ export type CreatePostOutput = {
 export type DeleteCategoryOutput = {
   __typename?: 'DeleteCategoryOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -155,14 +155,14 @@ export type DeleteCommentInput = {
 export type DeleteCommentOutput = {
   __typename?: 'DeleteCommentOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
 export type DeletePostOutput = {
   __typename?: 'DeletePostOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -181,7 +181,7 @@ export type EditCategoryInput = {
 export type EditCategoryOutput = {
   __typename?: 'EditCategoryOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -194,7 +194,7 @@ export type EditCommentInput = {
 export type EditCommentOutput = {
   __typename?: 'EditCommentOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -211,7 +211,7 @@ export type EditPostInput = {
 export type EditPostOutput = {
   __typename?: 'EditPostOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -222,7 +222,7 @@ export type EditSortCategoryInput = {
 export type EditSortCategoryOutput = {
   __typename?: 'EditSortCategoryOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -230,7 +230,7 @@ export type GetAllPopularHashTagsOutput = {
   __typename?: 'GetAllPopularHashTagsOutput';
   error?: Maybe<Scalars['String']['output']>;
   hashtags: Array<HashtagCount>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -238,7 +238,7 @@ export type GetCategoriesCountOutput = {
   __typename?: 'GetCategoriesCountOutput';
   categoryCounts?: Maybe<Array<CategoryCount>>;
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -246,7 +246,7 @@ export type GetCategoriesOutput = {
   __typename?: 'GetCategoriesOutput';
   categories?: Maybe<Array<Category>>;
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -254,7 +254,7 @@ export type GetCategoryByIdOutput = {
   __typename?: 'GetCategoryByIdOutput';
   category?: Maybe<Category>;
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -262,7 +262,7 @@ export type GetCommentOutput = {
   __typename?: 'GetCommentOutput';
   comments?: Maybe<Array<Comment>>;
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -270,14 +270,14 @@ export type GetHashTagOutput = {
   __typename?: 'GetHashTagOutput';
   error?: Maybe<Scalars['String']['output']>;
   hashtags?: Maybe<Array<Hashtag>>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
 export type GetPostByIdOutput = {
   __typename?: 'GetPostByIdOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   nextPost?: Maybe<Post>;
   ok: Scalars['Boolean']['output'];
   post?: Maybe<Post>;
@@ -287,7 +287,17 @@ export type GetPostByIdOutput = {
 export type GetPostListOutput = {
   __typename?: 'GetPostListOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  featuredPost: Post;
+  message?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+  posts?: Maybe<Array<Post>>;
+};
+
+export type GetPostListWithLimitOutput = {
+  __typename?: 'GetPostListWithLimitOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  featuredPost: Post;
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
   posts?: Maybe<Array<Post>>;
 };
@@ -315,7 +325,7 @@ export type LoginInput = {
 export type LoginOutput = {
   __typename?: 'LoginOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
   token?: Maybe<Scalars['String']['output']>;
 };
@@ -337,6 +347,7 @@ export type Mutation = {
   editSortCategory: EditSortCategoryOutput;
   login: LoginOutput;
   togglePostStatus: TogglePostStatus;
+  updateFeaturedPost: UpdateFeaturedPostOutput;
   updateHashTag: UpdateHashTagOutput;
   updatePassword: UpdatePasswordOutput;
   updatePostHits: UpdatePostHitsOutput;
@@ -421,6 +432,11 @@ export type MutationTogglePostStatusArgs = {
 };
 
 
+export type MutationUpdateFeaturedPostArgs = {
+  postId: Scalars['Int']['input'];
+};
+
+
 export type MutationUpdateHashTagArgs = {
   input: UpdateHashTagInput;
 };
@@ -447,6 +463,7 @@ export type Post = {
   contents: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   excerpt?: Maybe<Scalars['String']['output']>;
+  featureYn: Scalars['String']['output'];
   hashtags?: Maybe<Array<Hashtag>>;
   hits: Scalars['Int']['output'];
   id: Scalars['Float']['output'];
@@ -477,6 +494,7 @@ export type Query = {
   getPostById?: Maybe<GetPostByIdOutput>;
   getPostList: GetPostListOutput;
   getPostListByCategoryId?: Maybe<GetPostListByCategoryIdOutput>;
+  getPostListWithLimit: GetPostListWithLimitOutput;
   getPostsByParentCategoryId?: Maybe<GetPostListByCategoryIdOutput>;
   me: User;
   userProfile: UserProfileOutput;
@@ -516,7 +534,14 @@ export type QueryUserProfileByNickNameArgs = {
 export type TogglePostStatus = {
   __typename?: 'TogglePostStatus';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type UpdateFeaturedPostOutput = {
+  __typename?: 'UpdateFeaturedPostOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -528,7 +553,7 @@ export type UpdateHashTagInput = {
 export type UpdateHashTagOutput = {
   __typename?: 'UpdateHashTagOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -542,7 +567,7 @@ export type UpdatePasswordOutput = {
 export type UpdatePostHitsOutput = {
   __typename?: 'UpdatePostHitsOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -560,7 +585,7 @@ export type UpdateUserProfileInput = {
 export type UpdateUserProfileOutput = {
   __typename?: 'UpdateUserProfileOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -583,7 +608,7 @@ export type User = {
 export type UserProfileOutput = {
   __typename?: 'UserProfileOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
   user?: Maybe<User>;
 };
@@ -591,12 +616,12 @@ export type UserProfileOutput = {
 export type GetPostListByCategoryIdOutput = {
   __typename?: 'getPostListByCategoryIdOutput';
   error?: Maybe<Scalars['String']['output']>;
-  message: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   ok: Scalars['Boolean']['output'];
   posts?: Maybe<Array<Post>>;
 };
 
-export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null };
+export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, featureYn: string, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null };
 
 export type GetPostListByCategoryIdQueryVariables = Exact<{
   categoryId: Scalars['Int']['input'];
@@ -611,11 +636,6 @@ export type GetPostsByParentCategoryIdQueryVariables = Exact<{
 
 
 export type GetPostsByParentCategoryIdQuery = { __typename?: 'Query', getPostsByParentCategoryId?: { __typename?: 'getPostListByCategoryIdOutput', ok: boolean, error?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, readTime: number, category?: { __typename?: 'Category', id: number, categoryTitle: string } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } | null };
-
-export type GetCategoriesCountsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetCategoriesCountsQuery = { __typename?: 'Query', getCategoriesCounts: { __typename?: 'GetCategoriesCountOutput', ok: boolean, categoryCounts?: Array<{ __typename?: 'CategoryCount', id: number, categoryTitle: string, icon?: string | null, iconColor?: string | null, subCategories?: Array<{ __typename?: 'Category', id: number, categoryTitle: string }> | null }> | null } };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -639,12 +659,17 @@ export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { 
 export type GetPostListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPostListQuery = { __typename?: 'Query', getPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
+export type GetPostListQuery = { __typename?: 'Query', getPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, featureYn: string, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null, featuredPost: { __typename?: 'Post', id: number, title: string, excerpt?: string | null, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null } } };
+
+export type GetPostListWithLimitQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPostListWithLimitQuery = { __typename?: 'Query', getPostListWithLimit: { __typename?: 'GetPostListWithLimitOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, featureYn: string, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null, featuredPost: { __typename?: 'Post', id: number, title: string, excerpt?: string | null } } };
 
 export type GetAllPostListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPostListQuery = { __typename?: 'Query', getAllPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
+export type GetAllPostListQuery = { __typename?: 'Query', getAllPostList: { __typename?: 'GetPostListOutput', posts?: Array<{ __typename?: 'Post', id: number, title: string, contents: string, excerpt?: string | null, hits: number, thumbnailUrl?: string | null, createdAt?: any | null, updatedAt?: any | null, readTime: number, postStatus: PostStatus, featureYn: string, category?: { __typename?: 'Category', id: number, categoryTitle: string, parentCategory?: { __typename?: 'Category', id: number, categoryTitle: string } | null } | null, comments?: Array<{ __typename?: 'Comment', comment: string }> | null, hashtags?: Array<{ __typename?: 'Hashtag', hashtag: string }> | null }> | null } };
 
 export type GetAllPopularHashTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -756,6 +781,13 @@ export type EditSortCategoryMutationVariables = Exact<{
 
 export type EditSortCategoryMutation = { __typename?: 'Mutation', editSortCategory: { __typename?: 'EditSortCategoryOutput', ok: boolean } };
 
+export type UpdateFeaturedPostMutationVariables = Exact<{
+  postId: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateFeaturedPostMutation = { __typename?: 'Mutation', updateFeaturedPost: { __typename?: 'UpdateFeaturedPostOutput', ok: boolean, message?: string | null, error?: string | null } };
+
 export type CreateAccountMutationVariables = Exact<{
   createAccountInput: CreateAccountInput;
 }>;
@@ -770,15 +802,15 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginOutput', ok: boolean, token?: string | null, error?: string | null } };
 
-export const PostFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<PostFieldsFragment, unknown>;
+export const PostFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"featureYn"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<PostFieldsFragment, unknown>;
 export const GetPostListByCategoryIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostListByCategoryId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"categoryId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostListByCategoryId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"categoryId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"categoryId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetPostListByCategoryIdQuery, GetPostListByCategoryIdQueryVariables>;
 export const GetPostsByParentCategoryIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostsByParentCategoryId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"categoryId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostsByParentCategoryId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"categoryId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"categoryId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetPostsByParentCategoryIdQuery, GetPostsByParentCategoryIdQueryVariables>;
-export const GetCategoriesCountsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCategoriesCounts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCategoriesCounts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"categoryCounts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"iconColor"}},{"kind":"Field","name":{"kind":"Name","value":"subCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetCategoriesCountsQuery, GetCategoriesCountsQueryVariables>;
 export const GetCategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"categories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"iconColor"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"subCategories"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"iconColor"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"iconColor"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"post"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const GetPostByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"postId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"postId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"postId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"post"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"annonymousId"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"prevPost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nextPost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}}]}}]}}]}}]} as unknown as DocumentNode<GetPostByIdQuery, GetPostByIdQueryVariables>;
 export const CreateCommentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createComment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateCommentInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createComment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"commentId"}}]}}]}}]} as unknown as DocumentNode<CreateCommentMutation, CreateCommentMutationVariables>;
-export const GetPostListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PostFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<GetPostListQuery, GetPostListQueryVariables>;
-export const GetAllPostListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PostFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<GetAllPostListQuery, GetAllPostListQueryVariables>;
+export const GetPostListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PostFields"}}]}},{"kind":"Field","name":{"kind":"Name","value":"featuredPost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"featureYn"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<GetPostListQuery, GetPostListQueryVariables>;
+export const GetPostListWithLimitDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPostListWithLimit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPostListWithLimit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PostFields"}}]}},{"kind":"Field","name":{"kind":"Name","value":"featuredPost"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"featureYn"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<GetPostListWithLimitQuery, GetPostListWithLimitQueryVariables>;
+export const GetAllPostListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllPostList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PostFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PostFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Post"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"contents"}},{"kind":"Field","name":{"kind":"Name","value":"excerpt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"readTime"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"featureYn"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}},{"kind":"Field","name":{"kind":"Name","value":"parentCategory"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"categoryTitle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}}]}}]}}]} as unknown as DocumentNode<GetAllPostListQuery, GetAllPostListQueryVariables>;
 export const GetAllPopularHashTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllPopularHashTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllPopularHashTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashtag"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllPopularHashTagsQuery, GetAllPopularHashTagsQueryVariables>;
 export const UserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<UserProfileQuery, UserProfileQueryVariables>;
 export const UserProfileByNickNameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userProfileByNickName"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userNickName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userProfileByNickName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userNickName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userNickName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"profileImage"}},{"kind":"Field","name":{"kind":"Name","value":"introduce"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"posts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"hits"}},{"kind":"Field","name":{"kind":"Name","value":"postStatus"}},{"kind":"Field","name":{"kind":"Name","value":"comments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<UserProfileByNickNameQuery, UserProfileByNickNameQueryVariables>;
@@ -795,5 +827,6 @@ export const GetCommentsDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const DeleteCommentByAdminDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteCommentByAdmin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteCommentByAdmin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<DeleteCommentByAdminMutation, DeleteCommentByAdminMutationVariables>;
 export const UpdatePostHitsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePostHits"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"postId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePostHits"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"postId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"postId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<UpdatePostHitsMutation, UpdatePostHitsMutationVariables>;
 export const EditSortCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"editSortCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EditSortCategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editSortCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<EditSortCategoryMutation, EditSortCategoryMutationVariables>;
+export const UpdateFeaturedPostDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateFeaturedPost"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"postId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateFeaturedPost"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"postId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"postId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<UpdateFeaturedPostMutation, UpdateFeaturedPostMutationVariables>;
 export const CreateAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createAccountInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAccountInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAccount"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createAccountInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<CreateAccountMutation, CreateAccountMutationVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
