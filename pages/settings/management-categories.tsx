@@ -33,6 +33,7 @@ import {
 import SortableParentCategory from "@/components/category/sortable-parent-category";
 import SortableSubCategory from "@/components/category/sortable-sub-category";
 import { toast } from "react-toastify";
+import { useLoadingStore } from "@/stores/useLoadingStore";
 
 export type SelectedCategoryType = NonNullable<
   GetCategoriesQuery["getCategories"]["categories"]
@@ -58,6 +59,7 @@ const ManagementCategories = () => {
   const [lastDragInfo, setLastDragInfo] = useState<DragInfo>(null);
   const [dragApprove, setDragApprove] = useState(false);
   const { editSortCategory } = useEditSortCategoryMutation();
+  const { setGlobalLoading } = useLoadingStore();
 
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedCategoryType[0]>();
@@ -162,6 +164,7 @@ const ManagementCategories = () => {
         return parent;
       });
 
+      //타이밍 문제로 인한 맨 밑에 배치
       const updatedParent = newCategories.find(
         (category) => category.id === targetParent?.id
       );
@@ -208,6 +211,7 @@ const ManagementCategories = () => {
   };
 
   useEffect(() => {
+    setGlobalLoading(true);
     if (dragApprove) {
       handleEditSortCategory().then((success) => {
         if (success) {
@@ -218,8 +222,9 @@ const ManagementCategories = () => {
       });
       setLastDragInfo(null);
       setDragApprove(false);
+      setGlobalLoading(false);
     }
-  }, [dragApprove, lastDragInfo]);
+  }, [dragApprove]);
 
   return (
     <>
