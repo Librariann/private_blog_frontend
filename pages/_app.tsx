@@ -47,6 +47,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
+        <meta
+          name="google-site-verification"
+          content="Lur52L9fwqDX7fwgKdI3KDi0kVxdh79f1HVKoDEs-Oo"
+        />
         <link rel="icon" href="/favicon-32x32.png" />
         <link
           rel="icon"
