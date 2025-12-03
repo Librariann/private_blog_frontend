@@ -130,6 +130,7 @@ export const GET_POST_BY_ID_QUERY = gql`
         readTime
         thumbnailUrl
         postStatus
+        excerpt
         user {
           id
         }

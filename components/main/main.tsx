@@ -9,6 +9,8 @@ import Desktop from "./desktop";
 import { useRouter } from "next/router";
 import { useGetCategories } from "@/hooks/hooks";
 import styled from "styled-components";
+import Head from "next/head";
+import { useUserInfoStore } from "@/stores/useUserInfoStore";
 
 const Main = ({
   posts,
@@ -22,6 +24,7 @@ const Main = ({
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     new Set()
   );
+  const { userInfo } = useUserInfoStore();
   const { categories, categoriesLoading } = useGetCategories();
   useEffect(() => {
     if (!categoriesLoading) {
@@ -41,98 +44,115 @@ const Main = ({
     setExpandedCategories(newExpanded);
   };
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-8 space-y-6">
-          {/* Featured Post */}
-          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8">
-            <div className="flex items-center space-x-2 mb-4">
-              <Rocket
-                className={`w-5 h-5 ${
-                  isDarkMode ? "text-purple-400" : "text-purple-600"
-                }`}
-              />
-              <span
-                className={isDarkMode ? "text-purple-400" : "text-purple-600"}
+    <>
+      <Head>
+        <title>{userInfo?.nickname}&apos;s Blog | 개발 블로그</title>
+        <meta
+          name="description"
+          content={`${userInfo?.nickname}의 블로그. 개발 관련 기술 포스트와 경험을 공유합니다. 총 ${posts.length}개의 포스트를 만나보세요.`}
+        />
+        <meta property="og:title" content={`${userInfo?.nickname}'s Blog`} />
+        <meta
+          property="og:description"
+          content={`Frontend, Backend, DevOps 기술 블로그 - ${posts.length}개의 포스트`}
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://librarian-blog.dev" />
+        <meta property="og:image" content={posts[0]?.thumbnailUrl ?? ""} />
+      </Head>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* Featured Post */}
+            <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8">
+              <div className="flex items-center space-x-2 mb-4">
+                <Rocket
+                  className={`w-5 h-5 ${
+                    isDarkMode ? "text-purple-400" : "text-purple-600"
+                  }`}
+                />
+                <span
+                  className={isDarkMode ? "text-purple-400" : "text-purple-600"}
+                >
+                  Featured
+                </span>
+              </div>
+              <h2
+                className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
               >
-                Featured
-              </span>
-            </div>
-            <h2
-              className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
-            >
-              {posts?.[0]?.title}
-            </h2>
-            <p
-              className={`mb-6 ${
-                isDarkMode ? "text-white/70" : "text-gray-600"
-              }`}
-            >
-              React 19에서 추가된 Server Components, Actions, 그리고 새로운
-              Hooks에 대해 알아봅니다.
-            </p>
-            <button
-              onClick={() =>
-                router.push(
-                  `/post/${posts?.[0].category?.parentCategory?.categoryTitle}/${posts?.[0].category?.categoryTitle}/@Post-${posts?.[0].id}`
-                )
-              }
-              className={`px-6 py-3 rounded-lg transition-all ${
-                isDarkMode
-                  ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 text-white border border-white/20"
-                  : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
-              }`}
-            >
-              Read More
-            </button>
-          </GlassCardMain>
+                {posts?.[0]?.title}
+              </h2>
+              <p
+                className={`mb-6 ${
+                  isDarkMode ? "text-white/70" : "text-gray-600"
+                }`}
+              >
+                React 19에서 추가된 Server Components, Actions, 그리고 새로운
+                Hooks에 대해 알아봅니다.
+              </p>
+              <button
+                onClick={() =>
+                  router.push(
+                    `/post/${posts?.[0].category?.parentCategory?.categoryTitle}/${posts?.[0].category?.categoryTitle}/@Post-${posts?.[0].id}`
+                  )
+                }
+                className={`px-6 py-3 rounded-lg transition-all ${
+                  isDarkMode
+                    ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 text-white border border-white/20"
+                    : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+                }`}
+              >
+                Read More
+              </button>
+            </GlassCardMain>
 
-          {/* Sidebar - Mobile Only */}
-          <Mobile
+            {/* Sidebar - Mobile Only */}
+            <Mobile
+              categories={categories}
+              expandedCategories={expandedCategories}
+              toggleCategoryExpand={toggleCategoryExpand}
+            />
+
+            {/* Blog Posts */}
+            <div className="space-y-6">
+              {posts?.slice(0, 5).map((post) => (
+                <BlogPostCard
+                  key={post.id}
+                  post={post}
+                  onClick={() =>
+                    router.push(
+                      `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
+                    )
+                  }
+                />
+              ))}
+            </div>
+
+            <button
+              className={`w-full px-6 py-4 rounded-xl transition-all cursor-pointer ${
+                isDarkMode
+                  ? "glass-card-hover border border-white/10 text-white"
+                  : "glass-card-light-hover border border-gray-200 text-gray-900"
+              }`}
+              onClick={() => {
+                router.push("/all-posts-page");
+              }}
+            >
+              모든 포스트 보기 →
+            </button>
+          </div>
+
+          {/* Sidebar - Desktop Only */}
+          <Desktop
             categories={categories}
             expandedCategories={expandedCategories}
             toggleCategoryExpand={toggleCategoryExpand}
+            popularHashTags={popularHashTags}
           />
-
-          {/* Blog Posts */}
-          <div className="space-y-6">
-            {posts?.slice(0, 5).map((post) => (
-              <BlogPostCard
-                key={post.id}
-                post={post}
-                onClick={() =>
-                  router.push(
-                    `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
-                  )
-                }
-              />
-            ))}
-          </div>
-
-          <button
-            className={`w-full px-6 py-4 rounded-xl transition-all cursor-pointer ${
-              isDarkMode
-                ? "glass-card-hover border border-white/10 text-white"
-                : "glass-card-light-hover border border-gray-200 text-gray-900"
-            }`}
-            onClick={() => {
-              router.push("/all-posts-page");
-            }}
-          >
-            모든 포스트 보기 →
-          </button>
         </div>
-
-        {/* Sidebar - Desktop Only */}
-        <Desktop
-          categories={categories}
-          expandedCategories={expandedCategories}
-          toggleCategoryExpand={toggleCategoryExpand}
-          popularHashTags={popularHashTags}
-        />
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 

@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { remark } from "remark";
 import rehypeSlug from "rehype-slug";
 import { useUpdatePostHits } from "@/hooks/hooks";
+import Head from "next/head";
 
 type topicProps = {
   id: string;
@@ -137,174 +138,192 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
     () => extractHeadings(postData?.contents || ""),
     [postData?.contents]
   );
-
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        className={`cursor-pointer flex items-center space-x-2 mb-4 sm:mb-6 transition-colors ${
-          isDarkMode
-            ? "text-white/70 hover:text-white"
-            : "text-gray-600 hover:text-gray-900"
-        }`}
-      >
-        <ArrowLeft className="w-5 h-5" />
-        <span>목록으로</span>
-      </button>
+    <>
+      <Head>
+        <title>{postData?.title} | Librarian&apos;s</title>
+        <meta
+          name="description"
+          content={postData?.excerpt || postData?.contents.substring(0, 150)}
+        />
+        <meta property="og:title" content={postData?.title} />
+        <meta property="og:description" content={postData?.excerpt ?? ""} />
+        <meta property="og:image" content={postData?.thumbnailUrl ?? ""} />
+        <meta property="og:type" content="article" />
+        <meta
+          property="og:url"
+          content={`https://librarian-blog.dev${router.asPath}`}
+        />
+      </Head>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        {/* Back Button */}
+        <button
+          onClick={() => router.back()}
+          className={`cursor-pointer flex items-center space-x-2 mb-4 sm:mb-6 transition-colors ${
+            isDarkMode
+              ? "text-white/70 hover:text-white"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>목록으로</span>
+        </button>
 
-      {/* Post Header */}
-      <GlassCardMain
-        $isDarkMode={isDarkMode}
-        className="rounded-2xl p-6 sm:p-8 mb-6"
-      >
-        <div className="mb-6">
-          <Badge
-            variant="secondary"
-            className={
-              isDarkMode
-                ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-white/20 mb-4"
-                : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300 mb-4"
-            }
-          >
-            {postData?.category?.categoryTitle}
-          </Badge>
+        {/* Post Header */}
+        <GlassCardMain
+          $isDarkMode={isDarkMode}
+          className="rounded-2xl p-6 sm:p-8 mb-6"
+        >
+          <div className="mb-6">
+            <Badge
+              variant="secondary"
+              className={
+                isDarkMode
+                  ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-white/20 mb-4"
+                  : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300 mb-4"
+              }
+            >
+              {postData?.category?.categoryTitle}
+            </Badge>
 
-          <h1 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
-            {postData?.title}
-          </h1>
+            <h1
+              className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}
+            >
+              {postData?.title}
+            </h1>
 
-          <div
-            className={`flex flex-wrap items-center gap-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-          >
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4" />
-              <span>{formattedDate}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
-              <span>{postData?.readTime}분 읽기</span>
+            <div
+              className={`flex flex-wrap items-center gap-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
+            >
+              <div className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4" />
+                <span>{formattedDate}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4" />
+                <span>{postData?.readTime}분 읽기</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Table of Contents */}
-        {tocItems.length > 0 && (
-          <div
-            className={`border rounded-xl overflow-hidden ${
-              isDarkMode
-                ? "border-white/10 bg-white/5"
-                : "border-gray-200 bg-gray-50"
-            }`}
-          >
-            <button
-              onClick={() => setIsTocOpen(!isTocOpen)}
-              className={`w-full flex items-center justify-between px-6 py-4 transition-colors ${
-                isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-100"
+          {/* Table of Contents */}
+          {tocItems.length > 0 && (
+            <div
+              className={`border rounded-xl overflow-hidden ${
+                isDarkMode
+                  ? "border-white/10 bg-white/5"
+                  : "border-gray-200 bg-gray-50"
               }`}
             >
-              <div className="flex items-center space-x-3">
-                <List
-                  className={`w-5 h-5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
-                />
-                <span className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  목차
-                </span>
-              </div>
-              <motion.div
-                animate={{ rotate: isTocOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+              <button
+                onClick={() => setIsTocOpen(!isTocOpen)}
+                className={`w-full flex items-center justify-between px-6 py-4 transition-colors ${
+                  isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-100"
+                }`}
               >
-                <svg
-                  className={`w-5 h-5 ${isDarkMode ? "text-white/60" : "text-gray-600"}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
+                <div className="flex items-center space-x-3">
+                  <List
+                    className={`w-5 h-5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
                   />
-                </svg>
-              </motion.div>
-            </button>
-
-            <AnimatePresence initial={false}>
-              {isTocOpen && (
+                  <span className={isDarkMode ? "text-white" : "text-gray-900"}>
+                    목차
+                  </span>
+                </div>
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="overflow-hidden"
+                  animate={{ rotate: isTocOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <div
-                    className={`px-6 pb-4 border-t ${isDarkMode ? "border-white/10" : "border-gray-200"}`}
+                  <svg
+                    className={`w-5 h-5 ${isDarkMode ? "text-white/60" : "text-gray-600"}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <nav className="space-y-2 mt-4">
-                      {headings.map((item, index) => (
-                        <motion.button
-                          key={item.id}
-                          initial={{ x: -10, opacity: 0 }}
-                          animate={{ x: 0, opacity: 1 }}
-                          transition={{ duration: 0.2, delay: index * 0.05 }}
-                          onClick={() => scrollToSection(item.id)}
-                          className={`w-full text-left px-4 py-2 rounded-lg transition-all cursor-pointer ${
-                            isDarkMode
-                              ? "text-white/70 hover:bg-white/10 hover:text-white"
-                              : "text-gray-600 hover:bg-white hover:text-gray-900"
-                          }`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <span
-                              className={
-                                isDarkMode ? "text-blue-400" : "text-blue-600"
-                              }
-                            >
-                              {index + 1}.
-                            </span>
-                            <span>{item.text}</span>
-                          </div>
-                        </motion.button>
-                      ))}
-                    </nav>
-                  </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
                 </motion.div>
-              )}
-            </AnimatePresence>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isTocOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className={`px-6 pb-4 border-t ${isDarkMode ? "border-white/10" : "border-gray-200"}`}
+                    >
+                      <nav className="space-y-2 mt-4">
+                        {headings.map((item, index) => (
+                          <motion.button
+                            key={item.id}
+                            initial={{ x: -10, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ duration: 0.2, delay: index * 0.05 }}
+                            onClick={() => scrollToSection(item.id)}
+                            className={`w-full text-left px-4 py-2 rounded-lg transition-all cursor-pointer ${
+                              isDarkMode
+                                ? "text-white/70 hover:bg-white/10 hover:text-white"
+                                : "text-gray-600 hover:bg-white hover:text-gray-900"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <span
+                                className={
+                                  isDarkMode ? "text-blue-400" : "text-blue-600"
+                                }
+                              >
+                                {index + 1}.
+                              </span>
+                              <span>{item.text}</span>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </nav>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Post Content */}
+          <div
+            className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
+          >
+            <EditorMarkdown
+              source={postData?.contents}
+              data-color-mode={isDarkMode ? "dark" : "light"}
+              style={{ backgroundColor: "transparent" }}
+              rehypePlugins={[rehypeSlug]}
+            />
           </div>
-        )}
 
-        {/* Post Content */}
-        <div
-          className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
-        >
-          <EditorMarkdown
-            source={postData?.contents}
-            data-color-mode={isDarkMode ? "dark" : "light"}
-            style={{ backgroundColor: "transparent" }}
-            rehypePlugins={[rehypeSlug]}
+          {/* Tags */}
+          <PostTags hashtags={postData?.hashtags ?? []} />
+        </GlassCardMain>
+
+        {/* Comments Section */}
+        <Comments comments={postData?.comments ?? []} />
+
+        {/* Previous/Next Posts Navigation */}
+        {postData && (post?.prevPost || post?.nextPost) && (
+          <PostNavigation
+            post={postData}
+            prevPost={post?.prevPost ?? null}
+            nextPost={post?.nextPost ?? null}
           />
-        </div>
-
-        {/* Tags */}
-        <PostTags hashtags={postData?.hashtags ?? []} />
-      </GlassCardMain>
-
-      {/* Comments Section */}
-      <Comments comments={postData?.comments ?? []} />
-
-      {/* Previous/Next Posts Navigation */}
-      {postData && (post?.prevPost || post?.nextPost) && (
-        <PostNavigation
-          post={postData}
-          prevPost={post?.prevPost ?? null}
-          nextPost={post?.nextPost ?? null}
-        />
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 
