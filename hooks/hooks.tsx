@@ -13,6 +13,8 @@ import {
   DeletePostMutationVariables,
   EditCategoryMutation,
   EditCategoryMutationVariables,
+  EditCommentMutation,
+  EditCommentMutationVariables,
   EditSortCategoryMutation,
   EditSortCategoryMutationVariables,
   FindOneCategoryByIdQuery,
@@ -67,6 +69,7 @@ import {
   UPDATE_FEATURED_POST_MUTATION,
   GET_POST_LIST_WITH_LIMIT_QUERY,
   DELETE_COMMENT_MUTATION,
+  EDIT_COMMENT_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -479,4 +482,32 @@ export const useUpdateFeaturedPostMutation = () => {
     awaitRefetchQueries: true,
   });
   return { updateFeaturedPost };
+};
+
+export const useEditComment = (id: number, commentId: number) => {
+  const [editCommentMutation, { loading: editCommentLoading }] = useMutation<
+    EditCommentMutation,
+    EditCommentMutationVariables
+  >(EDIT_COMMENT_MUTATION, {
+    update(cache, { data }) {
+      if (!data?.editComment.ok) return;
+
+      // 캐시에서 즉시 제거
+      cache.evict({
+        id: cache.identify({
+          __typename: "Comment",
+          id: commentId,
+        }),
+      });
+      cache.gc(); // 가비지 컬렉션
+    },
+    refetchQueries: [
+      {
+        query: GET_POST_BY_ID_QUERY,
+        variables: { postId: id },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { editCommentMutation, editCommentLoading };
 };

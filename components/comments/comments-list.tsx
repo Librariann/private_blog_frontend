@@ -7,11 +7,13 @@ import { CommentsProps, CommentType } from "./comments";
 import { Settings } from "lucide-react";
 import { useState } from "react";
 import UserDeleteConfirmModal from "./modal/user-delete-confirm-modal";
+import UserEditConfirmModal from "./modal/user-edit-comfirm-modal";
 
 const CommentsList = ({ comments, postId }: CommentsProps) => {
   const { isDarkMode } = useDarkModeStore();
   const [openMenuId, setOpenMenuId] = useState<number>();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [selectedComment, setSelectedComment] = useState<CommentType>();
 
   const toggleOpenComment = (id: number) => {
@@ -73,7 +75,9 @@ const CommentsList = ({ comments, postId }: CommentsProps) => {
                                 <button
                                   className={`w-full px-4 py-2 text-sm rounded-t-lg hover:bg-blue-500/10 transition-colors cursor-pointer ${isDarkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600"}`}
                                   onClick={() => {
+                                    setIsEditDialogOpen(true);
                                     setOpenMenuId(undefined);
+                                    setSelectedComment(comment);
                                   }}
                                 >
                                   수정
@@ -110,6 +114,13 @@ const CommentsList = ({ comments, postId }: CommentsProps) => {
       <UserDeleteConfirmModal
         isDeleteDialogOpen={isDeleteDialogOpen}
         setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+        selectedComment={selectedComment!}
+        postId={postId}
+      />
+
+      <UserEditConfirmModal
+        isEditDialogOpen={isEditDialogOpen}
+        setIsEditDialogOpen={setIsEditDialogOpen}
         selectedComment={selectedComment!}
         postId={postId}
       />

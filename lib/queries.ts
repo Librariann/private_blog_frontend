@@ -154,6 +154,7 @@ export const CREATE_COMMENT_MUTATION = gql`
     createComment(input: $input) {
       ok
       error
+      message
       commentResult {
         id
         annonymousId
@@ -403,6 +404,7 @@ export const DELETE_COMMENT_MUTATION = gql`
     deleteComment(input: $input) {
       ok
       error
+      message
     }
   }
 `;
@@ -430,6 +432,16 @@ export const UPDATE_FEATURED_POST_MUTATION = gql`
       ok
       message
       error
+    }
+  }
+`;
+
+export const EDIT_COMMENT_MUTATION = gql`
+  mutation editComment($input: EditCommentInput!) {
+    editComment(input: $input) {
+      ok
+      error
+      message
     }
   }
 `;

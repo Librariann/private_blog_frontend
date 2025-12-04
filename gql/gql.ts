@@ -18,7 +18,7 @@ const documents = {
     "\n  query getPostsByParentCategoryId($categoryId: Int!) {\n    getPostsByParentCategoryId(categoryId: $categoryId) {\n      ok\n      error\n      posts {\n        id\n        title\n        contents\n        hits\n        thumbnailUrl\n        createdAt\n        readTime\n        category {\n          id\n          categoryTitle\n        }\n        comments {\n          comment\n        }\n        hashtags {\n          hashtag\n        }\n      }\n    }\n  }\n": types.GetPostsByParentCategoryIdDocument,
     "\n  query getCategories {\n    getCategories {\n      ok\n      error\n      categories {\n        id\n        categoryTitle\n        sortOrder\n        icon\n        iconColor\n        description\n        parentCategory {\n          id\n          categoryTitle\n        }\n        subCategories {\n          id\n          categoryTitle\n          icon\n          iconColor\n          sortOrder\n          description\n          parentCategory {\n            id\n            categoryTitle\n            sortOrder\n            icon\n            iconColor\n            description\n          }\n          post {\n            id\n            title\n            createdAt\n          }\n        }\n      }\n    }\n  }\n": types.GetCategoriesDocument,
     "\n  query getPostById($postId: Int!) {\n    getPostById(postId: $postId) {\n      ok\n      post {\n        id\n        title\n        contents\n        hits\n        createdAt\n        readTime\n        thumbnailUrl\n        postStatus\n        excerpt\n        user {\n          id\n        }\n        category {\n          id\n          categoryTitle\n          parentCategory {\n            categoryTitle\n          }\n        }\n        hashtags {\n          hashtag\n        }\n        comments {\n          id\n          annonymousId\n          comment\n          createdAt\n        }\n      }\n      prevPost {\n        id\n        title\n        createdAt\n        readTime\n      }\n      nextPost {\n        id\n        title\n        createdAt\n        readTime\n      }\n    }\n  }\n": types.GetPostByIdDocument,
-    "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentResult {\n        id\n        annonymousId\n        comment\n        createdAt\n      }\n      commentId\n    }\n  }\n": types.CreateCommentDocument,
+    "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      message\n      commentResult {\n        id\n        annonymousId\n        comment\n        createdAt\n      }\n      commentId\n    }\n  }\n": types.CreateCommentDocument,
     "\n  \n  query getPostList {\n    getPostList {\n      posts {\n        ...PostFields\n      }\n      featuredPost {\n        id\n        title\n        excerpt\n        category {\n          id\n          categoryTitle\n          parentCategory {\n            id\n            categoryTitle\n          }\n        }\n      }\n    }\n  }\n": types.GetPostListDocument,
     "\n  \n  query getPostListWithLimit {\n    getPostListWithLimit {\n      posts {\n        ...PostFields\n      }\n      featuredPost {\n        id\n        title\n        excerpt\n        category {\n          id\n          categoryTitle\n          parentCategory {\n            id\n            categoryTitle\n          }\n        }\n      }\n    }\n  }\n": types.GetPostListWithLimitDocument,
     "\n  \n  query getAllPostList {\n    getAllPostList {\n      posts {\n        ...PostFields\n      }\n    }\n  }\n": types.GetAllPostListDocument,
@@ -36,10 +36,11 @@ const documents = {
     "\n  query findOneCategoryById($categoryId: Int!) {\n    findOneCategoryById(categoryId: $categoryId) {\n      ok\n      error\n      category {\n        id\n        categoryTitle\n        icon\n        iconColor\n        description\n      }\n    }\n  }\n": types.FindOneCategoryByIdDocument,
     "\n  query getComments {\n    getComments {\n      ok\n      error\n      comments {\n        id\n        comment\n        annonymousId\n        createdAt\n        post {\n          id\n          title\n        }\n      }\n    }\n  }\n": types.GetCommentsDocument,
     "\n  mutation deleteCommentByAdmin($id: Int!) {\n    deleteCommentByAdmin(id: $id) {\n      ok\n      error\n    }\n  }\n": types.DeleteCommentByAdminDocument,
-    "\n  mutation deleteComment($input: DeleteCommentInput!) {\n    deleteComment(input: $input) {\n      ok\n      error\n    }\n  }\n": types.DeleteCommentDocument,
+    "\n  mutation deleteComment($input: DeleteCommentInput!) {\n    deleteComment(input: $input) {\n      ok\n      error\n      message\n    }\n  }\n": types.DeleteCommentDocument,
     "\n  mutation updatePostHits($postId: Int!) {\n    updatePostHits(postId: $postId) {\n      ok\n      error\n    }\n  }\n": types.UpdatePostHitsDocument,
     "\n  mutation editSortCategory($input: EditSortCategoryInput!) {\n    editSortCategory(input: $input) {\n      ok\n    }\n  }\n": types.EditSortCategoryDocument,
     "\n  mutation updateFeaturedPost($postId: Int!) {\n    updateFeaturedPost(postId: $postId) {\n      ok\n      message\n      error\n    }\n  }\n": types.UpdateFeaturedPostDocument,
+    "\n  mutation editComment($input: EditCommentInput!) {\n    editComment(input: $input) {\n      ok\n      error\n      message\n    }\n  }\n": types.EditCommentDocument,
     "\n  mutation createAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
 };
@@ -81,7 +82,7 @@ export function graphql(source: "\n  query getPostById($postId: Int!) {\n    get
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentResult {\n        id\n        annonymousId\n        comment\n        createdAt\n      }\n      commentId\n    }\n  }\n"): (typeof documents)["\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      commentResult {\n        id\n        annonymousId\n        comment\n        createdAt\n      }\n      commentId\n    }\n  }\n"];
+export function graphql(source: "\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      message\n      commentResult {\n        id\n        annonymousId\n        comment\n        createdAt\n      }\n      commentId\n    }\n  }\n"): (typeof documents)["\n  mutation createComment($input: CreateCommentInput!) {\n    createComment(input: $input) {\n      ok\n      error\n      message\n      commentResult {\n        id\n        annonymousId\n        comment\n        createdAt\n      }\n      commentId\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -153,7 +154,7 @@ export function graphql(source: "\n  mutation deleteCommentByAdmin($id: Int!) {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation deleteComment($input: DeleteCommentInput!) {\n    deleteComment(input: $input) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation deleteComment($input: DeleteCommentInput!) {\n    deleteComment(input: $input) {\n      ok\n      error\n    }\n  }\n"];
+export function graphql(source: "\n  mutation deleteComment($input: DeleteCommentInput!) {\n    deleteComment(input: $input) {\n      ok\n      error\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation deleteComment($input: DeleteCommentInput!) {\n    deleteComment(input: $input) {\n      ok\n      error\n      message\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -166,6 +167,10 @@ export function graphql(source: "\n  mutation editSortCategory($input: EditSortC
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation updateFeaturedPost($postId: Int!) {\n    updateFeaturedPost(postId: $postId) {\n      ok\n      message\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation updateFeaturedPost($postId: Int!) {\n    updateFeaturedPost(postId: $postId) {\n      ok\n      message\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation editComment($input: EditCommentInput!) {\n    editComment(input: $input) {\n      ok\n      error\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation editComment($input: EditCommentInput!) {\n    editComment(input: $input) {\n      ok\n      error\n      message\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

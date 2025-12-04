@@ -29,7 +29,6 @@ const UserDeleteConfirmModal = ({
 }) => {
   const { isDarkMode } = useDarkModeStore();
   const [commentPassword, setCommentPassword] = useState<string>("");
-  const { asPath } = useRouter();
   const { deleteCommentMutation } = useDeleteComment(
     postId,
     selectedComment?.id
@@ -53,8 +52,7 @@ const UserDeleteConfirmModal = ({
     });
 
     if (result.data?.deleteComment.ok) {
-      toast.success("댓글이 삭제됐습니다.");
-      // ✅ 스크롤 위치 유지하면서 새로고침
+      toast.success(result.data?.deleteComment.message);
     } else {
       toast.error(result.data?.deleteComment.error);
     }

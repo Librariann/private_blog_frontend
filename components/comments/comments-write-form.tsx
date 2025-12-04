@@ -25,8 +25,16 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
   const { createCommentMutation } = useCreateComment({ id: postId });
 
   const onSubmit = async () => {
-    if (!postId) {
-      toast.error("댓글 내용이 없습니다! 다시 확인해주세요!");
+    if (!commentAuthor.trim()) {
+      toast.error("아이디를 입력해주세요.");
+      return;
+    }
+    if (!commentPassword.trim()) {
+      toast.error("비밀번호를 입력해주세요.");
+      return;
+    }
+    if (!newComment.trim()) {
+      toast.error("댓글 내용을 입력해주세요.");
       return;
     }
     setIsModalOpen(false);
