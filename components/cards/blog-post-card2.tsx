@@ -18,7 +18,7 @@ const BlogPostCard2 = ({ post, onClick, index }: BlogPostCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1 * 0.05 }}
-      // onClick={() => onNavigateToPost(post.id)}
+      onClick={onClick}
       className={`group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300`}
     >
       <div className="flex gap-4 p-6">
