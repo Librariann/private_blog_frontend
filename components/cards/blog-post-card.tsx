@@ -4,10 +4,11 @@ import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import styled from "styled-components";
 import { PostFieldsFragment } from "@/gql/graphql";
 
-type BlogPostCardProps = {
+export type BlogPostCardProps = {
   // post: Post;
   post: PostFieldsFragment;
   onClick?: () => void;
+  index?: number;
 };
 
 export function BlogPostCard({ post, onClick }: BlogPostCardProps) {

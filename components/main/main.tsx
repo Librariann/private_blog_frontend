@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Code2, Code, Database, Globe, Rocket } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Rocket } from "lucide-react";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { popularHashTagsProps, UserInfoType } from "@/pages";
-import { BlogPostCard, glassCardTypes } from "../cards/blog-post-card";
+import { popularHashTagsProps } from "@/pages";
+import { glassCardTypes } from "../cards/blog-post-card";
 import { Post } from "@/gql/graphql";
 import Mobile from "./mobile";
 import Desktop from "./desktop";
@@ -11,6 +11,8 @@ import { useGetCategories } from "@/hooks/hooks";
 import styled from "styled-components";
 import Head from "next/head";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
+import BlogPostCard2 from "../cards/blog-post-card2";
+import { motion } from "motion/react";
 
 const Main = ({
   posts,
@@ -117,16 +119,26 @@ const Main = ({
 
             {/* Blog Posts */}
             <div className="space-y-6">
-              {posts?.slice(0, 5).map((post) => (
-                <BlogPostCard
+              {posts?.slice(0, 5).map((post, index) => (
+                <BlogPostCard2
                   key={post.id}
                   post={post}
+                  index={index}
                   onClick={() =>
                     router.push(
                       `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
                     )
                   }
                 />
+                // <BlogPostCard
+                //   key={post.id}
+                //   post={post}
+                //   onClick={() =>
+                //     router.push(
+                //       `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
+                //     )
+                //   }
+                // />
               ))}
             </div>
 
@@ -158,6 +170,25 @@ const Main = ({
 };
 
 export const GlassCardMain = styled.div<glassCardTypes>`
+  background: ${(props) =>
+    props.$isDarkMode
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(255, 255, 255, 0.7)"};
+  backdrop-filter: ${(props) =>
+    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
+  -webkit-backdrop-filter: ${(props) =>
+    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
+  border: ${(props) =>
+    props.$isDarkMode
+      ? "1px solid rgba(255, 255, 255, 0.2)"
+      : "1px solid rgba(0, 0, 0, 0.05)"};
+  box-shadow: ${(props) =>
+    props.$isDarkMode
+      ? "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
+      : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
+`;
+
+export const GlassCardMotionMain = styled(motion.div)<glassCardTypes>`
   background: ${(props) =>
     props.$isDarkMode
       ? "rgba(255, 255, 255, 0.1)"

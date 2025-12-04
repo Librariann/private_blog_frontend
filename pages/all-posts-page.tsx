@@ -12,6 +12,7 @@ import { ChevronDown, Search } from "lucide-react";
 import { GlassCardMain } from "@/components/main/main";
 import Head from "next/head";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
+import BlogPostCard2 from "@/components/cards/blog-post-card2";
 
 const AllPostsPage = () => {
   const { categories } = useGetCategories();
@@ -300,9 +301,19 @@ const AllPostsPage = () => {
 
               {filteredPosts.length > 0 ? (
                 <div className="space-y-4">
-                  {filteredPosts.map((post) => (
+                  {filteredPosts.map((post, index) => (
                     <div key={post.id}>
-                      <BlogPostCard
+                      <BlogPostCard2
+                        key={post.id}
+                        post={post}
+                        index={index}
+                        onClick={() =>
+                          router.push(
+                            `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
+                          )
+                        }
+                      />
+                      {/* <BlogPostCard
                         key={post.id}
                         post={post}
                         onClick={() =>
@@ -310,7 +321,7 @@ const AllPostsPage = () => {
                             `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
                           )
                         }
-                      />
+                      /> */}
                     </div>
                   ))}
                 </div>

@@ -21,7 +21,7 @@ import {
   ArrowLeftIcon,
   ArrowRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   commands,
@@ -98,7 +98,7 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
 const PostWrite = () => {
   const { back } = useRouter();
   const { categories } = useGetCategories();
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
@@ -112,7 +112,7 @@ const PostWrite = () => {
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [postId, setPostId] = useState<number>(0);
-
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const { isDarkMode } = useDarkModeStore();
   const { editingPost, editingMode } = usePostEditStore();
   const { createPostMutation } = useCreatePost();
@@ -158,6 +158,10 @@ const PostWrite = () => {
   const handleSaveDraft = async () => {
     try {
       setIsSubmitting(true);
+      let uploadThumbnailUrl: File | string = thumbnailUrl;
+      if (thumbnailFile) {
+        uploadThumbnailUrl = await uploadImageToServer(thumbnailFile);
+      }
       const postResult = await createPostMutation({
         variables: {
           input: {
@@ -166,6 +170,7 @@ const PostWrite = () => {
             contents: md || "",
             categoryId: +subCategory,
             postStatus: PostStatus.Draft,
+            thumbnailUrl: uploadThumbnailUrl,
           },
           hashtags: tags,
         },
@@ -187,7 +192,10 @@ const PostWrite = () => {
   const handlePublish = async () => {
     try {
       setIsSubmitting(true);
-
+      let uploadThumbnailUrl: File | string = thumbnailUrl;
+      if (thumbnailFile) {
+        uploadThumbnailUrl = await uploadImageToServer(thumbnailFile);
+      }
       const postResult = await createPostMutation({
         variables: {
           input: {
@@ -196,6 +204,7 @@ const PostWrite = () => {
             contents: md || "",
             categoryId: +subCategory,
             postStatus: status,
+            thumbnailUrl: uploadThumbnailUrl,
           },
           hashtags: tags,
         },
@@ -218,7 +227,10 @@ const PostWrite = () => {
   const handleEditPost = async () => {
     try {
       setIsSubmitting(true);
-
+      let uploadThumbnailUrl: File | string = thumbnailUrl;
+      if (thumbnailFile) {
+        uploadThumbnailUrl = await uploadImageToServer(thumbnailFile);
+      }
       const postResult = await editPostMutation({
         variables: {
           input: {
@@ -228,6 +240,7 @@ const PostWrite = () => {
             contents: md || "",
             categoryId: +subCategory,
             postStatus: status,
+            thumbnailUrl: uploadThumbnailUrl,
           },
           hashtags: tags,
         },
@@ -236,6 +249,7 @@ const PostWrite = () => {
       if (postResult.data?.editPost.ok) {
         toast.success("포스트가 성공적으로 수정되었습니다.");
         // setPostConfirmModal(true);
+        back();
       } else {
         toast.error(postResult.data?.editPost.error);
       }
@@ -244,23 +258,36 @@ const PostWrite = () => {
     } finally {
       setIsSubmitting(false);
     }
-    back();
   };
 
   const handleNextStep = () => {
-    if (!title) {
+    if (!title.trim()) {
       toast.error("제목을 입력해주세요.");
       return;
     }
-    if (!excerpt) {
+    if (!excerpt.trim()) {
       toast.error("요약을 입력해주세요.");
       return;
     }
-    if (!md) {
+    if (!md.trim()) {
       toast.error("내용을 입력해주세요.");
       return;
     }
     setStep(2);
+  };
+
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setThumbnailFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setThumbnailUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+    // Reset input value to allow selecting the same file again
+    e.target.value = "";
   };
 
   // Step 1: 기본 작성 (제목, 태그, 내용)
@@ -422,22 +449,24 @@ const PostWrite = () => {
 
           <div className="flex gap-2">
             <NewButton
-              variant="outline"
+              variant="default"
               onClick={handleSaveDraft}
-              className={
-                isDarkMode ? "border-white/20 text-white hover:bg-white/10" : ""
-              }
+              className={`cursor-pointer
+                ${isDarkMode ? "bg-black/70 hover:border-white hover:border-1 text-white hover:bg-black/80" : ""}
+              `}
             >
               <Save className="w-4 h-4 mr-2" />
               임시저장
             </NewButton>
             <NewButton
               onClick={editingMode ? handleEditPost : handlePublish}
-              className={
-                isDarkMode
-                  ? "bg-blue-500 hover:bg-blue-600 text-white"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }
+              className={`cursor-pointer
+                ${
+                  isDarkMode
+                    ? "bg-blue-500 hover:bg-blue-600 text-white"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }
+              `}
             >
               <Send className="w-4 h-4 mr-2" />
               {editingMode ? "수정하기" : "발행하기"}
@@ -552,16 +581,38 @@ const PostWrite = () => {
             </h3>
 
             <div className="space-y-3">
-              <Input
-                value={thumbnailUrl}
-                onChange={(e) => setThumbnailUrl(e.target.value)}
-                placeholder="이미지 URL을 입력하세요"
-                className={
-                  isDarkMode
-                    ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
-                    : "bg-white border-gray-200"
-                }
-              />
+              <div>
+                <Input
+                  value={thumbnailUrl}
+                  onChange={(e) => {
+                    setThumbnailUrl(e.target.value);
+                    if (e.target.value.trim()) {
+                      setThumbnailFile(null);
+                    }
+                  }}
+                  placeholder="이미지 URL을 입력하세요"
+                  className={`
+                  ${
+                    isDarkMode
+                      ? "bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                      : "bg-white border-gray-200"
+                  }`}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleThumbnailChange}
+                />
+                <NewButton
+                  className="cursor-pointer mt-4 hover:bg-gray-400"
+                  variant={"default"}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  업로드
+                </NewButton>
+              </div>
 
               {thumbnailUrl && (
                 <div className="relative aspect-video rounded-lg overflow-hidden">

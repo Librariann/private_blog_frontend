@@ -7,6 +7,7 @@ import { GlassCardMain } from "../main/main";
 import { useFindOneCategoryById } from "@/hooks/hooks";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useMemo } from "react";
+import BlogPostCard2 from "../cards/blog-post-card2";
 
 const CategoryDetails = ({
   posts,
@@ -128,14 +129,25 @@ const CategoryDetails = ({
 
         {posts.length > 0 ? (
           <div className="space-y-4">
-            {posts.map((post) => (
+            {posts.map((post, index) => (
               <div key={post.id}>
-                <BlogPostCard
+                <BlogPostCard2
+                  key={post.id}
+                  post={post}
+                  index={index}
+                  onClick={() =>
+                    router.push(
+                      `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
+                    )
+                  }
+                />
+
+                {/* <BlogPostCard
                   post={post}
                   onClick={() =>
                     router.push(`${router.asPath}/@Post-${post.id}`)
                   }
-                />
+                /> */}
               </div>
             ))}
           </div>

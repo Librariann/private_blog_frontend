@@ -4,11 +4,8 @@ import { Send } from "lucide-react";
 import { ReadMoreButton } from "../buttons/read-more-button";
 import ConfirmModal from "../modal/confirm-modal";
 import { useLoadingStore } from "@/stores/useLoadingStore";
-import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { Comment } from "@/gql/graphql";
 import { useCreateComment } from "@/hooks/hooks";
-import { CommentType } from "./comments";
 
 type CommentsWriteFormProps = {
   postId: number;
