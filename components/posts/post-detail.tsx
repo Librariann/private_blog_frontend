@@ -2,7 +2,11 @@ import { ArrowLeft, Calendar, Clock, List } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Badge } from "../ui/badge";
-import { GetPostByIdQuery, Post } from "@/gql/graphql";
+import {
+  GetPostByIdQuery,
+  GetPostByIdQueryVariables,
+  Post,
+} from "@/gql/graphql";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import dynamic from "next/dynamic";
 import Comments from "../comments/comments";
@@ -17,6 +21,8 @@ import rehypeSlug from "rehype-slug";
 import { useUpdatePostHits } from "@/hooks/hooks";
 import Head from "next/head";
 import { Heading, PhrasingContent, Root, Text } from "mdast";
+import { useQuery } from "@apollo/client";
+import { GET_POST_BY_ID_QUERY } from "@/lib/queries";
 
 type topicProps = {
   id: string;
@@ -27,11 +33,20 @@ export type PostDetailPageProps = {
 };
 
 const PostDetail = ({ post }: PostDetailPageProps) => {
+  const postId = Number(post?.post?.id);
+  const { data: postDater } = useQuery<
+    GetPostByIdQuery,
+    GetPostByIdQueryVariables
+  >(GET_POST_BY_ID_QUERY, {
+    variables: { postId },
+    skip: !postId,
+  });
+  const router = useRouter();
+  const postData = postDater?.getPostById?.post || post?.post;
   const { isDarkMode } = useDarkModeStore();
   const { data } = useMe();
+
   const [isTocOpen, setIsTocOpen] = useState(true);
-  const router = useRouter();
-  const postData = post?.post;
   const { updatePostHitsMutation } = useUpdatePostHits({
     postId: postData?.id!,
   });
@@ -327,7 +342,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         </GlassCardMain>
 
         {/* Comments Section */}
-        <Comments comments={postData?.comments ?? []} />
+        <Comments comments={postData?.comments ?? []} postId={postId} />
 
         {/* Previous/Next Posts Navigation */}
         {postData && (post?.prevPost || post?.nextPost) && (

@@ -154,6 +154,12 @@ export const CREATE_COMMENT_MUTATION = gql`
     createComment(input: $input) {
       ok
       error
+      commentResult {
+        id
+        annonymousId
+        comment
+        createdAt
+      }
       commentId
     }
   }
@@ -383,9 +389,18 @@ export const GET_COMMENTS_QUERY = gql`
   }
 `;
 
-export const DELETE_COMMENT_MUTATION = gql`
+export const DELETE_COMMENT_BY_ADMIN_MUTATION = gql`
   mutation deleteCommentByAdmin($id: Int!) {
     deleteCommentByAdmin(id: $id) {
+      ok
+      error
+    }
+  }
+`;
+
+export const DELETE_COMMENT_MUTATION = gql`
+  mutation deleteComment($input: DeleteCommentInput!) {
+    deleteComment(input: $input) {
       ok
       error
     }

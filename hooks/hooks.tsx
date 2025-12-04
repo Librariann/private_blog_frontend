@@ -7,6 +7,8 @@ import {
   DeleteCategoryMutationVariables,
   DeleteCommentByAdminMutation,
   DeleteCommentByAdminMutationVariables,
+  DeleteCommentMutation,
+  DeleteCommentMutationVariables,
   DeletePostMutation,
   DeletePostMutationVariables,
   EditCategoryMutation,
@@ -23,6 +25,8 @@ import {
   GetCategoriesQueryVariables,
   GetCommentsQuery,
   GetCommentsQueryVariables,
+  GetPostByIdQuery,
+  GetPostByIdQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
   GetPostListWithLimitQuery,
@@ -57,11 +61,12 @@ import {
   FIND_ONE_CATEGORY_BY_ID_QUERY,
   DELETE_CATEGORY_MUTATION,
   GET_COMMENTS_QUERY,
-  DELETE_COMMENT_MUTATION,
+  DELETE_COMMENT_BY_ADMIN_MUTATION,
   UPDATE_POST_HITS_MUTATION,
   EDIT_SORT_CATEGORY_ORDER_MUTATION,
   UPDATE_FEATURED_POST_MUTATION,
   GET_POST_LIST_WITH_LIMIT_QUERY,
+  DELETE_COMMENT_MUTATION,
 } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import {
@@ -70,6 +75,7 @@ import {
 } from "@/gql/graphql";
 import { useMutation } from "@apollo/client";
 import { ME_QUERY } from "./useMe";
+import { useRouter } from "next/router";
 
 export function useGetCategories() {
   const { data, loading } = useQuery<
@@ -92,13 +98,40 @@ export const useCreateComment = ({ id }: { id: number }) => {
     CreateCommentMutation,
     CreateCommentMutationVariables
   >(CREATE_COMMENT_MUTATION, {
-    refetchQueries: [
-      {
+    update(cache, { data }) {
+      if (!data?.createComment.ok || !data?.createComment.commentResult) return;
+
+      const newComment = data?.createComment.commentResult;
+
+      // 캐시의 포스트 데이터 읽기
+      const existingPost = cache.readQuery<
+        GetPostByIdQuery,
+        GetPostByIdQueryVariables
+      >({
         query: GET_POST_BY_ID_QUERY,
-        variables: { postId: Number(id) },
-      },
-    ],
-    awaitRefetchQueries: true,
+        variables: { postId: id },
+      });
+
+      if (existingPost?.getPostById?.post) {
+        // 새 댓글을 기존 댓글 배열에 추가
+        cache.writeQuery<GetPostByIdQuery, GetPostByIdQueryVariables>({
+          query: GET_POST_BY_ID_QUERY,
+          variables: { postId: id },
+          data: {
+            getPostById: {
+              ...existingPost.getPostById,
+              post: {
+                ...existingPost.getPostById.post,
+                comments: [
+                  ...(existingPost.getPostById.post.comments || []),
+                  newComment,
+                ],
+              },
+            },
+          },
+        });
+      }
+    },
   });
   return { createCommentMutation, commentLoading };
 };
@@ -353,7 +386,7 @@ export const useDeleteCommentByAdmin = () => {
     useMutation<
       DeleteCommentByAdminMutation,
       DeleteCommentByAdminMutationVariables
-    >(DELETE_COMMENT_MUTATION, {
+    >(DELETE_COMMENT_BY_ADMIN_MUTATION, {
       refetchQueries: [
         {
           query: GET_COMMENTS_QUERY,
@@ -362,6 +395,34 @@ export const useDeleteCommentByAdmin = () => {
       awaitRefetchQueries: true,
     });
   return { deleteCommentByAdminMutation, commentLoading };
+};
+
+export const useDeleteComment = (id: number, commentId: number) => {
+  const [deleteCommentMutation, { loading: commentLoading }] = useMutation<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
+  >(DELETE_COMMENT_MUTATION, {
+    update(cache, { data }) {
+      if (!data?.deleteComment.ok) return;
+
+      // 캐시에서 즉시 제거
+      cache.evict({
+        id: cache.identify({
+          __typename: "Comment",
+          id: commentId,
+        }),
+      });
+      cache.gc(); // 가비지 컬렉션
+    },
+    refetchQueries: [
+      {
+        query: GET_POST_BY_ID_QUERY,
+        variables: { postId: id },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+  return { deleteCommentMutation, commentLoading };
 };
 
 export const useUpdatePostHits = ({

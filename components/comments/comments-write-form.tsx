@@ -11,16 +11,10 @@ import { useCreateComment } from "@/hooks/hooks";
 import { CommentType } from "./comments";
 
 type CommentsWriteFormProps = {
-  comments: CommentType[];
-  handleAddComments: (addComment: CommentType) => void;
-  displayedCommentsCount: number;
+  postId: number;
 };
 
-const CommentsWriteForm = ({
-  comments,
-  handleAddComments,
-  displayedCommentsCount,
-}: CommentsWriteFormProps) => {
+const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
   const [newComment, setNewComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -28,19 +22,7 @@ const CommentsWriteForm = ({
   const [commentPassword, setCommentPassword] = useState("");
   const { isDarkMode } = useDarkModeStore();
   const { setGlobalLoading } = useLoadingStore();
-  //TODO: 추후 수정필요
-  const { createCommentMutation } = useCreateComment({ id: 1 });
-
-  const router = useRouter();
-  const { slug } = router.query;
-  const postId =
-    slug && Array.isArray(slug) && slug.length > 0
-      ? slug[slug.length - 1].split("-")[1]
-      : null;
-
-  const handleCommentSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
+  const { createCommentMutation } = useCreateComment({ id: postId });
 
   const onSubmit = async () => {
     if (!postId) {
@@ -65,28 +47,10 @@ const CommentsWriteForm = ({
     if (commentResult.data?.createComment.ok) {
       toast.success("댓글이 작성됐습니다.");
       if (newComment.trim() && commentAuthor.trim()) {
-        const comment: Comment = {
-          id: comments?.length + 1,
-          annonymousId: commentAuthor,
-          annonymousPassword: commentPassword,
-          comment: newComment,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        handleAddComments(comment);
         setNewComment("");
         setCommentAuthor("");
         setCommentPassword("");
-        // 새 댓글 작성 시 표시 개수를 늘려서 새 댓글이 보이도록
-        if (displayedCommentsCount < comments.length + 1) {
-          // setDisplayedCommentsCount(displayedCommentsCount + 1);
-        }
       }
-      //   reset({
-      //     id: "",
-      //     password: "",
-      //     comment: "",
-      //   });
     } else {
       toast.error("댓글 작성에 실패했습니다.");
     }
@@ -138,17 +102,17 @@ const CommentsWriteForm = ({
               : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
           }`}
         />
-        <div
-          className="flex justify-end mt-3"
-          onClick={() => setIsModalOpen(true)}
-        >
+        <div className="flex justify-end mt-3">
           <ReadMoreButton
             type="submit"
-            className={
-              isDarkMode
-                ? "bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
-            }
+            onClick={() => setIsModalOpen(true)}
+            className={`cursor-pointer 
+              ${
+                isDarkMode
+                  ? "bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30"
+                  : "bg-blue-500 hover:bg-blue-600 text-white"
+              }
+                `}
           >
             <Send className="w-4 h-4 mr-2" />
             댓글 작성

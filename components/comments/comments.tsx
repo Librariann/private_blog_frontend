@@ -3,7 +3,7 @@ import { MessageCircle } from "lucide-react";
 import { ReadMoreButton } from "../buttons/read-more-button";
 import CommentsList from "./comments-list";
 import CommentsWriteForm from "./comments-write-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Comment } from "@/gql/graphql";
 import { GlassCardMain } from "../main/main";
 
@@ -16,17 +16,18 @@ export type CommentType = Pick<
 
 export type CommentsProps = {
   comments: CommentType[];
+  postId: number;
 };
 
-const Comments = ({ comments }: CommentsProps) => {
+const Comments = ({ comments, postId }: CommentsProps) => {
   const { isDarkMode } = useDarkModeStore();
-  const [commentsList, setCommentsList] = useState<CommentType[]>(
-    [...comments].reverse()
-  );
+  const [commentsList, setCommentsList] = useState<CommentType[]>([
+    ...comments,
+  ]);
 
-  const handleAddComments = (addComment: CommentType) => {
-    setCommentsList([addComment, ...commentsList]);
-  };
+  useEffect(() => {
+    setCommentsList([...comments]);
+  }, [comments]);
 
   const [displayedCommentsCount, setDisplayedCommentsCount] = useState(5);
   const displayedComments = commentsList.slice(0, displayedCommentsCount);
@@ -49,14 +50,10 @@ const Comments = ({ comments }: CommentsProps) => {
       </div>
 
       {/* Comment Form */}
-      <CommentsWriteForm
-        comments={commentsList}
-        handleAddComments={handleAddComments}
-        displayedCommentsCount={displayedCommentsCount}
-      />
+      <CommentsWriteForm postId={postId} />
 
       {/* Comments List */}
-      <CommentsList comments={displayedComments} />
+      <CommentsList postId={postId} comments={displayedComments} />
 
       {/* Load More Button */}
       {hasMoreComments && (
