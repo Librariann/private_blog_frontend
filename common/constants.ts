@@ -12,7 +12,7 @@ type statusType = {
   buttonColor: string;
 };
 export const LOCAL_STORAGE_TOKEN = "blog-token";
-export const handlePathes = ["/login", "/create-account", "/404"];
+export const handlePathes = ["/login", "/create-account", "/404", "/about"];
 export const authPage = ["/my-page", "/post-write"];
 export const POST_STATUS_OBJECTS: Record<PostStatus, statusType> = {
   [PostStatus.Draft]: {

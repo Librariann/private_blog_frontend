@@ -62,6 +62,8 @@ function Layout({ children }: Props) {
 
   const isLayoutVisible = !handlePathes.includes(pathname); //레이아웃 보여줘야할때
 
+  const aboutPage = pathname === "/about";
+
   return (
     <div className="p-0 font-sans flex flex-col min-h-screen">
       {isLayoutVisible && mounted ? (
@@ -109,6 +111,16 @@ function Layout({ children }: Props) {
             <Footer />
           </div>
         </>
+      ) : aboutPage ? (
+        <div className={"fixed top-0 left-0 right-0"}>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />
+          <Header
+            isDarkMode={isDarkMode}
+            onToggleTheme={onToggleTheme}
+            isLoggedIn={isLoggedIn}
+          />
+          <div className="w-full">{children}</div>
+        </div>
       ) : (
         <div className="w-full">{children}</div>
       )}
