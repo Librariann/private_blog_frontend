@@ -51,14 +51,14 @@ const AllPostsPage = () => {
   return (
     <>
       <Head>
-        <title>모든 포스트 | {userInfo?.nickname}&apos;s blog</title>
+        <title>모든 포스트 | {userInfo?.user?.nickname}&apos;s blog</title>
         <meta
           name="description"
           content={`총 ${posts.length}개의 포스트를 읽어보세요. 카테고리별로 분류된 다양한 주제의 글을 확인할 수 있습니다.`}
         />
         <meta
           property="og:title"
-          content={`모든 포스트 | ${userInfo?.nickname}&apos;s blog`}
+          content={`모든 포스트 | ${userInfo?.user?.nickname}&apos;s blog`}
         />
         <meta
           property="og:description"

@@ -155,7 +155,9 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                   aria-label="User profile"
                 >
                   <Avatar className="w-8 h-8 ring-2 ring-offset-2 ring-offset-transparent hover:ring-blue-500 transition-all">
-                    <AvatarImage src={`${userInfo?.profileImage || ""}`} />
+                    <AvatarImage
+                      src={`${userInfo?.user?.profileImage || ""}`}
+                    />
                     <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs">
                       Dev
                     </AvatarFallback>
@@ -236,7 +238,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 포스트
               </button>
               <button
-                onClick={() => console.log("category")}
+                onClick={() => router.push("/all-categories-page")}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
@@ -245,8 +247,8 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
               >
                 카테고리
               </button>
-              <a
-                href="#"
+              <button
+                onClick={() => router.push("/about")}
                 className={`block px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
@@ -254,7 +256,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 }`}
               >
                 소개
-              </a>
+              </button>
 
               <div className="pt-4 border-t border-white/10 flex items-center justify-around">
                 <a

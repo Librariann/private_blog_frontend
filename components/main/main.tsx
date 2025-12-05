@@ -49,12 +49,15 @@ const Main = ({
   return (
     <>
       <Head>
-        <title>{userInfo?.nickname}&apos;s Blog | 개발 블로그</title>
+        <title>{userInfo?.user?.nickname}&apos;s Blog | 개발 블로그</title>
         <meta
           name="description"
-          content={`${userInfo?.nickname}의 블로그. 개발 관련 기술 포스트와 경험을 공유합니다. 총 ${posts.length}개의 포스트를 만나보세요.`}
+          content={`${userInfo?.user?.nickname}의 블로그. 개발 관련 기술 포스트와 경험을 공유합니다. 총 ${posts.length}개의 포스트를 만나보세요.`}
         />
-        <meta property="og:title" content={`${userInfo?.nickname}'s Blog`} />
+        <meta
+          property="og:title"
+          content={`${userInfo?.user?.nickname}'s Blog`}
+        />
         <meta
           property="og:description"
           content={`Frontend, Backend, DevOps 기술 블로그 - ${posts.length}개의 포스트`}
