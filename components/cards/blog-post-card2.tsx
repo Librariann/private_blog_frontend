@@ -1,25 +1,28 @@
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { GlassCardMotionMain } from "../main/main";
-import { BlogPostCardProps } from "./blog-post-card";
+import { BlogPostCardProps, glassCardTypes } from "./blog-post-card";
 import { Badge } from "../ui/badge";
 import { formatDateShort, formatNumberConvertK } from "@/utils/utils";
-import { Eye, View } from "lucide-react";
+import { ArrowRight, Eye, View } from "lucide-react";
 import { differenceInDays, formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
+import styled from "styled-components";
+import { motion } from "motion/react";
 
-const BlogPostCard2 = ({ post, onClick, index }: BlogPostCardProps) => {
+const BlogPostCard2 = ({ post, onClick, mainYn }: BlogPostCardProps) => {
   const { isDarkMode } = useDarkModeStore();
 
   const daysAgo = differenceInDays(new Date(), new Date(post.createdAt));
   return (
-    <GlassCardMotionMain
+    <GlassCardMotion
+      $mainYn={mainYn}
       $isDarkMode={isDarkMode}
       key={post.id}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1 * 0.05 }}
       onClick={onClick}
-      className={`group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300`}
+      className={`group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300 border ${
+        isDarkMode
+          ? "border-white/10 hover:border-white/30"
+          : "border-gray-200 hover:border-blue-300"
+      }`}
     >
       <div className="flex gap-4 p-6">
         <div className="flex-1">
@@ -56,8 +59,10 @@ const BlogPostCard2 = ({ post, onClick, index }: BlogPostCardProps) => {
           </div>
 
           <h3
-            className={`mb-2 line-clamp-2 group-hover:text-blue-500 transition-colors ${
-              isDarkMode ? "text-white" : "text-gray-900"
+            className={`mb-2 transition-colors ${
+              isDarkMode
+                ? "text-white group-hover:text-blue-300"
+                : "text-gray-900 group-hover:text-blue-600"
             }`}
           >
             {post.title}
@@ -102,19 +107,63 @@ const BlogPostCard2 = ({ post, onClick, index }: BlogPostCardProps) => {
             <span>{post.readTime}분 읽기</span>
           </div>
         </div>
-
-        {post.thumbnailUrl && (
-          <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 hidden sm:block">
-            <img
-              src={post.thumbnailUrl}
-              alt={post.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+        <div>
+          {post.thumbnailUrl && (
+            <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 hidden sm:block">
+              <img
+                src={post.thumbnailUrl}
+                alt={post.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          )}
+          <div
+            className={`ml-12 mt-3 flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ${
+              isDarkMode ? "text-blue-300" : "text-blue-600"
+            }`}
+          >
+            <span>더 읽기</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </div>
-        )}
+        </div>
       </div>
-    </GlassCardMotionMain>
+    </GlassCardMotion>
   );
 };
+
+const GlassCardMotion = styled(motion.div)<glassCardTypes>`
+  background: ${(props) =>
+    props.$isDarkMode === true
+      ? "rgba(255, 255, 255, 0.08)"
+      : "rgba(255, 255, 255, 0.6)"};
+  backdrop-filter: ${(props) =>
+    props.$mainYn === true
+      ? props.$isDarkMode === true
+        ? "blur(4px)"
+        : "blur(10px)"
+      : "none"};
+  -webkit-backdrop-filter: ${(props) =>
+    props.$mainYn === true
+      ? props.$isDarkMode === true
+        ? "blur(4px)"
+        : "blur(10px)"
+      : "none"};
+  box-shadow: ${(props) =>
+    props.$isDarkMode === true
+      ? "0 4px 16px 0 rgba(0, 0, 0, 0.1)"
+      : "0 4px 16px 0 rgba(0, 0, 0, 0.06)"};
+
+  &:hover {
+    background: ${(props) =>
+      props.$isDarkMode === true
+        ? "rgba(255, 255, 255, 0.15)"
+        : "rgba(255, 255, 255, 0.85)"};
+    box-shadow: ${(props) =>
+      props.$isDarkMode === true
+        ? "0 8px 32px 0 rgba(0, 0, 0, 0.2)"
+        : "0 12px 40px 0 rgba(0, 0, 0, 0.12)"};
+    transform: translateY(-2px);
+  }
+`;
 
 export default BlogPostCard2;

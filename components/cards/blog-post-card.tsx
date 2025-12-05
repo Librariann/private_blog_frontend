@@ -8,7 +8,7 @@ export type BlogPostCardProps = {
   // post: Post;
   post: PostFieldsFragment;
   onClick?: () => void;
-  index?: number;
+  mainYn?: boolean;
 };
 
 export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
@@ -102,6 +102,7 @@ export function BlogPostCard({ post, onClick }: BlogPostCardProps) {
 
 export type glassCardTypes = {
   $isDarkMode?: boolean;
+  $mainYn?: boolean;
 };
 
 const GlassCard = styled.article<glassCardTypes>`

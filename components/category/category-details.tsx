@@ -129,12 +129,12 @@ const CategoryDetails = ({
 
         {posts.length > 0 ? (
           <div className="space-y-4">
-            {posts.map((post, index) => (
+            {posts.map((post) => (
               <div key={post.id}>
                 <BlogPostCard2
                   key={post.id}
                   post={post}
-                  index={index}
+                  mainYn={false}
                   onClick={() =>
                     router.push(
                       `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
