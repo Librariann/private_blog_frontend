@@ -8,12 +8,11 @@ import { formatNumberConvertK } from "@/utils/utils";
 const ProfileSidebar = () => {
   const { isDarkMode } = useDarkModeStore();
   const { userInfo } = useUserInfoStore();
-
-  const postLength = userInfo?.posts.length;
+  const postLength = userInfo?.user?.posts.length;
   const viewLength = formatNumberConvertK(
-    userInfo?.posts.reduce((acc, post) => acc + post?.hits, 0) || 0
+    userInfo?.user?.posts.reduce((acc, post) => acc + post?.hits, 0) || 0
   );
-  const commentLength = userInfo?.posts.reduce(
+  const commentLength = userInfo?.user?.posts.reduce(
     (acc, post) => acc + (post?.comments?.length || 0),
     0
   );
@@ -24,21 +23,21 @@ const ProfileSidebar = () => {
         <Avatar
           className={`w-24 h-24 mx-auto mb-4 ring-4 ${isDarkMode ? "ring-white/20" : "ring-blue-200"}`}
         >
-          <AvatarImage src={`${userInfo?.profileImage || ""}`} />
+          <AvatarImage src={`${userInfo?.user?.profileImage || ""}`} />
           <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
             Dev
           </AvatarFallback>
         </Avatar>
 
         <h3 className={isDarkMode ? "text-white mb-1" : "text-gray-900 mb-1"}>
-          {userInfo?.nickname}
+          {userInfo?.user?.nickname}
         </h3>
         <p className={isDarkMode ? "text-white/70 mb-4" : "text-gray-600 mb-4"}>
-          {userInfo?.role}
+          {userInfo?.user?.role}
         </p>
 
         <p className={isDarkMode ? "text-white/60 mb-4" : "text-gray-500 mb-4"}>
-          {userInfo?.introduce}
+          {userInfo?.user?.introduce}
         </p>
 
         <div
@@ -46,12 +45,12 @@ const ProfileSidebar = () => {
         >
           <div className="flex items-center justify-center space-x-2">
             <MapPin className="w-4 h-4" />
-            <span>{userInfo?.location}</span>
+            <span>{userInfo?.user?.location}</span>
           </div>
           <div className="flex items-center justify-center space-x-2">
             <LinkIcon className="w-4 h-4" />
             <a
-              href={`${userInfo?.website}`}
+              href={`${userInfo?.user?.website}`}
               target="_blank"
               className={`transition-colors ${
                 isDarkMode
@@ -59,7 +58,7 @@ const ProfileSidebar = () => {
                   : "text-blue-600 hover:text-blue-700"
               }`}
             >
-              {userInfo?.website}
+              {userInfo?.user?.website}
             </a>
           </div>
         </div>
@@ -86,10 +85,10 @@ const ProfileSidebar = () => {
             </div>
             <div>
               <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-                {commentLength}
+                {userInfo?.hashtagLength}
               </div>
               <div className={isDarkMode ? "text-white/60" : "text-gray-500"}>
-                Comments
+                Tags
               </div>
             </div>
           </div>

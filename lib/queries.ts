@@ -278,6 +278,7 @@ export const GET_USER_BY_NICKNAME_QUERY = gql`
           }
         }
       }
+      hashtagLength
     }
   }
 `;

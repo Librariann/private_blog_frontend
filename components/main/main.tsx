@@ -12,7 +12,6 @@ import styled from "styled-components";
 import Head from "next/head";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
 import BlogPostCard2 from "../cards/blog-post-card2";
-import { motion } from "motion/react";
 
 const Main = ({
   posts,

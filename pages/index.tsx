@@ -1,10 +1,5 @@
 import { GetStaticProps } from "next";
-import {
-  GetPostListQuery,
-  GetPostListQueryVariables,
-  Post,
-  UserProfileByNickNameQuery,
-} from "@/gql/graphql";
+import { Post, UserProfileByNickNameQuery } from "@/gql/graphql";
 import { MemoizedMain } from "@/components/main/main";
 import { getPopularHashTagDatas, getPostDatas, getUserInfo } from "@/lib/posts";
 import { useQuery } from "@apollo/client";
@@ -16,7 +11,7 @@ export type popularHashTagsProps = {
 };
 
 export type UserInfoType = NonNullable<
-  UserProfileByNickNameQuery["userProfileByNickName"]["user"]
+  UserProfileByNickNameQuery["userProfileByNickName"]
 >;
 
 export const getStaticProps: GetStaticProps = async () => {

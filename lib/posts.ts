@@ -129,5 +129,8 @@ export async function getUserInfo(userNickName: string) {
     variables: { userNickName },
     fetchPolicy: "cache-first",
   });
-  return data.userProfileByNickName?.user || null;
+  return {
+    user: data.userProfileByNickName?.user || null,
+    hashtagLength: data.userProfileByNickName.hashtagLength || 0,
+  };
 }
