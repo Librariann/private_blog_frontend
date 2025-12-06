@@ -2,12 +2,17 @@
 import { SparklesCore } from "@/components/ui/sparkles";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-function About() {
+function About3() {
   const [titleIndex, setTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showEmphasis, setShowEmphasis] = useState(false);
-
+  const fadeInUp = {
+    initial: { opacity: 0, y: 60 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-100px" },
+    transition: { duration: 0.6 },
+  };
   const titles = [
     "Backend Developer",
     "Frontend Developer",
@@ -68,12 +73,28 @@ function About() {
     []
   );
   return (
-    <div className="min-h-screen bg-black snap-y snap-mandatory overflow-y-auto h-screen scrollbar-hide">
-      <section className="snap-start relative min-h-screen flex items-center justify-center px-4 bg-black">
+    <div
+      className="h-screen overflow-y-auto"
+      style={{ scrollSnapType: "y mandatory" }}
+    >
+      {/* 첫 번째: snap으로 고정 */}
+      <section
+        className="h-screen relative flex items-center justify-center bg-black snap-start snap-always"
+        style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}
+      >
         <div className="w-full absolute inset-0 h-screen">
           {MemoizedSparkles}
         </div>
-        <div className="text-center">
+
+        <div className="text-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 md:text-lg text-sm"
+          >
+            문제를 기술로 매끄럽게 정리하는 개발자입니다.
+          </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -82,10 +103,11 @@ function About() {
           >
             Park SeongHyun
           </motion.h1>
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
+            transition={{ delay: 1, duration: 0.8 }}
             className="text-2xl md:text-4xl mb-8 h-12 md:h-16 text-gray-300"
           >
             {showEmphasis ? (
@@ -107,10 +129,11 @@ function About() {
               <span className="typing-text">{displayText}</span>
             )}
           </motion.div>
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.3, duration: 0.8 }}
+            transition={{ delay: 2, duration: 0.8 }}
             className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 text-sm"
           >
             <span>📧 okpc0306@naver.com</span>
@@ -149,11 +172,41 @@ function About() {
           </motion.div>
         </div>
       </section>
-      <section>
-        <div>Hello World!</div>
+      <section
+        className="bg-slate-900 min-h-screen px-4 py-20 md:p-20"
+        style={{ scrollSnapAlign: "start" }}
+      >
+        <motion.div {...fadeInUp}>
+          <h2 className="text-white text-4xl">핵심역량</h2>
+          <p className="text-gray-300">내용...</p>
+        </motion.div>
+      </section>
+
+      <section
+        className="min-h-screen py-20 px-4 md:p-20 bg-slate-800"
+        style={{ scrollSnapAlign: "start" }}
+      >
+        <h2 className="text-white text-4xl">Projects</h2>
+        <p className="text-gray-300">프로젝트...</p>
+      </section>
+
+      <section
+        className="min-h-screen py-20 px-4 md:p-20 bg-slate-900"
+        style={{ scrollSnapAlign: "start" }}
+      >
+        <h2 className="text-white text-4xl">Skills</h2>
+        <p className="text-gray-300">기술...</p>
+      </section>
+
+      <section
+        className="min-h-screen py-20 px-4 md:p-20 bg-slate-800"
+        style={{ scrollSnapAlign: "start" }}
+      >
+        <h2 className="text-white text-4xl">Contact</h2>
+        <p className="text-gray-300">연락처</p>
       </section>
     </div>
   );
 }
 
-export default About;
+export default About3;

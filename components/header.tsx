@@ -27,10 +27,6 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userInfo } = useUserInfoStore();
-  const handleNavigation = (action: () => void) => {
-    action();
-    setIsMobileMenuOpen(false);
-  };
 
   const clickedMenu = (menuName: string): boolean => {
     return menuName === router.pathname;

@@ -10,7 +10,6 @@ import {
   handlePathes,
   LOCAL_STORAGE_TOKEN,
 } from "@/common/constants";
-import { GlobalLoading } from "../loading/global-loading";
 import { useLoadingStore } from "@/stores/useLoadingStore";
 import Footer from "../footer";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
@@ -70,7 +69,7 @@ function Layout({ children }: Props) {
         <>
           {globalLoading && <GlobalLoading2 />}
           <div
-            className={`min-h-screen relative overflow-hidden ${
+            className={`min-h-screen relative "overflow-hidden" ${
               isDarkMode ? "dark" : "light"
             }`}
           >
@@ -112,15 +111,19 @@ function Layout({ children }: Props) {
           </div>
         </>
       ) : aboutPage ? (
-        <div className={"fixed top-0 left-0 right-0"}>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />
-          <Header
-            isDarkMode={isDarkMode}
-            onToggleTheme={onToggleTheme}
-            isLoggedIn={isLoggedIn}
-          />
+        <>
+          <div className={"fixed top-0 left-0 right-0"}>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />
+
+            <Header
+              isDarkMode={isDarkMode}
+              onToggleTheme={onToggleTheme}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
+
           <div className="w-full">{children}</div>
-        </div>
+        </>
       ) : (
         <div className="w-full">{children}</div>
       )}
