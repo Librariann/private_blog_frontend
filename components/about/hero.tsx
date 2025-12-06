@@ -1,20 +1,13 @@
 import { motion } from "motion/react";
-import { BookOpen, Sparkles, ChevronDown } from "lucide-react";
+import { ChevronDown, Mail, GithubIcon } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 
 export function Hero() {
-  const [displayedText, setDisplayedText] = useState("");
-  const fullText = "Park SeongHyun";
   const [titleIndex, setTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showEmphasis, setShowEmphasis] = useState(false);
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-100px" },
-    transition: { duration: 0.6 },
-  };
+
   const titles = [
     "Backend Developer",
     "Frontend Developer",
@@ -57,19 +50,6 @@ export function Hero() {
 
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, titleIndex]);
-  useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setDisplayedText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 100);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const particles = useMemo(
     () =>
@@ -120,7 +100,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
           className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 md:text-lg text-sm"
         >
           문제를 기술로 매끄럽게 정리하는 개발자입니다.
@@ -128,7 +108,7 @@ export function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
           className="text-5xl md:text-7xl font-bold mb-6 text-white"
         >
           Park SeongHyun
@@ -137,7 +117,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
+          transition={{ delay: 2.5, duration: 0.8 }}
           className="text-2xl md:text-4xl mb-8 h-12 md:h-16 text-gray-300"
         >
           {showEmphasis ? (
@@ -159,22 +139,37 @@ export function Hero() {
             <span className="typing-text">{displayText}</span>
           )}
         </motion.div>
+        <div className="flex">
+          <motion.div
+            initial={{ opacity: 0, x: 45 }}
+            animate={{ opacity: 1, x: 125 }}
+            transition={{ delay: 3.5, duration: 0.8 }}
+            className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 text-sm"
+          >
+            <div className="flex">
+              <Mail />
+              &nbsp;&nbsp;
+              <span className="mt-[1px]">okpc0306@naver.com</span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 195 }}
+            animate={{ opacity: 1, x: 155 }}
+            transition={{ delay: 4.5, duration: 0.8 }}
+            className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 text-sm"
+          >
+            <div className="flex">
+              <GithubIcon />
+              <span className="mt-[1px]">Librariann</span>
+            </div>
+          </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.8 }}
-          className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 text-sm"
-        >
-          <span>📧 okpc0306@naver.com</span>
-          {/* <span className="hidden md:inline">|</span> */}
-          {/* <span>💼 경력 4년 7개월</span> */}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
+          transition={{ delay: 5, duration: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
         >
           <ChevronDown className="w-6 h-6 text-violet-300 animate-bounce" />
