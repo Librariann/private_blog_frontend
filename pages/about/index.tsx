@@ -1,6 +1,7 @@
 "use client";
 import { AboutMe } from "@/components/about/about-me";
 import { Hero } from "@/components/about/hero";
+import { Navigation } from "@/components/about/navigation";
 import { useEffect, useState } from "react";
 function About() {
   const [pageNum, setPageNum] = useState(0);
@@ -24,7 +25,9 @@ function About() {
     return () => observer.disconnect();
   }, []);
   return (
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-black relative">
+    <div className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth scrollbar-hide bg-black relative">
+      {/* Navigation */}
+      <Navigation />
       {/* Animated background grid */}
       {pageNum !== 0 && (
         <div className="fixed inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] pointer-events-none" />
