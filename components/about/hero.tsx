@@ -98,17 +98,17 @@ export function Hero() {
 
       <div className="max-w-4xl mx-auto text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 5 }}
+          transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
           className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 md:text-lg text-sm"
         >
-          문제를 기술로 매끄럽게 정리하는 개발자입니다.
+          복잡한 문제를 기술로 깔끔하게 풀어내는 개발자입니다.
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
           className="text-5xl md:text-7xl font-bold mb-6 text-white"
         >
           Park SeongHyun
@@ -117,7 +117,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
+          transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
           className="text-2xl md:text-4xl mb-8 h-12 md:h-16 text-gray-300"
         >
           {showEmphasis ? (
@@ -129,7 +129,7 @@ export function Hero() {
                 scale: [1, 1.3, 1.15, 1.3, 1.15, 1.1],
               }}
               transition={{
-                duration: 3,
+                duration: 2,
                 ease: "easeInOut",
               }}
             >
@@ -139,37 +139,32 @@ export function Hero() {
             <span className="typing-text">{displayText}</span>
           )}
         </motion.div>
-        <div className="flex">
+        <div className="flex justify-center">
           <motion.div
-            initial={{ opacity: 0, x: 45 }}
-            animate={{ opacity: 1, x: 125 }}
-            transition={{ delay: 3.5, duration: 0.8 }}
-            className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 text-sm"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+            className="flex flex-col mr-2 md:flex-row gap-1 justify-center items-center text-gray-400 text-sm"
           >
-            <div className="flex">
-              <Mail />
-              &nbsp;&nbsp;
-              <span className="mt-[1px]">okpc0306@naver.com</span>
-            </div>
+            <Mail />
+            okpc0305@gmail.com
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 195 }}
-            animate={{ opacity: 1, x: 155 }}
-            transition={{ delay: 4.5, duration: 0.8 }}
-            className="flex flex-col md:flex-row gap-4 justify-center items-center text-gray-400 text-sm"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+            className="flex flex-col md:flex-row gap-1 justify-center items-center text-gray-400 text-sm"
           >
-            <div className="flex">
-              <GithubIcon />
-              <span className="mt-[1px]">Librariann</span>
-            </div>
+            <GithubIcon />
+            Librariann
           </motion.div>
         </div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 5, duration: 1 }}
+          transition={{ delay: 2, duration: 0.8, ease: "easeOut" }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
         >
           <ChevronDown className="w-6 h-6 text-violet-300 animate-bounce" />
