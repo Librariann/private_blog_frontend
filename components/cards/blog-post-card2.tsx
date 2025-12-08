@@ -109,7 +109,7 @@ const BlogPostCard2 = ({ post, onClick, mainYn }: BlogPostCardProps) => {
         </div>
         <div>
           {post.thumbnailUrl && (
-            <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 hidden sm:block">
+            <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0">
               <img
                 src={post.thumbnailUrl}
                 alt={post.title}
