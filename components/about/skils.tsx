@@ -122,7 +122,6 @@ export function Skills() {
       className="min-h-screen snap-start flex items-center py-20 px-4 relative"
     >
       {/* Section divider line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-[linear-gradient(to_bottom,transparent,rgba(192,132,252,0.5),transparent)]"></div>
 
       <div className="max-w-6xl mx-auto w-full" ref={ref}>
         <motion.div
@@ -202,7 +201,7 @@ export function Skills() {
 
                   {/* Decorative glow */}
                   <motion.div
-                    className={`absolute -top-10 -right-10 w-20 h-20 ${colors.icon} opacity-10 rounded-full blur-2xl`}
+                    className={`absolute -top-10 -right-10 w-20 h-20 ${colors.icon} opacity-10 rounded-full blur-2xl hidden md:block`}
                     animate={{
                       scale: [1, 1.2, 1],
                       opacity: [0.1, 0.2, 0.1],
