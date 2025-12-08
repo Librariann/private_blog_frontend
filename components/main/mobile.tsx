@@ -4,6 +4,8 @@ import { AnimatePresence } from "motion/react";
 import { DesktopAndMobileProps } from "./desktop";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
+import { GlassCardMain } from "./main";
+import { useRouter } from "next/router";
 
 const Mobile = ({
   categories,
@@ -11,13 +13,13 @@ const Mobile = ({
   toggleCategoryExpand,
 }: DesktopAndMobileProps) => {
   const { isDarkMode } = useDarkModeStore();
+  const router = useRouter();
   return (
     <>
       {/* Categories Section - Mobile Only */}
-      <div
-        className={`lg:hidden rounded-2xl p-6 ${
-          isDarkMode ? "glass-card" : "glass-card-light"
-        }`}
+      <GlassCardMain
+        $isDarkMode={isDarkMode}
+        className="lg:hidden rounded-2xl p-6"
       >
         <h3 className={`mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
           카테고리
@@ -32,7 +34,7 @@ const Mobile = ({
                 {/* 상위 카테고리 */}
                 <button
                   onClick={() => toggleCategoryExpand(parent.categoryTitle)}
-                  className={`w-full flex items-center justify-between ${parent.iconColor} px-3 py-2 rounded-lg transition-all ${
+                  className={`cursor-pointer w-full flex items-center justify-between ${parent.iconColor} px-3 py-2 rounded-lg transition-all ${
                     isDarkMode
                       ? "text-white/80 hover:bg-white/5"
                       : "text-gray-700 hover:bg-gray-50"
@@ -76,9 +78,14 @@ const Mobile = ({
                         className="overflow-hidden"
                       >
                         <div className="ml-11 mt-1 space-y-1">
-                          {parent.subCategories.map((subCatecory, index) => (
+                          {parent.subCategories.map((subCategory, index) => (
                             <motion.button
-                              key={subCatecory.categoryTitle}
+                              key={subCategory.categoryTitle}
+                              onClick={() =>
+                                router.push(
+                                  `/post/${parent.categoryTitle}/${subCategory.categoryTitle}`
+                                )
+                              }
                               initial={{ x: -10, opacity: 0 }}
                               animate={{ x: 0, opacity: 1 }}
                               transition={{
@@ -86,14 +93,14 @@ const Mobile = ({
                                 delay: index * 0.05,
                                 ease: "easeOut",
                               }}
-                              className={`w-full text-left px-3 py-2 rounded-lg transition-all text-sm ${
+                              className={`cursor-pointer w-full text-left px-3 py-2 rounded-lg transition-all text-sm ${
                                 isDarkMode
                                   ? "text-white/70 hover:bg-white/10 hover:text-white"
                                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                <span>{subCatecory.categoryTitle}</span>
+                                <span>{subCategory.categoryTitle}</span>
                                 <span
                                   className={
                                     isDarkMode
@@ -101,7 +108,7 @@ const Mobile = ({
                                       : "text-gray-400"
                                   }
                                 >
-                                  {subCatecory.post?.length}
+                                  {subCategory.post?.length}
                                 </span>
                               </div>
                             </motion.button>
@@ -124,7 +131,7 @@ const Mobile = ({
         >
           모든 카테고리 보기
         </button>
-      </div>
+      </GlassCardMain>
     </>
   );
 };

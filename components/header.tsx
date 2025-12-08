@@ -184,11 +184,13 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
               </div>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={
-                  isDarkMode
-                    ? "md:hidden text-white"
-                    : "md:hidden text-gray-900"
-                }
+                className={`
+                  cursor-pointer
+                  ${
+                    isDarkMode
+                      ? "md:hidden text-white"
+                      : "md:hidden text-gray-900"
+                  }`}
               >
                 {isMobileMenuOpen ? (
                   <X className="w-6 h-6" />
@@ -214,8 +216,11 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
           >
             <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
               <button
-                onClick={() => console.log("mobile home")}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                onClick={() => {
+                  router.push("/");
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white hover:bg-white/10"
                     : "text-gray-900 hover:bg-gray-100"
@@ -224,8 +229,11 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 홈
               </button>
               <button
-                onClick={() => router.push("/all-posts-page")}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                onClick={() => {
+                  router.push("/all-posts-page");
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
@@ -234,8 +242,11 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 포스트
               </button>
               <button
-                onClick={() => router.push("/all-categories-page")}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                onClick={() => {
+                  router.push("/all-categories-page");
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
@@ -244,8 +255,11 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 카테고리
               </button>
               <button
-                onClick={() => router.push("/about")}
-                className={`block px-4 py-3 rounded-lg transition-colors ${
+                onClick={() => {
+                  router.push("/about");
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
                   isDarkMode
                     ? "text-white/70 hover:bg-white/10 hover:text-white"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
@@ -256,7 +270,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
 
               <div className="pt-4 border-t border-white/10 flex items-center justify-around">
                 <a
-                  href="#"
+                  href="https://github.com/Librariann"
                   className={
                     isDarkMode
                       ? "text-white/70 hover:text-white transition-colors p-2"
@@ -265,7 +279,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 >
                   <Github className="w-6 h-6" />
                 </a>
-                <a
+                {/* <a
                   href="#"
                   className={
                     isDarkMode
@@ -274,7 +288,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                   }
                 >
                   <Linkedin className="w-6 h-6" />
-                </a>
+                </a> */}
                 <a
                   href="#"
                   className={
@@ -285,7 +299,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                 >
                   <Mail className="w-6 h-6" />
                 </a>
-                <button
+                {/* <button
                   className={
                     isDarkMode
                       ? "text-white/70 hover:text-white transition-colors p-2"
@@ -293,7 +307,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                   }
                 >
                   <Search className="w-6 h-6" />
-                </button>
+                </button> */}
               </div>
             </nav>
           </GlassMotionCardMain>
