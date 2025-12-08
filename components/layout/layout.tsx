@@ -110,7 +110,7 @@ function Layout({ children }: Props) {
             <Footer />
           </div>
         </>
-      ) : aboutPage ? (
+      ) : aboutPage && mounted ? (
         <>
           <div className={"fixed top-0 left-0 right-0"}>
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />

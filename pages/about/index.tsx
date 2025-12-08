@@ -1,7 +1,10 @@
 "use client";
 import { AboutMe } from "@/components/about/about-me";
+import { ContactMe } from "@/components/about/contact-me";
+import { Experience } from "@/components/about/experience";
 import { Hero } from "@/components/about/hero";
 import { Navigation } from "@/components/about/navigation";
+import { Skills } from "@/components/about/skils";
 import { useEffect, useState } from "react";
 function About() {
   const [pageNum, setPageNum] = useState(0);
@@ -45,6 +48,9 @@ function About() {
 
       <Hero />
       <AboutMe />
+      <Experience />
+      <Skills />
+      <ContactMe />
     </div>
   );
 }

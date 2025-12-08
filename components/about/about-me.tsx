@@ -31,9 +31,9 @@ export function AboutMe() {
       icon: Server,
       title: `Backend Engineering`,
       description: [
-        "API 설계 및 데이터 모델링 경험",
-        "Node.js(NestJS) 기반 서버 로직 개발",
         "Spring Boot 기반 비즈니스 로직 및 트랜잭션 처리 경험",
+        "Node.js(Express, NestJS) 기반 서버 로직 개발",
+        "API 설계 및 데이터 모델링 경험",
         "안정성과 유지보수성을 고려한 서비스 구조 설계",
       ],
       color: "bg-violet-400",
@@ -59,6 +59,7 @@ export function AboutMe() {
       title: "DevOps & Infrastructure",
       description: [
         "Cloud 기반 배포 및 운영 경험",
+        "OpenStack 기반 Private Cloud 구축 경험",
         "GitOps 활용 CI/CD 파이프라인 구축",
         "K8s, Docker 운영 경험",
       ],
@@ -72,9 +73,8 @@ export function AboutMe() {
       title: "Frontend Engineering",
       description: [
         "React 기반 UI 개발",
-        "상태 관리 구조 설계(Zustand/Redux Toolkit/MobX)",
-        "Next.js (App Router, Page Router) 활용",
-        "Next.js 기반 SEO 구조 설계 및 최적화 경험",
+        "Next.js (App Router, Page Router) 활용 및 SEO 최적화",
+        "MFA(Micro Frontend Architecture) 구조 설계 및 활용",
         "렌더링 흐름 및 컴포넌트 구조 최적화",
       ],
       color: "bg-purple-400",
@@ -84,11 +84,12 @@ export function AboutMe() {
     },
     {
       icon: Asterisk,
-      title: "Core Engineering Skills",
+      title: "Problem Solving & Collaboration",
       description: [
         "문제 정의 및 구조화",
         "코드 품질 및 일관성 유지",
         "리뷰 중심 협업 경험",
+        "타 부서와 원활한 협업 경험",
       ],
       color: "bg-purple-400",
       borderColor: "border-purple-400/30",
@@ -114,7 +115,7 @@ export function AboutMe() {
           className="text-center mb-16"
         >
           <motion.h1
-            className="text-violet-200 mb-4"
+            className="text-violet-200 mb-4 text-2xl md:text-4xl"
             animate={
               isInView
                 ? {
