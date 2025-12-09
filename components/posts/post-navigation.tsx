@@ -54,7 +54,7 @@ const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
           <p
             className={`mt-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
           >
-            {formatDateShort(prevPost?.createdAt)} • {nextPost?.readTime}분
+            {formatDateShort(prevPost?.createdAt)} • {prevPost?.readTime}분
           </p>
         </button>
       ) : (
