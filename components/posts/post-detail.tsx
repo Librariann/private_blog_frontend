@@ -328,10 +328,10 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
           {/* Post Content */}
           <div
             className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
+            data-color-mode={isDarkMode ? "dark" : "light"}
           >
             <EditorMarkdown
               source={postData?.contents}
-              data-color-mode={isDarkMode ? "dark" : "light"}
               style={{ backgroundColor: "transparent" }}
               rehypePlugins={[rehypeSlug]}
             />
