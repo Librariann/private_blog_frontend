@@ -1,3 +1,11 @@
+[data-color-mode*="dark"] .wmde-markdown {
+  color: #ececec;
+}
+
+[data-color-mode*="light"] .wmde-markdown {
+  color: #24292f;
+}
+
 .wmde-markdown h1 {
   border-bottom: none;
 }
@@ -19,4 +27,39 @@
 .wmde-markdown ul {
   list-style-type: disc;
   padding-left: 2em;
+}
+
+[data-color-mode*="dark"] .wmde-markdown blockquote,
+.wmde-markdown[data-color-mode*="dark"] blockquote {
+  margin: 1.5rem 0;
+  padding: 0.9rem 1.2rem;
+  border-left: 4px solid #60a5fa;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  color: #e5e7eb;
+}
+
+[data-color-mode*="dark"] .wmde-markdown blockquote p {
+  color: white;
+}
+
+/* 라이트모드 blockquote */
+[data-color-mode*="light"] .wmde-markdown blockquote {
+  margin: 1.5rem 0;
+  padding: 0.9rem 1.2rem;
+  border-left: 4px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  color: #374151;
+}
+
+[data-color-mode*="light"] .wmde-markdown blockquote p {
+  color: #1f2937;
+}
+
+.wmde-markdown hr {
+  background-color: #c7c7c7;
+  height: 0.05em;
 }
