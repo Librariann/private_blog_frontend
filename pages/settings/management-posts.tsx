@@ -321,7 +321,7 @@ const ManagementPosts = () => {
                     className={`px-6 py-4 ${isDarkMode ? "text-white/70" : "text-gray-600"}`}
                   >
                     <div className="text-sm">
-                      <div>{post.category?.categoryTitle}</div>
+                      <div>{post.category?.parentCategory?.categoryTitle}</div>
                       <div
                         className={
                           isDarkMode ? "text-white/50" : "text-gray-500"
