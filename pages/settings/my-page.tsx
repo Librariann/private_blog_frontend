@@ -20,7 +20,7 @@ import { GlassCardMain } from "@/components/main/main";
 import { NewButton } from "@/components/buttons/new-button";
 import { useMe } from "@/hooks/useMe";
 import ProfileEditModal from "@/components/modal/profile-edit-modal";
-import { formatNumberConvertK } from "@/utils/utils";
+import { formatDateHHMMSS, formatNumberConvertK } from "@/utils/utils";
 import { useRouter } from "next/router";
 import { POST_STATUS_OBJECTS } from "@/common/constants";
 import { PostStatus } from "@/gql/graphql";
@@ -265,7 +265,7 @@ const MyPage = () => {
                     >
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
-                        {post.createdAt}
+                        {formatDateHHMMSS(post.createdAt)}
                       </span>
                       <span className="flex items-center gap-1">
                         <Eye className="w-4 h-4" />
