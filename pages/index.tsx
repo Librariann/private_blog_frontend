@@ -51,7 +51,9 @@ const Home = ({
   featuredPost: Post;
 }) => {
   // Apollo로 클라이언트에서 데이터 가져오기
-  const { data } = useQuery(GET_POST_LIST_QUERY);
+  const { data } = useQuery(GET_POST_LIST_QUERY, {
+    fetchPolicy: "cache-and-network",
+  });
 
   const postsDatas: Post[] = data?.getPostList?.post || posts;
 
