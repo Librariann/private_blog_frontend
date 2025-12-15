@@ -55,7 +55,7 @@ const Home = ({
     fetchPolicy: "cache-and-network",
   });
 
-  const postsDatas: Post[] = data?.getPostList?.post || posts;
+  const postsDatas: Post[] = data?.getPostList?.posts || posts;
 
   return (
     <MemoizedMain
