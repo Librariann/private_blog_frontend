@@ -16,6 +16,7 @@ import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useMe } from "@/hooks/useMe";
 import { toast } from "react-toastify";
 import GlobalLoading2 from "../loading/global-loading2";
+import { Analytics } from "@vercel/analytics/next";
 
 type Props = {
   children: React.ReactNode;
@@ -122,10 +123,16 @@ function Layout({ children }: Props) {
             />
           </div>
 
-          <div className="w-full">{children}</div>
+          <div className="w-full">
+            {children}
+            <Analytics />
+          </div>
         </>
       ) : (
-        <div className="w-full">{children}</div>
+        <div className="w-full">
+          {children}
+          <Analytics />
+        </div>
       )}
     </div>
   );
