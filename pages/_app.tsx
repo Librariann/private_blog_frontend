@@ -16,6 +16,7 @@ import { useLoadingStore } from "@/stores/useLoadingStore";
 import { GlobalLoading } from "@/components/loading/global-loading";
 import { useRouter } from "next/router";
 import GlobalLoading2 from "@/components/loading/global-loading2";
+import { Analytics } from "@vercel/analytics/next";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
@@ -94,6 +95,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Layout>
         <Component {...pageProps} />
       </Layout>
+      <Analytics />
     </ApolloProvider>
   );
 }
