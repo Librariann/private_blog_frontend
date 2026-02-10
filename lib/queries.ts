@@ -17,6 +17,10 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
         category {
           id
           categoryTitle
+          parentCategory {
+            id
+            categoryTitle
+          }
         }
         comments {
           comment
@@ -45,6 +49,10 @@ export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
         category {
           id
           categoryTitle
+          parentCategory {
+            id
+            categoryTitle
+          }
         }
         comments {
           comment

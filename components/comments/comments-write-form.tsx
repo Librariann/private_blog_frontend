@@ -1,5 +1,5 @@
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Send } from "lucide-react";
 import { ReadMoreButton } from "../buttons/read-more-button";
 import ConfirmModal from "../modal/confirm-modal";
@@ -17,9 +17,39 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
 
   const [commentAuthor, setCommentAuthor] = useState("");
   const [commentPassword, setCommentPassword] = useState("");
+  const [isReadonlyAuthor, setIsReadonlyAuthor] = useState(true);
+  const [isReadonlyPassword, setIsReadonlyPassword] = useState(true);
+  const [formKey, setFormKey] = useState(Date.now());
   const { isDarkMode } = useDarkModeStore();
   const { setGlobalLoading } = useLoadingStore();
   const { createCommentMutation } = useCreateComment({ id: postId });
+
+  useEffect(() => {
+    setCommentAuthor("");
+    setCommentPassword("");
+    setNewComment("");
+
+    setTimeout(() => {
+      setCommentAuthor("");
+      setCommentPassword("");
+      setNewComment("");
+      setFormKey(Date.now());
+    }, 100);
+  }, []);
+
+  const handleAuthorFocus = () => {
+    if (isReadonlyAuthor) {
+      setIsReadonlyAuthor(false);
+      setCommentAuthor("");
+    }
+  };
+
+  const handlePasswordFocus = () => {
+    if (isReadonlyPassword) {
+      setIsReadonlyPassword(false);
+      setCommentPassword("");
+    }
+  };
 
   const onSubmit = async () => {
     if (!commentAuthor.trim()) {
@@ -72,57 +102,84 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
             : "bg-gray-50 border border-gray-200"
         }`}
       >
-        <div className="flex gap-3 mb-3">
-          <input
-            type="text"
-            placeholder="이름"
-            value={commentAuthor}
-            onChange={(e) => setCommentAuthor(e.target.value)}
-            className={`w-1/2 p-2 rounded-lg outline-none transition-all ${
+        <form
+          autoComplete="off"
+          onSubmit={(e) => e.preventDefault()}
+          key={formKey}
+        >
+          <input type="text" name="username" style={{ display: "none" }} />
+          <input type="password" name="password" style={{ display: "none" }} />
+
+          <div className="flex gap-3 mb-3">
+            <input
+              key={`author-${formKey}`}
+              type="text"
+              name="comment-author-field"
+              placeholder="이름"
+              value={commentAuthor}
+              onChange={(e) => setCommentAuthor(e.target.value)}
+              onFocus={handleAuthorFocus}
+              readOnly={isReadonlyAuthor}
+              autoComplete="off"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck="false"
+              data-form-type="other"
+              className={`w-1/2 p-2 rounded-lg outline-none transition-all ${
+                isDarkMode
+                  ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
+                  : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
+              }`}
+            />
+            <input
+              key={`password-${formKey}`}
+              type="password"
+              name="comment-password-field"
+              placeholder="비밀번호"
+              value={commentPassword}
+              onChange={(e) => setCommentPassword(e.target.value)}
+              onFocus={handlePasswordFocus}
+              readOnly={isReadonlyPassword}
+              autoComplete="off"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck="false"
+              data-form-type="other"
+              className={`w-1/2 p-2 rounded-lg outline-none transition-all ${
+                isDarkMode
+                  ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
+                  : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
+              }`}
+            />
+          </div>
+          <textarea
+            placeholder="댓글을 입력하세요..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            rows={4}
+            className={`w-full px-4 py-3 rounded-lg outline-none resize-none transition-all ${
               isDarkMode
                 ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
                 : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
             }`}
           />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={commentPassword}
-            onChange={(e) => setCommentPassword(e.target.value)}
-            className={`w-1/2 p-2 rounded-lg outline-none transition-all ${
-              isDarkMode
-                ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
-                : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
-            }`}
-          />
-        </div>
-        <textarea
-          placeholder="댓글을 입력하세요..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          rows={4}
-          className={`w-full px-4 py-3 rounded-lg outline-none resize-none transition-all ${
-            isDarkMode
-              ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
-              : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
-          }`}
-        />
-        <div className="flex justify-end mt-3">
-          <ReadMoreButton
-            type="submit"
-            onClick={() => setIsModalOpen(true)}
-            className={`cursor-pointer 
+          <div className="flex justify-end mt-3">
+            <ReadMoreButton
+              type="submit"
+              onClick={() => setIsModalOpen(true)}
+              className={`cursor-pointer 
               ${
                 isDarkMode
                   ? "bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
               }
                 `}
-          >
-            <Send className="w-4 h-4 mr-2" />
-            댓글 작성
-          </ReadMoreButton>
-        </div>
+            >
+              <Send className="w-4 h-4 mr-2" />
+              댓글 작성
+            </ReadMoreButton>
+          </div>
+        </form>
       </div>
       <ConfirmModal
         isOpen={isModalOpen}
