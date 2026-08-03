@@ -3,7 +3,7 @@ import Header from "../header";
 import PostWriteButton from "../post-write-button";
 import { authTokenVar, isLoggedInVar } from "@/apollo";
 import { useReactiveVar } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   authPage,
@@ -26,22 +26,17 @@ function Layout({ children }: Props) {
   const { pathname, push } = useRouter();
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const [mounted, setMounted] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { globalLoading } = useLoadingStore();
   const { isDarkMode, setIsDarkMode } = useDarkModeStore();
 
   const { data, error } = useMe();
-
-  const handleMobileMenuClose = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   const onToggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
   useEffect(() => {
-    setMounted(true);
+    startTransition(() => setMounted(true));
     if (data === undefined && error === "Token has expired") {
       toast.error("로그인 시간이 만료되었습니다. 다시 로그인 해주세요.");
       localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
@@ -60,40 +55,23 @@ function Layout({ children }: Props) {
     }
   }, [pathname, isLoggedIn, push]);
 
-  const isLayoutVisible = !handlePathes.includes(pathname); //레이아웃 보여줘야할때
-
   const aboutPage = pathname === "/about";
+  const isLayoutVisible = !handlePathes.includes(pathname) || aboutPage;
 
   return (
-    <div className="p-0 font-sans flex flex-col min-h-screen">
-      {isLayoutVisible && mounted ? (
+    <div className="editorial-sans flex min-h-screen flex-col p-0">
+      {isLayoutVisible ? (
         <>
           {globalLoading && <GlobalLoading2 />}
           <div
-            className={`min-h-screen relative "overflow-hidden" ${
+            className={`editorial-shell relative min-h-screen ${
               isDarkMode ? "dark" : "light"
             }`}
           >
-            {/* Animated gradient background */}
-            <div className="fixed inset-0 -z-10">
-              {isDarkMode ? (
-                <>
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1604781109199-ced99b89b0f6?...')] bg-cover bg-center" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-950/30 via-transparent to-purple-950/30" />
-                </>
-              ) : (
-                <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50 to-slate-100"></div>
-                  <div className="absolute inset-0 bg-[url('/images/darkmode-background.jpeg')] bg-cover bg-center opacity-5"></div>
-                </>
-              )}
-            </div>
-
             <Header
               isDarkMode={isDarkMode}
               onToggleTheme={onToggleTheme}
-              isLoggedIn={isLoggedIn}
+              isLoggedIn={mounted && isLoggedIn}
             />
             <div className="grow">
               <div className="flex flex-row">
@@ -108,24 +86,7 @@ function Layout({ children }: Props) {
               )}
             </div>
 
-            <Footer />
-          </div>
-        </>
-      ) : aboutPage && mounted ? (
-        <>
-          <div className={"fixed top-0 left-0 right-0"}>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/80 to-black/90" />
-
-            <Header
-              isDarkMode={isDarkMode}
-              onToggleTheme={onToggleTheme}
-              isLoggedIn={isLoggedIn}
-            />
-          </div>
-
-          <div className="w-full">
-            {children}
-            <Analytics />
+            <Footer isDarkMode={isDarkMode} />
           </div>
         </>
       ) : (
