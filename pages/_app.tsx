@@ -16,6 +16,7 @@ import { useLoadingStore } from "@/stores/useLoadingStore";
 import { GlobalLoading } from "@/components/loading/global-loading";
 import { useRouter } from "next/router";
 import GlobalLoading2 from "@/components/loading/global-loading2";
+import "@fontsource-variable/noto-sans-kr/wght.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = createApolloClient(pageProps.initialApolloState);
