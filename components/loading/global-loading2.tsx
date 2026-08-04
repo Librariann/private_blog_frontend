@@ -113,7 +113,7 @@ const StyledWrapper = styled.div`
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: color-mix(in oklab, var(--editorial-paper) 76%, transparent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,7 +124,7 @@ const StyledWrapper = styled.div`
     position: relative;
     width: 96px;
     height: 96px;
-    transform: rotate(45deg);
+    transform: rotate(45deg) scale(0.7);
   }
 
   .loader-square {
@@ -134,8 +134,8 @@ const StyledWrapper = styled.div`
     width: 28px;
     height: 28px;
     margin: 2px;
-    border-radius: 0px;
-    background: white;
+    border-radius: 0;
+    background: var(--editorial-signal);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
