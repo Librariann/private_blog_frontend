@@ -1,281 +1,84 @@
-import { GlassCardMain } from "@/components/main/main";
-import {
-  useGetCategories,
-  useGetPopularHashTagList,
-  useGetPostList,
-} from "@/hooks/hooks";
-import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import { ArrowRight, TrendingUp } from "lucide-react";
-import { DynamicIcon } from "lucide-react/dynamic";
+import { EditorialPageHeading } from "@/components/editorial/page-heading";
+import { useGetCategories, useGetPopularHashTagList } from "@/hooks/hooks";
+import { ArrowUpRight, Hash } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
 const AllCategoriesPage = () => {
   const router = useRouter();
-  const { isDarkMode } = useDarkModeStore();
   const { categories } = useGetCategories();
   const popularHashTags = useGetPopularHashTagList();
-  const totalSubCategories = categories?.reduce(
-    (sum, category) =>
-      sum +
-      (category?.subCategories?.length === undefined
-        ? 0
-        : category.subCategories.length),
-    0
+  const totalSubCategories = categories.reduce(
+    (sum, category) => sum + (category.subCategories?.length || 0), 0
   );
-  const totalPostLength = categories
-    ?.map((category) => {
-      return category.subCategories?.reduce(
-        (sum, subCategory) => sum + (subCategory.post?.length || 0),
-        0
-      );
-    })
-    .reduce((sum, count) => (sum || 0) + (count || 0), 0);
+  const totalPosts = categories.reduce(
+    (sum, category) => sum + (category.subCategories?.reduce(
+      (subtotal, child) => subtotal + (child.post?.length || 0), 0
+    ) || 0), 0
+  );
 
   return (
     <>
       <Head>
-        <title>모든 카테고리 | Librarian&apos;s Blog</title>
-        <meta
-          name="description"
-          content={`${categories.length}개의 상위 카테고리, ${totalSubCategories}개의 하위 카테고리로 구성된 ${totalPostLength}개의 포스트를 주제별로 탐색해보세요.`}
-        />
-        <meta property="og:title" content="모든 카테고리 | Librarian's Blog" />
-        <meta
-          property="og:description"
-          content={`${categories.length}개의 카테고리로 분류된 기술 블로그`}
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content="https://librarian-blog.dev/all-categories-page"
-        />
+        <title>카테고리 | Librarian&apos;s Blog</title>
+        <meta name="description" content={`${totalPosts}개의 포스트를 주제별로 탐색해보세요.`} />
       </Head>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <GlassCardMain
-          $isDarkMode={isDarkMode}
-          className="rounded-2xl p-8 mb-8"
-        >
-          <h1 className={isDarkMode ? "text-white mb-2" : "text-gray-900 mb-2"}>
-            카테고리
-          </h1>
-          <p className={isDarkMode ? "text-white/60" : "text-gray-500"}>
-            관심 있는 주제별로 포스트를 탐색해보세요
-          </p>
-        </GlassCardMain>
+      <main className="editorial-inner-page">
+        <EditorialPageHeading
+          index="02"
+          eyebrow="Index / Subjects"
+          title="관심사의 지도"
+          description="문제와 도구, 시행착오가 서로 만나는 지점을 주제별로 정리했습니다."
+          meta={`${categories.length} FIELDS / ${totalSubCategories} TOPICS`}
+        />
 
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
-            <div
-              className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-            >
-              상위 카테고리
-            </div>
-            <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-              {categories.length}개
-            </div>
-          </GlassCardMain>
-          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
-            <div
-              className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-            >
-              하위 카테고리
-            </div>
-            <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-              {totalSubCategories}개
-            </div>
-          </GlassCardMain>
-          <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
-            <div
-              className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-            >
-              총 포스트
-            </div>
-            <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-              {totalPostLength}개
-            </div>
-          </GlassCardMain>
-        </div>
+        <dl className="editorial-stats">
+          <div><dt>Fields</dt><dd>{categories.length.toString().padStart(2, "0")}</dd></div>
+          <div><dt>Topics</dt><dd>{totalSubCategories.toString().padStart(2, "0")}</dd></div>
+          <div><dt>Articles</dt><dd>{totalPosts.toString().padStart(2, "0")}</dd></div>
+        </dl>
 
-        {/* Category Hierarchy */}
-        <div className="space-y-6">
-          {categories?.map((parentCategory) => {
-            const parentPostCount =
-              parentCategory.subCategories?.reduce(
-                (acc, category) => acc + (category.post?.length || 0),
-                0
-              ) || 0;
-
+        <section className="editorial-category-index">
+          {categories.map((parent, parentIndex) => {
+            const parentPostCount = parent.subCategories?.reduce(
+              (sum, child) => sum + (child.post?.length || 0), 0
+            ) || 0;
             return (
-              <GlassCardMain
-                key={parentCategory.categoryTitle}
-                $isDarkMode={isDarkMode}
-                className="rounded-2xl p-6"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className={`w-16 h-16 rounded-xl bg-gradient-to-br ${parentCategory.iconColor} flex items-center justify-center`}
-                    >
-                      <DynamicIcon
-                        name={parentCategory.icon || ("code" as any)}
-                        className="w-5 h-5"
-                        color="white"
-                      />
-                    </div>
-                    <div>
-                      <h2
-                        className={
-                          isDarkMode ? "text-white mb-1" : "text-gray-900 mb-1"
-                        }
-                      >
-                        {parentCategory.categoryTitle}
-                      </h2>
-                      <div
-                        className={
-                          isDarkMode ? "text-white/60" : "text-gray-500"
-                        }
-                      >
-                        {parentCategory?.subCategories?.length}개 하위 카테고리
-                        · {parentPostCount}개 포스트
-                      </div>
-                    </div>
+              <article key={parent.categoryTitle} className="editorial-category-block">
+                <header>
+                  <span>{String(parentIndex + 1).padStart(2, "0")}</span>
+                  <div className="editorial-category-icon">
+                    <Hash aria-hidden="true" />
                   </div>
-                  {parentPostCount > 0 && (
-                    <div
-                      className={`flex items-center space-x-2 ${isDarkMode ? "text-green-400" : "text-green-600"}`}
-                    >
-                      <TrendingUp className="w-5 h-5" />
-                      <span>Active</span>
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  className={`mb-4 px-4 py-3 rounded-lg ${
-                    isDarkMode
-                      ? "bg-white/5 border border-white/10"
-                      : "bg-gray-50 border border-gray-200"
-                  }`}
-                >
-                  <div
-                    className={`mb-1 ${isDarkMode ? "text-white/50" : "text-gray-400"}`}
-                  >
-                    최근 포스트
+                  <div>
+                    <h2>{parent.categoryTitle}</h2>
+                    <p>{parent.subCategories?.length || 0} TOPICS · {parentPostCount} ARTICLES</p>
                   </div>
-                  <div
-                    className={isDarkMode ? "text-white/80" : "text-gray-700"}
-                  >
-                    {parentCategory.subCategories
-                      ?.map((subCategory) => {
-                        const sortedPost = subCategory.post?.toSorted(
-                          (a, b) => {
-                            return (
-                              new Date(b.createdAt).getTime() -
-                              new Date(a.createdAt).getTime()
-                            );
-                          }
-                        );
-
-                        return sortedPost?.[0];
-                      })
-                      .toSorted((a, b) => {
-                        return (
-                          new Date(b?.createdAt).getTime() -
-                          new Date(a?.createdAt).getTime()
-                        );
-                      })?.[0]?.title || "최근 포스트가 없습니다."}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {parentCategory?.subCategories?.map((subCategory) => (
+                </header>
+                <div className="editorial-topic-grid">
+                  {parent.subCategories?.map((child) => (
                     <button
-                      key={subCategory.categoryTitle}
-                      onClick={() =>
-                        router.push(
-                          `/post/${parentCategory.categoryTitle}/${subCategory.categoryTitle}`
-                        )
-                      }
-                      className={`cursor-pointer group p-4 rounded-xl text-left transition-all ${
-                        isDarkMode
-                          ? "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/30"
-                          : "bg-white/60 hover:bg-white border border-gray-200 hover:border-blue-300 hover:shadow-md"
-                      }`}
+                      key={child.categoryTitle}
+                      onClick={() => router.push(`/post/${parent.categoryTitle}/${child.categoryTitle}`)}
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <h3
-                          className={
-                            isDarkMode ? "text-white" : "text-gray-900"
-                          }
-                        >
-                          {subCategory.categoryTitle}
-                        </h3>
-                        <ArrowRight
-                          className={`w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity ${
-                            isDarkMode ? "text-blue-300" : "text-blue-600"
-                          }`}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={
-                            isDarkMode ? "text-white/60" : "text-gray-500"
-                          }
-                        >
-                          {subCategory?.post?.length}개 포스트
-                        </span>
-                        {subCategory?.post?.length! > 0 && (
-                          <span
-                            className={`px-2 py-1 rounded text-xs ${
-                              isDarkMode
-                                ? "bg-green-500/20 text-green-300"
-                                : "bg-green-100 text-green-700"
-                            }`}
-                          >
-                            활성
-                          </span>
-                        )}
-                      </div>
+                      <span>{child.categoryTitle}</span>
+                      <small>{child.post?.length || 0} NOTES</small>
+                      <ArrowUpRight aria-hidden="true" />
                     </button>
                   ))}
                 </div>
-              </GlassCardMain>
+              </article>
             );
           })}
-        </div>
+        </section>
 
-        {/* Popular Topics */}
-        <GlassCardMain
-          $isDarkMode={isDarkMode}
-          className="rounded-2xl p-6 mt-8"
-        >
-          <h2 className={isDarkMode ? "text-white mb-6" : "text-gray-900 mb-6"}>
-            인기 주제
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {popularHashTags.slice(0, 8).map((topic) => (
-              <div
-                key={topic.hashtag}
-                className={`p-4 rounded-xl cursor-pointer transition-all ${
-                  isDarkMode
-                    ? "bg-white/5 hover:bg-white/10 border border-white/10"
-                    : "bg-white/60 hover:bg-white border border-gray-200 hover:shadow-md"
-                }`}
-              >
-                <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-                  {topic.hashtag}
-                </div>
-                <div className={isDarkMode ? "text-white/60" : "text-gray-500"}>
-                  {topic.count}개
-                </div>
-              </div>
-            ))}
-          </div>
-        </GlassCardMain>
-      </div>
+        <section className="editorial-topic-cloud">
+          <span className="editorial-section-label">Frequent vocabulary</span>
+          <div>{popularHashTags.slice(0, 12).map((tag) => (
+            <span key={tag.hashtag}>#{tag.hashtag}<sup>{tag.count}</sup></span>
+          ))}</div>
+        </section>
+      </main>
     </>
   );
 };
