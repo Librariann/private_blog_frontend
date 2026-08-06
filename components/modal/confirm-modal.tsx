@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 
 type ConfirmModalProps = {
@@ -26,16 +26,17 @@ const ConfirmModal = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96 shadow-xl text-center">
-        <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
-        <p className="text-gray-600 mb-6 text-center">{message}</p>
+    <div className="editorial-modal-backdrop">
+      <div className="editorial-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <span className="editorial-kicker">Confirmation / 01</span>
+        <h2 id="confirm-title">{title}</h2>
+        <p>{message}</p>
         {isComment && (
           <input
             type="password"
             autoComplete="new-password"
             placeholder="비밀번호를 입력해주세요"
-            className="border border-gray-300 rounded w-full p-2 mb-4"
+            className="editorial-field w-full mb-4"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -49,14 +50,14 @@ const ConfirmModal = ({
                 onConfirm();
               }
             }}
-            className={`px-4 py-2 bg-blue-500 text-white rounded transition-colors hover:bg-blue-600`}
+            className="editorial-signal-button"
           >
             확인
           </button>
           {!isCancel && (
             <button
               onClick={onClose}
-              className={`px-4 py-2 bg-gray-200 text-gray-700 rounded transition-colorshover:bg-gray-300`}
+              className="editorial-outline-button"
             >
               취소
             </button>
