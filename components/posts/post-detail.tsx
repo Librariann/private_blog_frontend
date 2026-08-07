@@ -1,7 +1,6 @@
 import { ArrowLeft, Calendar, Clock, List } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Badge } from "../ui/badge";
 import {
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
@@ -12,7 +11,6 @@ import dynamic from "next/dynamic";
 import Comments from "../comments/comments";
 import PostNavigation from "./post-navigation";
 import PostTags from "./post-tags";
-import { GlassCardMain } from "../main/main";
 import { useMe } from "@/hooks/useMe";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -185,46 +183,23 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
           content={`https://librarian-blog.dev${router.asPath}`}
         />
       </Head>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <main className="editorial-article-page">
         {/* Back Button */}
         <button
           onClick={() => router.back()}
-          className={`cursor-pointer flex items-center space-x-2 mb-4 sm:mb-6 transition-colors ${
-            isDarkMode
-              ? "text-white/70 hover:text-white"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className="editorial-back"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>목록으로</span>
         </button>
 
         {/* Post Header */}
-        <GlassCardMain
-          $isDarkMode={isDarkMode}
-          className="rounded-2xl p-6 sm:p-8 mb-6"
-        >
-          <div className="mb-6">
-            <Badge
-              variant="secondary"
-              className={
-                isDarkMode
-                  ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-white/20 mb-4"
-                  : "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-300 mb-4"
-              }
-            >
-              {postData?.category?.categoryTitle}
-            </Badge>
-
-            <h1
-              className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}
-            >
-              {postData?.title}
-            </h1>
-
-            <div
-              className={`flex flex-wrap items-center gap-4 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-            >
+        <article>
+          <header className="editorial-article-header">
+            <span className="editorial-kicker">{postData?.category?.categoryTitle} / Field note</span>
+            <h1>{postData?.title}</h1>
+            {postData?.excerpt && <p>{postData.excerpt}</p>}
+            <div className="editorial-article-meta">
               <div className="flex items-center space-x-2">
                 <Calendar className="w-4 h-4" />
                 <span>{formattedDate}</span>
@@ -234,37 +209,25 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                 <span>{postData?.readTime}분 읽기</span>
               </div>
             </div>
-          </div>
+          </header>
 
           {/* Table of Contents */}
           {tocItems.length > 0 && (
-            <div
-              className={`border rounded-xl overflow-hidden ${
-                isDarkMode
-                  ? "border-white/10 bg-white/5"
-                  : "border-gray-200 bg-gray-50"
-              }`}
-            >
+            <div className="editorial-toc">
               <button
                 onClick={() => setIsTocOpen(!isTocOpen)}
-                className={`w-full flex items-center justify-between px-6 py-4 transition-colors ${
-                  isDarkMode ? "hover:bg-white/5" : "hover:bg-gray-100"
-                }`}
+                className="editorial-toc-trigger"
               >
                 <div className="flex items-center space-x-3">
-                  <List
-                    className={`w-5 h-5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
-                  />
-                  <span className={isDarkMode ? "text-white" : "text-gray-900"}>
-                    목차
-                  </span>
+                  <List className="w-4 h-4" />
+                  <span>Contents</span>
                 </div>
                 <motion.div
                   animate={{ rotate: isTocOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
                   <svg
-                    className={`w-5 h-5 ${isDarkMode ? "text-white/60" : "text-gray-600"}`}
+                    className="w-4 h-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -288,9 +251,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div
-                      className={`px-6 pb-4 border-t ${isDarkMode ? "border-white/10" : "border-gray-200"}`}
-                    >
+                    <div className="editorial-toc-list">
                       <nav className="space-y-2 mt-4">
                         {headings.map((item, index) => (
                           <motion.button
@@ -299,20 +260,10 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ duration: 0.2, delay: index * 0.05 }}
                             onClick={() => scrollToSection(item.id)}
-                            className={`w-full text-left px-4 py-2 rounded-lg transition-all cursor-pointer ${
-                              isDarkMode
-                                ? "text-white/70 hover:bg-white/10 hover:text-white"
-                                : "text-gray-600 hover:bg-white hover:text-gray-900"
-                            }`}
+                            className="editorial-toc-link"
                           >
                             <div className="flex items-center space-x-2">
-                              <span
-                                className={
-                                  isDarkMode ? "text-blue-400" : "text-blue-600"
-                                }
-                              >
-                                {index + 1}.
-                              </span>
+                              <span>{String(index + 1).padStart(2, "0")}</span>
                               <span>{item.text}</span>
                             </div>
                           </motion.button>
@@ -327,7 +278,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
 
           {/* Post Content */}
           <div
-            className={`mt-8 space-y-6 ${isDarkMode ? "text-white/80" : "text-gray-700"}`}
+            className="editorial-article-body"
             data-color-mode={isDarkMode ? "dark" : "light"}
           >
             <EditorMarkdown
@@ -339,7 +290,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
 
           {/* Tags */}
           <PostTags hashtags={postData?.hashtags ?? []} />
-        </GlassCardMain>
+        </article>
 
         {/* Comments Section */}
         <Comments comments={postData?.comments ?? []} postId={postId} />
@@ -352,7 +303,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
             nextPost={post?.nextPost ?? null}
           />
         )}
-      </div>
+      </main>
     </>
   );
 };
