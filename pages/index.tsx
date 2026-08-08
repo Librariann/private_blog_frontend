@@ -4,6 +4,7 @@ import { MemoizedMain } from "@/components/main/main";
 import { getPopularHashTagDatas, getPostDatas, getUserInfo } from "@/lib/posts";
 import { useQuery } from "@apollo/client";
 import { GET_POST_LIST_QUERY } from "@/lib/queries";
+import { startTransition, useEffect, useState } from "react";
 
 export type popularHashTagsProps = {
   hashtag: string;
@@ -50,8 +51,19 @@ const Home = ({
   userInfo: UserInfoType;
   featuredPost: Post;
 }) => {
+  const [isClientReady, setIsClientReady] = useState(false);
+
+  useEffect(() => {
+    startTransition(() => setIsClientReady(true));
+  }, []);
+
   // Apollo로 클라이언트에서 데이터 가져오기
-  const { data } = useQuery(GET_POST_LIST_QUERY);
+  const { data } = useQuery(GET_POST_LIST_QUERY, {
+    skip: !isClientReady,
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+    ssr: false,
+  });
 
   const postsDatas: Post[] = data?.getPostList?.post || posts;
 
