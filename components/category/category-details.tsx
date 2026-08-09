@@ -1,186 +1,61 @@
-import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { ArrowLeft } from "lucide-react";
-import { BlogPostCard } from "../cards/blog-post-card";
 import { Post } from "@/gql/graphql";
 import { useRouter } from "next/router";
-import { GlassCardMain } from "../main/main";
 import { useFindOneCategoryById } from "@/hooks/hooks";
-import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useMemo } from "react";
 import BlogPostCard2 from "../cards/blog-post-card2";
+import { EditorialPageHeading } from "../editorial/page-heading";
 
-const CategoryDetails = ({
-  posts,
-  categoryId,
-}: {
-  posts: Post[];
-  categoryId: number;
-}) => {
-  const { isDarkMode } = useDarkModeStore();
-  const hashtagMaps = new Map<string, number>();
+const CategoryDetails = ({ posts, categoryId }: { posts: Post[]; categoryId: number }) => {
   const router = useRouter();
   const { slug } = router.query;
   const category = useFindOneCategoryById({ categoryId });
   const categoryMemoized = useMemo(() => category, [category]);
-
-  posts
-    ?.flatMap((post) => post.hashtags)
-    .forEach((tag) => {
-      const count = hashtagMaps.get(tag?.hashtag || "") || 0;
-      hashtagMaps.set(tag?.hashtag || "", count + 1);
-    });
-
-  const postHashTags = Array.from(hashtagMaps.entries())
-    .map(([hashtag, count]) => ({
-      hashtag,
-      count,
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  const postTotalViews = posts.reduce((acc, post) => acc + post.hits, 0);
-  const avgReadTime = Math.round(
-    posts.reduce((acc, post) => acc + post.readTime, 0) / posts.length
-  );
+  const tagCounts = new Map<string, number>();
+  posts.flatMap((post) => post.hashtags).forEach((tag) => {
+    if (tag?.hashtag) tagCounts.set(tag.hashtag, (tagCounts.get(tag.hashtag) || 0) + 1);
+  });
+  const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
+  const totalViews = posts.reduce((sum, post) => sum + post.hits, 0);
+  const averageReadTime = posts.length
+    ? Math.round(posts.reduce((sum, post) => sum + post.readTime, 0) / posts.length)
+    : 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        className={`cursor-pointer flex items-center space-x-2 mb-6 transition-colors ${
-          isDarkMode
-            ? "text-white/70 hover:text-white"
-            : "text-gray-600 hover:text-gray-900"
-        }`}
-      >
-        <ArrowLeft className="w-5 h-5" />
-        <span>뒤로가기</span>
+    <main className="editorial-inner-page">
+      <button className="editorial-back" onClick={() => router.back()}>
+        <ArrowLeft aria-hidden="true" /> 전체 카테고리
       </button>
-
-      {/* Category Header */}
-      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-8 mb-8">
-        <div className="flex items-center space-x-4 mb-4">
-          <div
-            className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category?.iconColor || "from-blue-500 to-cyan-500"} flex items-center justify-center`}
-          >
-            <DynamicIcon
-              name={category?.icon as IconName}
-              className="w-8 h-8"
-              color="white"
-            />
-          </div>
-          <div>
-            <h1
-              className={isDarkMode ? "text-white mb-2" : "text-gray-900 mb-2"}
-            >
-              {slug?.[1]}
-            </h1>
-            <p className={isDarkMode ? "text-white/60" : "text-gray-500"}>
-              {posts.length}개의 포스트
-            </p>
-          </div>
-        </div>
-        <p className={isDarkMode ? "text-white/70" : "text-gray-600"}>
-          {categoryMemoized?.description}
-        </p>
-      </GlassCardMain>
-
-      {/* Category Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
-          <div
-            className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-          >
-            총 포스트
-          </div>
-          <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-            {posts.length}개
-          </div>
-        </GlassCardMain>
-
-        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
-          <div
-            className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-          >
-            총 조회수
-          </div>
-          <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-            {postTotalViews.toLocaleString()}
-          </div>
-        </GlassCardMain>
-
-        <GlassCardMain $isDarkMode={isDarkMode} className="rounded-xl p-6">
-          <div
-            className={`mb-2 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-          >
-            평균 읽기 시간
-          </div>
-          <div className={isDarkMode ? "text-white" : "text-gray-900"}>
-            {avgReadTime ? avgReadTime : 0}분
-          </div>
-        </GlassCardMain>
-      </div>
-
-      {/* Posts List */}
-      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6">
-        <h2 className={isDarkMode ? "text-white mb-6" : "text-gray-900 mb-6"}>
-          모든 포스트
-        </h2>
-
-        {posts.length > 0 ? (
-          <div className="space-y-4">
-            {posts.map((post) => (
-              <div key={post.id}>
-                <BlogPostCard2
-                  key={post.id}
-                  post={post}
-                  mainYn={false}
-                  onClick={() =>
-                    router.push(
-                      `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
-                    )
-                  }
-                />
-
-                {/* <BlogPostCard
-                  post={post}
-                  onClick={() =>
-                    router.push(`${router.asPath}/@Post-${post.id}`)
-                  }
-                /> */}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div
-            className={`text-center py-12 ${isDarkMode ? "text-white/60" : "text-gray-500"}`}
-          >
-            <p>아직 포스트가 없어요 곧 올라올거에요 😅</p>
-          </div>
-        )}
-      </GlassCardMain>
-
-      {/* Popular Tags in Category */}
-      <GlassCardMain $isDarkMode={isDarkMode} className="rounded-2xl p-6 mt-6">
-        <h3 className={isDarkMode ? "text-white mb-4" : "text-gray-900 mb-4"}>
-          인기 태그
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {postHashTags.slice(0, 10).map((tag) => (
-            <span
-              key={tag.hashtag}
-              className={`px-3 py-1 backdrop-blur-sm rounded-full border transition-all cursor-pointer ${
-                isDarkMode
-                  ? "bg-white/10 text-white border-white/20 hover:bg-white/20"
-                  : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
-              }`}
-            >
-              #{tag.hashtag}
-            </span>
-          ))}
-        </div>
-      </GlassCardMain>
-    </div>
+      <EditorialPageHeading
+        index="03"
+        eyebrow="Subject / Collection"
+        title={String(slug?.[1] || categoryMemoized?.categoryTitle || "카테고리")}
+        description={categoryMemoized?.description || "이 주제에 관해 기록한 생각과 구현의 과정입니다."}
+        meta={`${posts.length} ARTICLES`}
+      />
+      <dl className="editorial-stats">
+        <div><dt>Articles</dt><dd>{posts.length.toString().padStart(2, "0")}</dd></div>
+        <div><dt>Total views</dt><dd>{totalViews.toLocaleString()}</dd></div>
+        <div><dt>Avg. read</dt><dd>{averageReadTime}′</dd></div>
+      </dl>
+      <section className="editorial-archive-results editorial-category-results">
+        <div className="editorial-list-heading"><h2>이 주제의 기록</h2><span>NEWEST FIRST</span></div>
+        {posts.length ? posts.map((post) => (
+          <BlogPostCard2
+            key={post.id}
+            post={post}
+            mainYn={false}
+            onClick={() => router.push(`/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`)}
+          />
+        )) : <div className="editorial-empty">아직 포스트가 없습니다.</div>}
+      </section>
+      {tags.length > 0 && (
+        <section className="editorial-topic-cloud">
+          <span className="editorial-section-label">Vocabulary in this subject</span>
+          <div>{tags.slice(0, 10).map(([tag, count]) => <span key={tag}>#{tag}<sup>{count}</sup></span>)}</div>
+        </section>
+      )}
+    </main>
   );
 };
 
