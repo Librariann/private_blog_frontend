@@ -293,7 +293,7 @@ const PostWrite = () => {
   // Step 1: 기본 작성 (제목, 태그, 내용)
   if (step === 1) {
     return (
-      <div className="min-h-screen pb-8">
+      <div className="editorial-admin-page min-h-screen pb-8">
         <div className="max-w-full mx-auto px-4 sm:px-8 lg:px-16 py-4 sm:py-8">
           {/* Simple Header */}
           <div className="flex items-center justify-between mb-8">
@@ -430,7 +430,7 @@ const PostWrite = () => {
 
   // Step 2: 부가 정보 (요약, 썸네일, 카테고리 등)
   return (
-    <div className="min-h-screen pb-8">
+    <div className="editorial-admin-page min-h-screen pb-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
