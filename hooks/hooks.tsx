@@ -80,11 +80,12 @@ import { useMutation } from "@apollo/client";
 import { ME_QUERY } from "./useMe";
 import { useRouter } from "next/router";
 
-export function useGetCategories() {
+export function useGetCategories(skip = false) {
   const { data, loading } = useQuery<
     GetCategoriesQuery,
     GetCategoriesQueryVariables
   >(GET_CATEGORIES, {
+    skip,
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-first",
     ssr: false, // SSR 비활성화
