@@ -1,4 +1,3 @@
-import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useState, useEffect } from "react";
 import { Send } from "lucide-react";
 import { ReadMoreButton } from "../buttons/read-more-button";
@@ -20,7 +19,6 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
   const [isReadonlyAuthor, setIsReadonlyAuthor] = useState(true);
   const [isReadonlyPassword, setIsReadonlyPassword] = useState(true);
   const [formKey, setFormKey] = useState(Date.now());
-  const { isDarkMode } = useDarkModeStore();
   const { setGlobalLoading } = useLoadingStore();
   const { createCommentMutation } = useCreateComment({ id: postId });
 
@@ -95,13 +93,7 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
 
   return (
     <>
-      <div
-        className={`p-6 rounded-xl mb-6 ${
-          isDarkMode
-            ? "bg-white/5 border border-white/10"
-            : "bg-gray-50 border border-gray-200"
-        }`}
-      >
+      <div className="editorial-comment-form">
         <form
           autoComplete="off"
           onSubmit={(e) => e.preventDefault()}
@@ -125,11 +117,7 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
               autoCorrect="off"
               spellCheck="false"
               data-form-type="other"
-              className={`w-1/2 p-2 rounded-lg outline-none transition-all ${
-                isDarkMode
-                  ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
-                  : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
-              }`}
+              className="editorial-field"
             />
             <input
               key={`password-${formKey}`}
@@ -145,11 +133,7 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
               autoCorrect="off"
               spellCheck="false"
               data-form-type="other"
-              className={`w-1/2 p-2 rounded-lg outline-none transition-all ${
-                isDarkMode
-                  ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
-                  : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
-              }`}
+              className="editorial-field"
             />
           </div>
           <textarea
@@ -157,23 +141,13 @@ const CommentsWriteForm = ({ postId }: CommentsWriteFormProps) => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             rows={4}
-            className={`w-full px-4 py-3 rounded-lg outline-none resize-none transition-all ${
-              isDarkMode
-                ? "bg-white/5 text-white placeholder-white/40 border border-white/10 focus:border-blue-400/50"
-                : "bg-white text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-blue-400"
-            }`}
+            className="editorial-field editorial-textarea"
           />
           <div className="flex justify-end mt-3">
             <ReadMoreButton
               type="submit"
               onClick={() => setIsModalOpen(true)}
-              className={`cursor-pointer 
-              ${
-                isDarkMode
-                  ? "bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30"
-                  : "bg-blue-500 hover:bg-blue-600 text-white"
-              }
-                `}
+              className="editorial-signal-button"
             >
               <Send className="w-4 h-4 mr-2" />
               댓글 작성
