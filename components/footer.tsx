@@ -1,19 +1,14 @@
 const Footer = ({ isDarkMode }: { isDarkMode?: boolean }) => {
   return (
     <footer
-      className={`mt-16 py-8 ${isDarkMode ? "border-white/10" : "border-gray-200"} border-t`}
+      data-theme={isDarkMode ? "dark" : "light"}
+      className="mt-16 border-t border-[var(--editorial-rule)] text-[var(--editorial-ink)]"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className={`rounded-2xl p-6 text-center ${isDarkMode ? "glass-card" : "glass-card-light"}`}
-        >
-          <p className={isDarkMode ? "text-white/70" : "text-gray-600"}>
-            © 2025 Librarian. All rights reserved.
-          </p>
-          <p
-            className={isDarkMode ? "text-white/50 mt-2" : "text-gray-400 mt-2"}
-          ></p>
-        </div>
+      <div className="mx-auto flex max-w-[1536px] flex-col gap-3 px-4 py-8 text-[0.65rem] uppercase tracking-[0.12em] sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-20">
+        <p>© {new Date().getFullYear()} Librarian&apos;s Archive</p>
+        <p className="text-[var(--editorial-muted)]">
+          Engineering notes · Seoul, KR
+        </p>
       </div>
     </footer>
   );
