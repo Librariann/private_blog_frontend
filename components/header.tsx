@@ -1,19 +1,7 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import {
-  Search,
-  Menu,
-  Github,
-  Linkedin,
-  Mail,
-  Moon,
-  Sun,
-  X,
-} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { Github, Mail, Menu, Moon, Sun, X } from "lucide-react";
 import { useRouter } from "next/router";
-import { glassCardTypes } from "./cards/blog-post-card";
-import styled from "styled-components";
-import { GlassCardMain } from "./main/main";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
 
@@ -23,317 +11,156 @@ type HeaderProps = {
   isLoggedIn: boolean;
 };
 
+const navigation = [
+  { label: "Articles", path: "/all-posts-page" },
+  { label: "Index", path: "/all-categories-page" },
+  { label: "About", path: "/about" },
+];
+
 const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userInfo } = useUserInfoStore();
 
-  const clickedMenu = (menuName: string): boolean => {
-    return menuName === router.pathname;
+  const isActive = (path: string) =>
+    path === "/all-posts-page"
+      ? router.pathname === path || router.pathname.startsWith("/post/")
+      : router.pathname === path;
+
+  const navigate = (path: string) => {
+    setIsMobileMenuOpen(false);
+    router.push(path);
   };
 
   return (
-    <>
-      <GlassCardMain
-        $isDarkMode={isDarkMode}
-        className="sticky top-0 z-50 border-b"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+    <header className="sticky top-0 z-50 border-b border-[var(--editorial-rule)] bg-[color-mix(in_oklch,var(--editorial-paper)_94%,transparent)] text-[var(--editorial-ink)] backdrop-blur-md">
+      <div className="mx-auto flex h-[4.5rem] max-w-[1536px] items-center justify-between px-4 sm:px-8 lg:px-20">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="editorial-serif cursor-pointer text-left text-xl font-semibold tracking-[-0.035em] sm:text-2xl"
+          aria-label="Librarian's Archive 홈"
+        >
+          Librarian&apos;s <span className="text-[var(--editorial-signal-strong)]">Archive</span>
+        </button>
+
+        <nav className="hidden items-center gap-8 md:flex" aria-label="주요 메뉴">
+          {navigation.map((item) => (
             <button
-              onClick={() => router.push("/")}
-              className="flex items-center space-x-3 cursor-pointer"
+              type="button"
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className={`relative min-h-11 cursor-pointer text-[0.68rem] font-bold uppercase tracking-[0.14em] transition-colors hover:text-[var(--editorial-signal-strong)] ${
+                isActive(item.path) ? "text-[var(--editorial-signal-strong)]" : ""
+              }`}
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                <span className="text-white">{`{L}`}</span>
-              </div>
-              <span
-                className={`hidden sm:block ${isDarkMode ? "text-white" : "text-gray-900"}`}
-              >
-                Librarian&apos;s Blog
-              </span>
-            </button>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <button
-                onClick={() => router.push("/")}
-                className={`cursor-pointer transition-colors
-                  ${
-                    isDarkMode
-                      ? clickedMenu("/")
-                        ? "text-white"
-                        : "text-white/70 hover:text-white"
-                      : clickedMenu("/")
-                        ? "text-gray-900"
-                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
-                  }
-                `}
-              >
-                홈
-              </button>
-              <button
-                onClick={() => router.push("/all-posts-page")}
-                className={`cursor-pointer transition-colors
-                  ${
-                    isDarkMode
-                      ? clickedMenu("/all-posts-page")
-                        ? "text-white"
-                        : "text-white/70 hover:text-white"
-                      : clickedMenu("/all-posts-page")
-                        ? "text-gray-900"
-                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
-                  }`}
-              >
-                포스트
-              </button>
-              <button
-                onClick={() => router.push("/all-categories-page")}
-                className={`cursor-pointer transition-colors
-                  ${
-                    isDarkMode
-                      ? clickedMenu("/all-categories-page")
-                        ? "text-white"
-                        : "text-white/70 hover:text-white"
-                      : clickedMenu("/all-categories-page")
-                        ? "text-gray-900"
-                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
-                  }`}
-              >
-                카테고리
-              </button>
-              <button
-                onClick={() => router.push("/about")}
-                className={`cursor-pointer transition-colors
-                  ${
-                    isDarkMode
-                      ? clickedMenu("/about")
-                        ? "text-white"
-                        : "text-white/70 hover:text-white"
-                      : clickedMenu("/about")
-                        ? "text-gray-900"
-                        : "text-gray-600 hover:text-gray-900 hover:font-bold"
-                  }`}
-              >
-                소개
-              </button>
-            </nav>
-
-            {/* Actions */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* <button
-                className={`hidden sm:block ${isDarkMode ? "text-white/70 hover:text-white transition-colors" : "text-gray-600 hover:text-gray-900 transition-colors"}`}
-              >
-                <Search className="w-5 h-5" />
-              </button> */}
-              <button
-                onClick={onToggleTheme}
-                className={`p-2 rounded-lg transition-all cursor-pointer ${
-                  isDarkMode
-                    ? "bg-white/10 hover:bg-white/20 text-white"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-900"
-                }`}
-                aria-label="Toggle theme"
-              >
-                {isDarkMode ? (
-                  <Sun className="w-5 h-5" />
-                ) : (
-                  <Moon className="w-5 h-5" />
-                )}
-              </button>
-              {isLoggedIn && (
-                <button
-                  onClick={() => {
-                    router.push("/settings/my-page");
-                  }}
-                  className={`hidden sm:block cursor-pointer ${isDarkMode ? "text-white/70 hover:text-white transition-colors" : "text-gray-600 hover:text-gray-900 transition-colors"}`}
-                  aria-label="User profile"
-                >
-                  <Avatar className="w-8 h-8 ring-2 ring-offset-2 ring-offset-transparent hover:ring-blue-500 transition-all">
-                    <AvatarImage
-                      src={`${userInfo?.user?.profileImage || ""}`}
-                    />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xs">
-                      Dev
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
+              {item.label}
+              {isActive(item.path) && (
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-[var(--editorial-signal)]" />
               )}
-              <div className="hidden lg:flex items-center space-x-2">
-                <a
-                  href="#"
-                  className={
-                    isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors"
-                      : "text-gray-600 hover:text-gray-900 transition-colors"
-                  }
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  className={
-                    isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors"
-                      : "text-gray-600 hover:text-gray-900 transition-colors"
-                  }
-                >
-                  <Mail className="w-5 h-5" />
-                </a>
-              </div>
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`
-                  cursor-pointer
-                  ${
-                    isDarkMode
-                      ? "md:hidden text-white"
-                      : "md:hidden text-gray-900"
-                  }`}
-              >
-                {isMobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </GlassCardMain>
+            </button>
+          ))}
+        </nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <GlassMotionCardMain
-            $isDarkMode={isDarkMode}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden fixed top-16 left-0 right-0 z-40 border-b overflow-hidden"
+        <div className="flex items-center gap-1 sm:gap-2">
+          <a
+            href="https://github.com/Librariann"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden min-h-11 min-w-11 items-center justify-center transition-colors hover:text-[var(--editorial-signal-strong)] lg:flex"
+            aria-label="GitHub 프로필 열기"
           >
-            <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
-              <button
-                onClick={() => {
-                  router.push("/");
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                  isDarkMode
-                    ? "text-white hover:bg-white/10"
-                    : "text-gray-900 hover:bg-gray-100"
-                }`}
-              >
-                홈
-              </button>
-              <button
-                onClick={() => {
-                  router.push("/all-posts-page");
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                  isDarkMode
-                    ? "text-white/70 hover:bg-white/10 hover:text-white"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              >
-                포스트
-              </button>
-              <button
-                onClick={() => {
-                  router.push("/all-categories-page");
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                  isDarkMode
-                    ? "text-white/70 hover:bg-white/10 hover:text-white"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              >
-                카테고리
-              </button>
-              <button
-                onClick={() => {
-                  router.push("/about");
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`cursor-pointer w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                  isDarkMode
-                    ? "text-white/70 hover:bg-white/10 hover:text-white"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              >
-                소개
-              </button>
+            <Github className="h-[1.05rem] w-[1.05rem]" />
+          </a>
+          <a
+            href="mailto:okpc0305@gmail.com"
+            className="hidden min-h-11 min-w-11 items-center justify-center transition-colors hover:text-[var(--editorial-signal-strong)] lg:flex"
+            aria-label="이메일 보내기"
+          >
+            <Mail className="h-[1.05rem] w-[1.05rem]" />
+          </a>
+          <span className="mx-1 hidden h-5 w-px bg-[var(--editorial-rule)] lg:block" />
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[var(--editorial-paper-deep)]"
+            aria-label={isDarkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
+          >
+            {isDarkMode ? <Sun className="h-[1.05rem] w-[1.05rem]" /> : <Moon className="h-[1.05rem] w-[1.05rem]" />}
+          </button>
 
-              <div className="pt-4 border-t border-white/10 flex items-center justify-around">
-                <a
-                  href="https://github.com/Librariann"
-                  className={
-                    isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors p-2"
-                      : "text-gray-600 hover:text-gray-900 transition-colors p-2"
-                  }
+          {isLoggedIn && (
+            <button
+              type="button"
+              onClick={() => navigate("/settings/my-page")}
+              className="hidden min-h-11 min-w-11 cursor-pointer items-center justify-center sm:flex"
+              aria-label="관리자 프로필 설정"
+            >
+              <Avatar className="h-7 w-7 rounded-none ring-1 ring-[var(--editorial-rule)]">
+                <AvatarImage src={userInfo?.user?.profileImage || ""} />
+                <AvatarFallback className="rounded-none bg-[var(--editorial-signal)] text-xs text-[var(--editorial-paper)]">
+                  L
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center md:hidden"
+            aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            aria-expanded={isMobileMenuOpen}
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-x-0 top-full border-b border-[var(--editorial-ink)] bg-[var(--editorial-paper)] px-4 py-5 md:hidden"
+          >
+            <nav className="mx-auto grid max-w-[1536px]" aria-label="모바일 메뉴">
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="flex min-h-14 items-center justify-between border-t border-[var(--editorial-rule)] text-left editorial-serif"
+              >
+                Home <span className="text-xs text-[var(--editorial-signal-strong)]">00</span>
+              </button>
+              {navigation.map((item, index) => (
+                <button
+                  type="button"
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className="flex min-h-14 items-center justify-between border-t border-[var(--editorial-rule)] text-left editorial-serif"
                 >
-                  <Github className="w-6 h-6" />
+                  {item.label}
+                  <span className="text-xs text-[var(--editorial-signal-strong)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </button>
+              ))}
+              <div className="flex min-h-14 items-center gap-4 border-y border-[var(--editorial-rule)]">
+                <a href="https://github.com/Librariann" target="_blank" rel="noreferrer" className="flex min-h-11 items-center gap-2 text-xs uppercase tracking-widest">
+                  <Github className="h-4 w-4" /> GitHub
                 </a>
-                {/* <a
-                  href="#"
-                  className={
-                    isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors p-2"
-                      : "text-gray-600 hover:text-gray-900 transition-colors p-2"
-                  }
-                >
-                  <Linkedin className="w-6 h-6" />
-                </a> */}
-                <a
-                  href="#"
-                  className={
-                    isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors p-2"
-                      : "text-gray-600 hover:text-gray-900 transition-colors p-2"
-                  }
-                >
-                  <Mail className="w-6 h-6" />
+                <a href="mailto:okpc0305@gmail.com" className="flex min-h-11 items-center gap-2 text-xs uppercase tracking-widest">
+                  <Mail className="h-4 w-4" /> Mail
                 </a>
-                {/* <button
-                  className={
-                    isDarkMode
-                      ? "text-white/70 hover:text-white transition-colors p-2"
-                      : "text-gray-600 hover:text-gray-900 transition-colors p-2"
-                  }
-                >
-                  <Search className="w-6 h-6" />
-                </button> */}
               </div>
             </nav>
-          </GlassMotionCardMain>
+          </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </header>
   );
 };
-
-export const GlassMotionCardMain = styled(motion.div)<glassCardTypes>`
-  background: ${(props) =>
-    props.$isDarkMode
-      ? "rgba(255, 255, 255, 0.1)"
-      : "rgba(255, 255, 255, 0.7)"};
-  backdrop-filter: ${(props) =>
-    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
-  -webkit-backdrop-filter: ${(props) =>
-    props.$isDarkMode ? "blur(4px)" : "blur(10px)"};
-  border: ${(props) =>
-    props.$isDarkMode
-      ? "1px solid rgba(255, 255, 255, 0.2)"
-      : "1px solid rgba(0, 0, 0, 0.05)"};
-  box-shadow: ${(props) =>
-    props.$isDarkMode
-      ? "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
-      : "0 8px 32px 0 rgba(0, 0, 0, 0.08)"};
-`;
 
 export default Header;
