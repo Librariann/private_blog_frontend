@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { remark } from "remark";
 import rehypeSlug from "rehype-slug";
+import remarkBreaks from "remark-breaks";
 import { useUpdatePostHits } from "@/hooks/hooks";
 import Head from "next/head";
 import { Heading, PhrasingContent, Root, Text } from "mdast";
@@ -282,8 +283,10 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
             data-color-mode={isDarkMode ? "dark" : "light"}
           >
             <EditorMarkdown
+              className="editorial-post-content"
               source={postData?.contents}
               style={{ backgroundColor: "transparent" }}
+              remarkPlugins={[remarkBreaks]}
               rehypePlugins={[rehypeSlug]}
             />
           </div>

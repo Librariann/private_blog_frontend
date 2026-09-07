@@ -37,6 +37,8 @@ import CreateCategoryModal from "@/components/posts/modal/create-category-modal"
 import WritingAnimation from "@/components/loading/writing-animation";
 import { useRouter } from "next/router";
 import { usePostEditStore } from "@/stores/usePostEditStore";
+import rehypeSlug from "rehype-slug";
+import remarkBreaks from "remark-breaks";
 
 function insertAtSelection(
   state: TextState,
@@ -420,6 +422,15 @@ const PostWrite = () => {
               }
               className="border-0"
               preview="live"
+              previewOptions={{
+                className: "editorial-post-content",
+                style: { backgroundColor: "transparent" },
+                remarkPlugins: [remarkBreaks],
+                rehypePlugins: [rehypeSlug],
+                wrapperElement: {
+                  "data-color-mode": isDarkMode ? "dark" : "light",
+                },
+              }}
               commands={[...commands.getCommands(), imageUploadCommand]}
             />
           </div>
