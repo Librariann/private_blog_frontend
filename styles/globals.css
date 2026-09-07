@@ -1267,6 +1267,44 @@ html body[data-scroll-locked] {
 .editorial-modal h2 { margin-top: 0.6rem; font-family: var(--font-editorial); font-size: 2rem; }
 .editorial-modal > p { margin: 1rem 0 2rem; color: var(--editorial-muted); line-height: 1.65; }
 
+/* Comment edit / editorial revision sheet */
+body:has(.editorial-comment-edit-modal) [data-slot="dialog-overlay"] { background: color-mix(in oklab, var(--editorial-ink) 78%, transparent); }
+.editorial-comment-edit-modal { width: min(calc(100% - 2rem), 36rem) !important; max-width: 36rem !important; gap: 0 !important; padding: 0 !important; overflow: hidden; border: 1px solid var(--editorial-ink) !important; border-radius: 0 !important; background: var(--editorial-paper) !important; color: var(--editorial-ink); box-shadow: 12px 12px 0 var(--editorial-signal) !important; font-family: var(--font-editorial); }
+.editorial-comment-edit-modal > button { top: 1.35rem; right: 1.35rem; color: var(--editorial-ink) !important; opacity: 0.55; }
+.editorial-comment-edit-modal > button:hover { color: var(--editorial-signal-strong) !important; opacity: 1; }
+.editorial-comment-edit-header { gap: 0; padding: clamp(1.5rem, 5vw, 2.5rem); padding-right: 4rem; border-bottom: 1px solid var(--editorial-ink); text-align: left; }
+.editorial-comment-edit-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--editorial-signal-strong); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.editorial-comment-edit-meta span:last-child { color: var(--editorial-muted); }
+.editorial-comment-edit-header h2 { margin-top: 1.25rem; color: var(--editorial-ink); font-family: var(--font-editorial); font-size: clamp(2.15rem, 7vw, 3.5rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.055em; }
+.editorial-comment-edit-header p { max-width: 27rem; margin-top: 1rem; color: var(--editorial-muted); font-size: 0.82rem; line-height: 1.7; word-break: keep-all; }
+.editorial-comment-edit-form { display: grid; gap: 1.5rem; padding: clamp(1.5rem, 5vw, 2.5rem); }
+.editorial-comment-edit-form label { display: grid; gap: 0.55rem; }
+.editorial-comment-edit-label { display: flex; justify-content: space-between; gap: 1rem; color: var(--editorial-muted); font-size: 0.61rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; }
+.editorial-comment-edit-label span:first-child { color: var(--editorial-ink); }
+.editorial-comment-edit-form textarea,
+.editorial-comment-edit-form input { width: 100%; border: 1px solid var(--editorial-rule) !important; border-radius: 0 !important; background: transparent !important; color: var(--editorial-ink) !important; box-shadow: none !important; }
+.editorial-comment-edit-form textarea { min-height: 9.5rem; resize: vertical; padding: 0.9rem 1rem; line-height: 1.7; }
+.editorial-comment-edit-form input { height: 3.15rem; padding-inline: 1rem; }
+.editorial-comment-edit-form textarea::placeholder,
+.editorial-comment-edit-form input::placeholder { color: var(--editorial-muted); opacity: 0.65; }
+.editorial-comment-edit-form textarea:focus,
+.editorial-comment-edit-form input:focus { border-color: var(--editorial-signal) !important; outline: 2px solid color-mix(in oklab, var(--editorial-signal) 22%, transparent) !important; outline-offset: 2px; }
+.editorial-comment-edit-actions { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); margin: 0 calc(clamp(1.5rem, 5vw, 2.5rem) * -1) calc(clamp(1.5rem, 5vw, 2.5rem) * -1); border-top: 1px solid var(--editorial-ink); }
+.editorial-comment-edit-actions button { display: flex; min-height: 4rem; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.25rem; border-radius: 0; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
+.editorial-comment-edit-cancel { border-right: 1px solid var(--editorial-ink); background: transparent; color: var(--editorial-muted); }
+.editorial-comment-edit-cancel span { font-size: 0.55rem; letter-spacing: 0.1em; opacity: 0.65; }
+.editorial-comment-edit-cancel:hover { background: var(--editorial-paper-deep); color: var(--editorial-ink); }
+.editorial-comment-edit-submit { background: var(--editorial-signal); color: var(--editorial-paper); }
+.editorial-comment-edit-submit:hover { background: var(--editorial-ink); }
+.editorial-comment-edit-submit:disabled { cursor: wait; opacity: 0.55; }
+
+@media (max-width: 480px) {
+  .editorial-comment-edit-modal { box-shadow: 7px 7px 0 var(--editorial-signal) !important; }
+  .editorial-comment-edit-header { padding-right: 3.5rem; }
+  .editorial-comment-edit-actions { grid-template-columns: 1fr; }
+  .editorial-comment-edit-cancel { border-right: 0; border-bottom: 1px solid var(--editorial-ink); }
+}
+
 .editorial-auth-page { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); width: min(100%, 1180px); min-height: calc(100vh - 12rem); margin: 0 auto; padding: clamp(3rem, 7vw, 7rem) clamp(1rem, 5vw, 4rem); color: var(--editorial-ink); }
 .editorial-auth-intro { position: relative; padding: 2rem clamp(2rem, 6vw, 6rem) 2rem 0; border-right: 1px solid var(--editorial-ink); }
 .editorial-auth-index { display: block; margin-top: 3rem; color: var(--editorial-signal); font-family: var(--font-editorial); font-size: clamp(7rem, 18vw, 15rem); line-height: 0.65; }

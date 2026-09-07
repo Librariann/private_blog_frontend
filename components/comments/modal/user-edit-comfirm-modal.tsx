@@ -1,21 +1,17 @@
-import { NewButton } from "@/components/buttons/new-button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useDarkModeStore } from "@/stores/useDarkmodStore";
+import { Textarea } from "@/components/ui/text-area";
+import { useEditComment } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CommentType } from "../comments";
-import { useDeleteComment, useEditComment } from "@/hooks/hooks";
-import { useRouter } from "next/router";
-import { Textarea } from "@/components/ui/text-area";
 
 const UserEditConfirmModal = ({
   isEditDialogOpen,
@@ -28,17 +24,23 @@ const UserEditConfirmModal = ({
   selectedComment: CommentType;
   postId: number;
 }) => {
-  const { isDarkMode } = useDarkModeStore();
-  const [commentPassword, setCommentPassword] = useState<string>("");
-  const [editComment, setEditComment] = useState<string>("");
+  const [commentPassword, setCommentPassword] = useState("");
+  const [editComment, setEditComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { editCommentMutation } = useEditComment(postId, selectedComment?.id);
-  useEffect(() => {
-    setEditComment("");
-    setCommentPassword("");
-  }, [isEditDialogOpen]);
 
-  const handleOnEditComment = async () => {
-    console.log(editComment);
+  useEffect(() => {
+    if (isEditDialogOpen) {
+      setEditComment(selectedComment?.comment ?? "");
+      setCommentPassword("");
+    }
+  }, [isEditDialogOpen, selectedComment?.comment]);
+
+  const handleOnEditComment = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
     if (!editComment.trim()) {
       toast.error("댓글 내용을 입력해주세요");
       return;
@@ -48,81 +50,98 @@ const UserEditConfirmModal = ({
       toast.error("댓글 비밀번호를 입력해주세요.");
       return;
     }
-    const result = await editCommentMutation({
-      variables: {
-        input: {
-          id: selectedComment.id,
-          commentPassword,
-          comment: editComment,
-        },
-      },
-    });
 
-    if (result.data?.editComment.ok) {
-      toast.success(result.data?.editComment.message);
-    } else {
-      toast.error(result.data?.editComment.error);
+    try {
+      setIsSubmitting(true);
+      const result = await editCommentMutation({
+        variables: {
+          input: {
+            id: selectedComment.id,
+            commentPassword,
+            comment: editComment,
+          },
+        },
+      });
+
+      if (result.data?.editComment.ok) {
+        toast.success(result.data.editComment.message);
+        setIsEditDialogOpen(false);
+      } else {
+        toast.error(result.data?.editComment.error);
+      }
+    } catch {
+      toast.error("댓글을 수정하지 못했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsEditDialogOpen(false);
   };
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-      <DialogContent
-        className={`max-w-md ${
-          isDarkMode
-            ? "bg-white/10 backdrop-blur-xs border-white/20"
-            : "backdrop-blur-xs border-gray-200"
-        }`}
-      >
-        <DialogHeader>
-          <DialogTitle className={isDarkMode ? "text-white" : "text-gray-900"}>
-            댓글 수정
-          </DialogTitle>
-          <DialogDescription
-            className={isDarkMode ? "text-white/60" : "text-gray-600"}
-          >
-            정말로 이 댓글을 수정하시겠습니까?
-          </DialogDescription>
+      <DialogContent className="editorial-comment-edit-modal">
+        <DialogHeader className="editorial-comment-edit-header">
+          <div className="editorial-comment-edit-meta" aria-hidden="true">
+            <span>Edit / 01</span>
+            <span>Comment desk</span>
+          </div>
+          <DialogTitle>댓글 수정</DialogTitle>
           <DialogDescription>
-            <Textarea
-              className="mb-2"
-              placeholder="수정할 댓글 내용을 적어주세요"
-              onChange={(e) => {
-                setEditComment(e.target.value);
-              }}
-            />
-            <Input
-              type="password"
-              placeholder="해당 댓글의 비밀번호를 입력해주세요"
-              onChange={(e) => {
-                setCommentPassword(e.target.value);
-              }}
-            />
+            내용을 다듬은 뒤, 작성할 때 설정한 비밀번호로 변경사항을
+            확인해주세요.
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter>
-          <NewButton
-            variant="destructive"
-            className={`flex-1 bg-blue-500 hover:bg-blue-600 text-white cursor-pointer`}
-            onClick={handleOnEditComment}
-          >
-            수정
-          </NewButton>
-          <DialogClose asChild>
-            <NewButton
-              variant="outline"
-              className={`flex-1 cursor-pointer ${
-                isDarkMode
-                  ? "bg-white/10 hover:bg-white/20 border-white/20 text-white"
-                  : "border-gray-300"
-              }`}
+        <form
+          className="editorial-comment-edit-form"
+          onSubmit={handleOnEditComment}
+        >
+          <label htmlFor="edit-comment-content">
+            <span className="editorial-comment-edit-label">
+              <span>01 / Comment</span>
+              <span>{editComment.length}자</span>
+            </span>
+            <Textarea
+              id="edit-comment-content"
+              value={editComment}
+              rows={6}
+              autoFocus
+              placeholder="수정할 댓글 내용을 적어주세요"
+              onChange={(event) => setEditComment(event.target.value)}
+            />
+          </label>
+
+          <label htmlFor="edit-comment-password">
+            <span className="editorial-comment-edit-label">
+              <span>02 / Password</span>
+              <span>확인용</span>
+            </span>
+            <Input
+              id="edit-comment-password"
+              value={commentPassword}
+              type="password"
+              autoComplete="current-password"
+              placeholder="댓글 비밀번호를 입력해주세요"
+              onChange={(event) => setCommentPassword(event.target.value)}
+            />
+          </label>
+
+          <div className="editorial-comment-edit-actions">
+            <DialogClose asChild>
+              <button type="button" className="editorial-comment-edit-cancel">
+                취소
+                <span aria-hidden="true">ESC</span>
+              </button>
+            </DialogClose>
+            <button
+              type="submit"
+              className="editorial-comment-edit-submit"
+              disabled={isSubmitting}
             >
-              취소
-            </NewButton>
-          </DialogClose>
-        </DialogFooter>
+              {isSubmitting ? "저장 중" : "변경사항 저장"}
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
