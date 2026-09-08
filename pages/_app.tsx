@@ -9,7 +9,7 @@ import "../styles/markdown.css";
 import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
 import "../styles/globals.css";
 import { useLoadingStore } from "@/stores/useLoadingStore";
@@ -19,7 +19,9 @@ import GlobalLoading2 from "@/components/loading/global-loading2";
 import "@fontsource-variable/noto-sans-kr/wght.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const apolloClient = createApolloClient(pageProps.initialApolloState);
+  const [apolloClient] = useState(() =>
+    createApolloClient(pageProps.initialApolloState)
+  );
   const { setUserInfo } = useUserInfoStore();
   const { globalLoading, setGlobalLoading } = useLoadingStore();
   const router = useRouter();

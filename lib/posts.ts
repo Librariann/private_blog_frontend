@@ -25,17 +25,16 @@ import {
   UserProfileByNickNameQueryVariables,
 } from "@/gql/graphql";
 
-const apolloClient = createApolloClient();
-
 export async function getPostsByCategoryId(categoryId: number) {
   try {
+    const apolloClient = createApolloClient();
     const { data } = await apolloClient.query<
       GetPostListByCategoryIdQuery,
       GetPostListByCategoryIdQueryVariables
     >({
       query: GET_POST_BY_CATEGORYID_QUERY,
       variables: { categoryId },
-      fetchPolicy: "cache-first",
+      fetchPolicy: "no-cache",
     });
 
     return data.getPostListByCategoryId?.posts || [];
@@ -46,13 +45,14 @@ export async function getPostsByCategoryId(categoryId: number) {
 
 export async function getPostsByParentCategoryId(categoryId: number) {
   try {
+    const apolloClient = createApolloClient();
     const { data } = await apolloClient.query<
       GetPostsByParentCategoryIdQuery,
       GetPostsByParentCategoryIdQueryVariables
     >({
       query: GET_POST_BY_PARENT_CATEGORY_ID_QUERY,
       variables: { categoryId },
-      fetchPolicy: "cache-first",
+      fetchPolicy: "no-cache",
     });
 
     return data.getPostsByParentCategoryId?.posts || [];
@@ -63,12 +63,13 @@ export async function getPostsByParentCategoryId(categoryId: number) {
 
 export async function getCategories() {
   try {
+    const apolloClient = createApolloClient();
     const { data } = await apolloClient.query<
       GetCategoriesQuery,
       GetCategoriesQueryVariables
     >({
       query: GET_CATEGORIES,
-      fetchPolicy: "cache-first",
+      fetchPolicy: "no-cache",
     });
 
     return data.getCategories?.categories || [];
@@ -86,7 +87,7 @@ export async function getPostById(postId: number) {
     >({
       query: GET_POST_BY_ID_QUERY,
       variables: { postId },
-      fetchPolicy: "cache-first",
+      fetchPolicy: "no-cache",
     });
 
     return data.getPostById || null;
@@ -96,12 +97,13 @@ export async function getPostById(postId: number) {
 }
 
 export async function getPostDatas() {
+  const apolloClient = createApolloClient();
   const { data } = await apolloClient.query<
     GetPostListQuery,
     GetPostListQueryVariables
   >({
     query: GET_POST_LIST_QUERY,
-    fetchPolicy: "cache-first",
+    fetchPolicy: "no-cache",
   });
   return {
     posts: data?.getPostList.posts,
@@ -110,24 +112,26 @@ export async function getPostDatas() {
 }
 
 export async function getPopularHashTagDatas() {
+  const apolloClient = createApolloClient();
   const { data } = await apolloClient.query<
     GetAllPopularHashTagsQuery,
     GetAllPopularHashTagsQueryVariables
   >({
     query: GET_POPULAR_HASHTAG_QUERY,
-    fetchPolicy: "cache-first",
+    fetchPolicy: "no-cache",
   });
   return data.getAllPopularHashTags?.hashtags || [];
 }
 
 export async function getUserInfo(userNickName: string) {
+  const apolloClient = createApolloClient();
   const { data } = await apolloClient.query<
     UserProfileByNickNameQuery,
     UserProfileByNickNameQueryVariables
   >({
     query: GET_USER_BY_NICKNAME_QUERY,
     variables: { userNickName },
-    fetchPolicy: "cache-first",
+    fetchPolicy: "no-cache",
   });
   return {
     user: data.userProfileByNickName?.user || null,

@@ -236,6 +236,12 @@ export const useTogglePostStatus = () => {
           {
             query: GET_POST_LIST_QUERY,
           },
+          {
+            query: GET_CATEGORIES,
+          },
+          {
+            query: GET_POPULAR_HASHTAG_QUERY,
+          },
         ],
         awaitRefetchQueries: true,
       }
@@ -252,6 +258,15 @@ export const useDeletePost = () => {
       {
         query: GET_ALL_POST_LIST_QUERY,
       },
+      {
+        query: GET_POST_LIST_QUERY,
+      },
+      {
+        query: GET_CATEGORIES,
+      },
+      {
+        query: GET_POPULAR_HASHTAG_QUERY,
+      },
     ],
     awaitRefetchQueries: true,
   });
@@ -266,6 +281,15 @@ export const useCreatePost = () => {
     refetchQueries: [
       {
         query: GET_POST_LIST_QUERY,
+      },
+      {
+        query: GET_ALL_POST_LIST_QUERY,
+      },
+      {
+        query: GET_CATEGORIES,
+      },
+      {
+        query: GET_POPULAR_HASHTAG_QUERY,
       },
     ],
     awaitRefetchQueries: true,
@@ -303,6 +327,18 @@ export const useEditPost = ({ postId }: { postId: number }) => {
         {
           query: GET_POST_BY_ID_QUERY,
           variables: { postId: Number(postId) },
+        },
+        {
+          query: GET_POST_LIST_QUERY,
+        },
+        {
+          query: GET_ALL_POST_LIST_QUERY,
+        },
+        {
+          query: GET_CATEGORIES,
+        },
+        {
+          query: GET_POPULAR_HASHTAG_QUERY,
         },
       ],
       awaitRefetchQueries: true,
@@ -478,6 +514,9 @@ export const useUpdateFeaturedPostMutation = () => {
     refetchQueries: [
       {
         query: GET_ALL_POST_LIST_QUERY,
+      },
+      {
+        query: GET_POST_LIST_QUERY,
       },
     ],
     awaitRefetchQueries: true,
