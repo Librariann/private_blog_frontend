@@ -1,10 +1,10 @@
-import { ArrowLeft, Calendar, Clock, List } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, List, PencilLine } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   GetPostByIdQuery,
   GetPostByIdQueryVariables,
-  Post,
+  PostFieldsFragment,
 } from "@/gql/graphql";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import dynamic from "next/dynamic";
@@ -22,6 +22,7 @@ import Head from "next/head";
 import { Heading, PhrasingContent, Root, Text } from "mdast";
 import { useQuery } from "@apollo/client";
 import { GET_POST_BY_ID_QUERY } from "@/lib/queries";
+import { usePostEditStore } from "@/stores/usePostEditStore";
 
 type topicProps = {
   id: string;
@@ -44,6 +45,12 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   const postData = postDater?.getPostById?.post || post?.post;
   const { isDarkMode } = useDarkModeStore();
   const { data } = useMe();
+  const { setEditingPost, setEditingMode } = usePostEditStore();
+  const isPostOwner = Boolean(
+    data?.me?.id &&
+      postData?.user?.id &&
+      Number(data.me.id) === Number(postData.user.id)
+  );
 
   const [isTocOpen, setIsTocOpen] = useState(true);
   const { updatePostHitsMutation } = useUpdatePostHits({
@@ -86,6 +93,14 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleEditPost = () => {
+    if (!postData || !isPostOwner) return;
+
+    setEditingPost(postData as PostFieldsFragment);
+    setEditingMode(true);
+    router.push("/post-write");
   };
 
   // 포맷팅된 날짜 (클라이언트에서만)
@@ -185,14 +200,28 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         />
       </Head>
       <main className="editorial-article-page">
-        {/* Back Button */}
-        <button
-          onClick={() => router.back()}
-          className="editorial-back"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>목록으로</span>
-        </button>
+        <div className="editorial-article-toolbar">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="editorial-back"
+          >
+            <ArrowLeft aria-hidden="true" />
+            <span>목록으로</span>
+          </button>
+
+          {isPostOwner && (
+            <button
+              type="button"
+              onClick={handleEditPost}
+              className="editorial-post-edit"
+              aria-label={`'${postData?.title}' 포스트 수정`}
+            >
+              <span>포스트 수정</span>
+              <PencilLine aria-hidden="true" />
+            </button>
+          )}
+        </div>
 
         {/* Post Header */}
         <article>

@@ -129,7 +129,15 @@ const PostWrite = () => {
       setThumbnailUrl(editingPost?.thumbnailUrl || "");
       setTags(editingPost?.hashtags?.map((tag) => tag.hashtag) || []);
       if (editingPost.category?.parentCategory) {
-        setParentCategory(editingPost.category?.parentCategory);
+        const completeParentCategory = categories.find(
+          (category) =>
+            category.id === editingPost.category?.parentCategory?.id ||
+            category.categoryTitle ===
+              editingPost.category?.parentCategory?.categoryTitle
+        );
+        setParentCategory(
+          completeParentCategory || editingPost.category.parentCategory
+        );
       }
       setSubCategory(String(editingPost.category?.id));
       setStatus(editingPost?.postStatus);
