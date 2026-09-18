@@ -233,7 +233,10 @@ const Main = ({
         <section className="editorial-discovery" aria-label="주제별 탐색">
           <div className="editorial-discovery-intro">
             <span>DISCOVER / BY SUBJECT</span>
-            <h2>관심 있는 문제부터<br />기록을 탐색하세요.</h2>
+            <h2>
+              <span>관심 있는 문제부터</span>
+              <span>기록을 탐색하세요.</span>
+            </h2>
             <p>
               기술 스택보다 해결하려 했던 문제와 판단의 맥락을 중심으로
               기록합니다.
