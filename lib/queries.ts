@@ -9,6 +9,7 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
       posts {
         id
         title
+        excerpt
         contents
         hits
         thumbnailUrl
@@ -41,6 +42,7 @@ export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
       posts {
         id
         title
+        excerpt
         contents
         hits
         thumbnailUrl
