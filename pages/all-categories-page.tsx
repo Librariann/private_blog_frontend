@@ -12,9 +12,7 @@ const AllCategoriesPage = () => {
     (sum, category) => sum + (category.subCategories?.length || 0), 0
   );
   const totalPosts = categories.reduce(
-    (sum, category) => sum + (category.subCategories?.reduce(
-      (subtotal, child) => subtotal + (child.post?.length || 0), 0
-    ) || 0), 0
+    (sum, category) => sum + (category.postCount ?? 0), 0
   );
 
   return (
@@ -40,9 +38,6 @@ const AllCategoriesPage = () => {
 
         <section className="editorial-category-index">
           {categories.map((parent, parentIndex) => {
-            const parentPostCount = parent.subCategories?.reduce(
-              (sum, child) => sum + (child.post?.length || 0), 0
-            ) || 0;
             return (
               <article key={parent.categoryTitle} className="editorial-category-block">
                 <header>
@@ -52,7 +47,7 @@ const AllCategoriesPage = () => {
                   </div>
                   <div>
                     <h2>{parent.categoryTitle}</h2>
-                    <p>{parent.subCategories?.length || 0} TOPICS · {parentPostCount} ARTICLES</p>
+                    <p>{parent.subCategories?.length || 0} TOPICS · {parent.postCount ?? 0} ARTICLES</p>
                   </div>
                 </header>
                 <div className="editorial-topic-grid">
@@ -62,7 +57,7 @@ const AllCategoriesPage = () => {
                       onClick={() => router.push(`/post/${parent.categoryTitle}/${child.categoryTitle}`)}
                     >
                       <span>{child.categoryTitle}</span>
-                      <small>{child.post?.length || 0} NOTES</small>
+                      <small>{child.postCount ?? 0} NOTES</small>
                       <ArrowUpRight aria-hidden="true" />
                     </button>
                   ))}

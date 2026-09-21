@@ -92,7 +92,7 @@ const AllPostsPage = () => {
                         className={selectedCategory === category.categoryTitle ? "is-active" : ""}
                         onClick={() => setSelectedCategory(category.categoryTitle)}
                       >
-                        <span>{category.categoryTitle}</span><small>{category.post?.length || 0}</small>
+                        <span>{category.categoryTitle}</span><small>{category.postCount ?? 0}</small>
                       </button>
                     ))}
                   </div>

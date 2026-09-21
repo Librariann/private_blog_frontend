@@ -77,6 +77,7 @@ export const GET_CATEGORIES = gql`
         icon
         iconColor
         description
+        postCount
         parentCategory {
           id
           categoryTitle
@@ -96,11 +97,7 @@ export const GET_CATEGORIES = gql`
             iconColor
             description
           }
-          post {
-            id
-            title
-            createdAt
-          }
+          postCount
         }
       }
     }

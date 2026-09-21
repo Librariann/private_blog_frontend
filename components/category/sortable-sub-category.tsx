@@ -65,7 +65,7 @@ const SortableSubCategory = ({
         <span
           className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
         >
-          ({subCategory?.post?.length || 0}개 포스트)
+          ({subCategory.postCount ?? 0}개 포스트)
         </span>
       </div>
 

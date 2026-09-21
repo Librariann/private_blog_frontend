@@ -101,11 +101,10 @@ const Main = ({
             <span>{issueNumber}</span>
             <i />
             <p>
-              <span>신뢰 가능한</span>
-              <span>소프트웨어는</span>
-              <span>관찰 가능한</span>
-              <span>설계에서</span>
-              <span>시작된다.</span>
+              <span>NO COFFEE.</span>
+              <span>NO CODE.</span>
+              <span>JUST ONE</span>
+              <span>MORE COMMIT.</span>
             </p>
           </aside>
 
@@ -246,10 +245,6 @@ const Main = ({
           <div className="editorial-categories">
             {categories.map((parent) => {
               const isExpanded = expandedCategories.has(parent.categoryTitle);
-              const postCount = parent.subCategories?.reduce(
-                (sum, sub) => sum + (sub.post?.length || 0),
-                0
-              );
 
               return (
                 <div className="editorial-category" key={parent.categoryTitle}>
@@ -260,7 +255,7 @@ const Main = ({
                   >
                     <span>{parent.categoryTitle}</span>
                     <span className="editorial-category-count">
-                      {String(postCount || 0).padStart(2, "0")}
+                      {String(parent.postCount ?? 0).padStart(2, "0")}
                       <ChevronDown aria-hidden="true" />
                     </span>
                   </button>
@@ -278,7 +273,7 @@ const Main = ({
                         >
                           <CornerDownRight aria-hidden="true" />
                           {sub.categoryTitle}
-                          <span>{sub.post?.length || 0}</span>
+                          <span>{sub.postCount ?? 0}</span>
                         </button>
                       ))}
                     </div>

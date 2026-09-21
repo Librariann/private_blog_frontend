@@ -96,12 +96,7 @@ const SortableParentCategory = ({
               <span
                 className={`text-sm ${isDarkMode ? "text-white/50" : "text-gray-500"}`}
               >
-                (
-                {parentCategory?.subCategories?.reduce(
-                  (sum: number, sub) => sum + (sub?.post?.length || 0),
-                  0
-                )}
-                개 포스트)
+                ({parentCategory.postCount ?? 0}개 포스트)
               </span>
             </div>
           </div>
