@@ -6,6 +6,7 @@ import {
   GET_POST_BY_ID_QUERY,
   GET_POST_BY_PARENT_CATEGORY_ID_QUERY,
   GET_POST_LIST_QUERY,
+  GET_POST_LIST_WITH_LIMIT_QUERY,
   GET_USER_BY_NICKNAME_QUERY,
 } from "./queries";
 import {
@@ -19,6 +20,8 @@ import {
   GetPostListByCategoryIdQueryVariables,
   GetPostListQuery,
   GetPostListQueryVariables,
+  GetPostListWithLimitQuery,
+  GetPostListWithLimitQueryVariables,
   GetPostsByParentCategoryIdQuery,
   GetPostsByParentCategoryIdQueryVariables,
   Post,
@@ -140,6 +143,21 @@ export async function getPostDatas() {
   return {
     posts: data?.getPostList.posts,
     featuredPost: data?.getPostList.featuredPost,
+  };
+}
+
+export async function getPostDatasWithLimit() {
+  const apolloClient = createApolloClient();
+  const { data } = await apolloClient.query<
+    GetPostListWithLimitQuery,
+    GetPostListWithLimitQueryVariables
+  >({
+    query: GET_POST_LIST_WITH_LIMIT_QUERY,
+    fetchPolicy: "no-cache",
+  });
+  return {
+    posts: data?.getPostListWithLimit.posts,
+    featuredPost: data?.getPostListWithLimit.featuredPost,
   };
 }
 

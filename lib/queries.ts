@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { POST_FIELDS_FRAGMENT } from "./fragment";
+import { POST_CARD_FIELDS_FRAGMENT, POST_FIELDS_FRAGMENT } from "./fragment";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
   query getPostListByCategoryId(
@@ -221,25 +221,40 @@ export const GET_POST_LIST_QUERY = gql`
   }
 `;
 
+export const GET_PAGINATED_POST_LIST_QUERY = gql`
+  ${POST_CARD_FIELDS_FRAGMENT}
+  query getPaginatedPostList(
+    $offset: Int!
+    $limit: Int!
+    $searchQuery: String
+    $categoryTitle: String
+  ) {
+    getPaginatedPostList(
+      offset: $offset
+      limit: $limit
+      searchQuery: $searchQuery
+      categoryTitle: $categoryTitle
+    ) {
+      ok
+      error
+      hasMore
+      totalCount
+      posts {
+        ...PostCardFields
+      }
+    }
+  }
+`;
+
 export const GET_POST_LIST_WITH_LIMIT_QUERY = gql`
-  ${POST_FIELDS_FRAGMENT}
+  ${POST_CARD_FIELDS_FRAGMENT}
   query getPostListWithLimit {
     getPostListWithLimit {
       posts {
-        ...PostFields
+        ...PostCardFields
       }
       featuredPost {
-        id
-        title
-        excerpt
-        category {
-          id
-          categoryTitle
-          parentCategory {
-            id
-            categoryTitle
-          }
-        }
+        ...PostCardFields
       }
     }
   }

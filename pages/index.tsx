@@ -2,18 +2,22 @@ import { GetStaticProps } from "next";
 import {
   GetAllPopularHashTagsQuery,
   GetAllPopularHashTagsQueryVariables,
-  GetPostListQuery,
-  GetPostListQueryVariables,
+  GetPostListWithLimitQuery,
+  GetPostListWithLimitQueryVariables,
   Post,
   UserProfileByNickNameQuery,
   UserProfileByNickNameQueryVariables,
 } from "@/gql/graphql";
 import { MemoizedMain } from "@/components/main/main";
-import { getPopularHashTagDatas, getPostDatas, getUserInfo } from "@/lib/posts";
+import {
+  getPopularHashTagDatas,
+  getPostDatasWithLimit,
+  getUserInfo,
+} from "@/lib/posts";
 import { useQuery } from "@apollo/client";
 import {
   GET_POPULAR_HASHTAG_QUERY,
-  GET_POST_LIST_QUERY,
+  GET_POST_LIST_WITH_LIMIT_QUERY,
   GET_USER_BY_NICKNAME_QUERY,
 } from "@/lib/queries";
 import { startTransition, useEffect, useState } from "react";
@@ -30,7 +34,7 @@ export type UserInfoType = NonNullable<
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const postDatas = await getPostDatas();
+    const postDatas = await getPostDatasWithLimit();
     const popularHashTagDatas = await getPopularHashTagDatas();
     const userInfo = await getUserInfo("librarian");
 
@@ -74,9 +78,9 @@ const Home = ({
 
   // Apollo로 클라이언트에서 데이터 가져오기
   const { data: postData } = useQuery<
-    GetPostListQuery,
-    GetPostListQueryVariables
-  >(GET_POST_LIST_QUERY, {
+    GetPostListWithLimitQuery,
+    GetPostListWithLimitQueryVariables
+  >(GET_POST_LIST_WITH_LIMIT_QUERY, {
     skip: !isClientReady,
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-first",
@@ -106,9 +110,10 @@ const Home = ({
     setUserInfo(profileData?.userProfileByNickName || userInfo);
   }, [profileData?.userProfileByNickName, setUserInfo, userInfo]);
 
-  const latestPosts = (postData?.getPostList?.posts || posts) as Post[];
+  const latestPosts = (postData?.getPostListWithLimit?.posts ||
+    posts) as Post[];
   const latestFeaturedPost =
-    postData?.getPostList?.featuredPost || featuredPost;
+    postData?.getPostListWithLimit?.featuredPost || featuredPost;
   const latestPopularHashTags =
     hashtagData?.getAllPopularHashTags?.hashtags || popularHashTags;
 

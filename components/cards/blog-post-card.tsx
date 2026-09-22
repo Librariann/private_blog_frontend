@@ -2,11 +2,10 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import styled from "styled-components";
-import { PostFieldsFragment } from "@/gql/graphql";
+import { PostCardFieldsFragment } from "@/gql/graphql";
 
 export type BlogPostCardProps = {
-  // post: Post;
-  post: PostFieldsFragment;
+  post: PostCardFieldsFragment;
   onClick?: () => void;
   mainYn?: boolean;
 };
