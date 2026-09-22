@@ -21,11 +21,25 @@ import {
   GetPostListQueryVariables,
   GetPostsByParentCategoryIdQuery,
   GetPostsByParentCategoryIdQueryVariables,
+  Post,
   UserProfileByNickNameQuery,
   UserProfileByNickNameQueryVariables,
 } from "@/gql/graphql";
+import { CATEGORY_POST_PAGE_SIZE } from "@/common/constants";
 
-export async function getPostsByCategoryId(categoryId: number) {
+const emptyCategoryPostPage = {
+  posts: [] as Post[],
+  hasMore: false,
+  totalCount: 0,
+  totalViews: 0,
+  averageReadTime: 0,
+};
+
+export async function getPostsByCategoryId(
+  categoryId: number,
+  offset = 0,
+  limit = CATEGORY_POST_PAGE_SIZE
+) {
   try {
     const apolloClient = createApolloClient();
     const { data } = await apolloClient.query<
@@ -33,17 +47,28 @@ export async function getPostsByCategoryId(categoryId: number) {
       GetPostListByCategoryIdQueryVariables
     >({
       query: GET_POST_BY_CATEGORYID_QUERY,
-      variables: { categoryId },
+      variables: { categoryId, offset, limit },
       fetchPolicy: "no-cache",
     });
 
-    return data.getPostListByCategoryId?.posts || [];
+    const page = data.getPostListByCategoryId;
+    return {
+      posts: page?.posts || [],
+      hasMore: page?.hasMore || false,
+      totalCount: page?.totalCount || 0,
+      totalViews: page?.totalViews || 0,
+      averageReadTime: page?.averageReadTime || 0,
+    };
   } catch (error) {
-    return [];
+    return emptyCategoryPostPage;
   }
 }
 
-export async function getPostsByParentCategoryId(categoryId: number) {
+export async function getPostsByParentCategoryId(
+  categoryId: number,
+  offset = 0,
+  limit = CATEGORY_POST_PAGE_SIZE
+) {
   try {
     const apolloClient = createApolloClient();
     const { data } = await apolloClient.query<
@@ -51,13 +76,20 @@ export async function getPostsByParentCategoryId(categoryId: number) {
       GetPostsByParentCategoryIdQueryVariables
     >({
       query: GET_POST_BY_PARENT_CATEGORY_ID_QUERY,
-      variables: { categoryId },
+      variables: { categoryId, offset, limit },
       fetchPolicy: "no-cache",
     });
 
-    return data.getPostsByParentCategoryId?.posts || [];
+    const page = data.getPostsByParentCategoryId;
+    return {
+      posts: page?.posts || [],
+      hasMore: page?.hasMore || false,
+      totalCount: page?.totalCount || 0,
+      totalViews: page?.totalViews || 0,
+      averageReadTime: page?.averageReadTime || 0,
+    };
   } catch (error) {
-    return [];
+    return emptyCategoryPostPage;
   }
 }
 

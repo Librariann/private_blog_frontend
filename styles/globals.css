@@ -1178,6 +1178,9 @@ html body[data-scroll-locked] {
 .editorial-back:hover { color: var(--editorial-signal-strong); }
 .editorial-back svg { width: 0.9rem; }
 .editorial-category-results { max-width: 920px; margin-left: auto; }
+.editorial-infinite-status { display: grid; min-height: 5rem; place-items: center; color: var(--editorial-muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; }
+.editorial-infinite-status button { border-bottom: 1px solid currentColor; color: var(--editorial-ink); transition: color 160ms ease; }
+.editorial-infinite-status button:hover { color: var(--editorial-signal); }
 
 @media (max-width: 760px) {
   .editorial-page-heading { grid-template-columns: auto 1fr; align-items: start; }

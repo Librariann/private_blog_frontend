@@ -2,10 +2,22 @@ import { gql } from "@apollo/client";
 import { POST_FIELDS_FRAGMENT } from "./fragment";
 
 export const GET_POST_BY_CATEGORYID_QUERY = gql`
-  query getPostListByCategoryId($categoryId: Int!) {
-    getPostListByCategoryId(categoryId: $categoryId) {
+  query getPostListByCategoryId(
+    $categoryId: Int!
+    $offset: Int!
+    $limit: Int!
+  ) {
+    getPostListByCategoryId(
+      categoryId: $categoryId
+      offset: $offset
+      limit: $limit
+    ) {
       ok
       error
+      hasMore
+      totalCount
+      totalViews
+      averageReadTime
       posts {
         id
         title
@@ -35,10 +47,22 @@ export const GET_POST_BY_CATEGORYID_QUERY = gql`
 `;
 
 export const GET_POST_BY_PARENT_CATEGORY_ID_QUERY = gql`
-  query getPostsByParentCategoryId($categoryId: Int!) {
-    getPostsByParentCategoryId(categoryId: $categoryId) {
+  query getPostsByParentCategoryId(
+    $categoryId: Int!
+    $offset: Int!
+    $limit: Int!
+  ) {
+    getPostsByParentCategoryId(
+      categoryId: $categoryId
+      offset: $offset
+      limit: $limit
+    ) {
       ok
       error
+      hasMore
+      totalCount
+      totalViews
+      averageReadTime
       posts {
         id
         title
