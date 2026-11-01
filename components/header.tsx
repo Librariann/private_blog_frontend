@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Github, Mail, Menu, Moon, Sun, X } from "lucide-react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useUserInfoStore } from "@/stores/useUserInfoStore";
 
@@ -27,30 +28,30 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
       ? router.pathname === path || router.pathname.startsWith("/post/")
       : router.pathname === path;
 
-  const navigate = (path: string) => {
+  const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
-    router.push(path);
   };
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--editorial-rule)] bg-[color-mix(in_oklch,var(--editorial-paper)_94%,transparent)] text-[var(--editorial-ink)] backdrop-blur-md">
       <div className="mx-auto flex h-[4.5rem] max-w-[1536px] items-center justify-between px-4 sm:px-8 lg:px-20">
-        <button
-          type="button"
-          onClick={() => navigate("/")}
+        <Link
+          href="/"
+          onClick={closeMobileMenu}
           className="editorial-serif cursor-pointer text-left text-xl font-semibold tracking-[-0.035em] sm:text-2xl"
           aria-label="Librarian's Archive 홈"
         >
           Librarian&apos;s <span className="text-[var(--editorial-signal-strong)]">Archive</span>
-        </button>
+        </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="주요 메뉴">
           {navigation.map((item) => (
-            <button
-              type="button"
+            <Link
               key={item.path}
-              onClick={() => navigate(item.path)}
-              className={`relative min-h-11 cursor-pointer text-[0.68rem] font-bold uppercase tracking-[0.14em] transition-colors hover:text-[var(--editorial-signal-strong)] ${
+              href={item.path}
+              onClick={closeMobileMenu}
+              aria-current={isActive(item.path) ? "page" : undefined}
+              className={`relative inline-flex min-h-11 items-center cursor-pointer text-[0.68rem] font-bold uppercase tracking-[0.14em] transition-colors hover:text-[var(--editorial-signal-strong)] ${
                 isActive(item.path) ? "text-[var(--editorial-signal-strong)]" : ""
               }`}
             >
@@ -58,7 +59,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
               {isActive(item.path) && (
                 <span className="absolute inset-x-0 bottom-0 h-0.5 bg-[var(--editorial-signal)]" />
               )}
-            </button>
+            </Link>
           ))}
         </nav>
 
@@ -90,9 +91,9 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
           </button>
 
           {isLoggedIn && (
-            <button
-              type="button"
-              onClick={() => navigate("/settings/my-page")}
+            <Link
+              href="/settings/my-page"
+              onClick={closeMobileMenu}
               className="hidden min-h-11 min-w-11 cursor-pointer items-center justify-center sm:flex"
               aria-label="관리자 프로필 설정"
             >
@@ -102,7 +103,7 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
                   L
                 </AvatarFallback>
               </Avatar>
-            </button>
+            </Link>
           )}
 
           <button
@@ -127,25 +128,26 @@ const Header = ({ isDarkMode, onToggleTheme, isLoggedIn }: HeaderProps) => {
             className="absolute inset-x-0 top-full border-b border-[var(--editorial-ink)] bg-[var(--editorial-paper)] px-4 py-5 md:hidden"
           >
             <nav className="mx-auto grid max-w-[1536px]" aria-label="모바일 메뉴">
-              <button
-                type="button"
-                onClick={() => navigate("/")}
+              <Link
+                href="/"
+                onClick={closeMobileMenu}
                 className="flex min-h-14 items-center justify-between border-t border-[var(--editorial-rule)] text-left editorial-serif"
               >
                 Home <span className="text-xs text-[var(--editorial-signal-strong)]">00</span>
-              </button>
+              </Link>
               {navigation.map((item, index) => (
-                <button
-                  type="button"
+                <Link
                   key={item.path}
-                  onClick={() => navigate(item.path)}
+                  href={item.path}
+                  onClick={closeMobileMenu}
+                  aria-current={isActive(item.path) ? "page" : undefined}
                   className="flex min-h-14 items-center justify-between border-t border-[var(--editorial-rule)] text-left editorial-serif"
                 >
                   {item.label}
                   <span className="text-xs text-[var(--editorial-signal-strong)]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                </button>
+                </Link>
               ))}
               <div className="flex min-h-14 items-center gap-4 border-y border-[var(--editorial-rule)]">
                 <a href="https://github.com/Librariann" target="_blank" rel="noreferrer" className="flex min-h-11 items-center gap-2 text-xs uppercase tracking-widest">
