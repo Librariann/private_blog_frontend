@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { popularHashTagsProps } from "@/pages";
 import { Post } from "@/gql/graphql";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import { useGetCategories } from "@/hooks/hooks";
 import styled from "styled-components";
 import Head from "next/head";
@@ -18,7 +18,7 @@ import { glassCardTypes } from "../cards/blog-post-card";
 const getPostPath = (post?: Post) => {
   if (!post?.id) return "/all-posts-page";
 
-  return `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`;
+  return `/post/${encodeURIComponent(post.category?.parentCategory?.categoryTitle || "")}/${encodeURIComponent(post.category?.categoryTitle || "")}/@Post-${post.id}`;
 };
 
 const Main = ({
@@ -30,7 +30,6 @@ const Main = ({
   popularHashTags: popularHashTagsProps[];
   featuredPost: Post;
 }) => {
-  const router = useRouter();
   const { userInfo } = useUserInfoStore();
   const [isClientReady, setIsClientReady] = useState(false);
   const { categories, categoriesLoading } = useGetCategories(!isClientReady);
@@ -136,13 +135,12 @@ const Main = ({
                   : "RECENT"}
               </span>
             </div>
-            <button
-              type="button"
-              onClick={() => router.push(getPostPath(primaryPost))}
+            <Link
+              href={getPostPath(primaryPost)}
               className="editorial-read-link"
             >
               글 읽기 <ArrowUpRight aria-hidden="true" />
-            </button>
+            </Link>
           </article>
 
           <aside className="editorial-latest" aria-labelledby="latest-notes-title">
@@ -153,10 +151,9 @@ const Main = ({
             <div className="editorial-latest-list">
               {latestPosts.length > 0 ? (
                 latestPosts.map((post, index) => (
-                  <button
-                    type="button"
+                  <Link
                     key={post.id}
-                    onClick={() => router.push(getPostPath(post))}
+                    href={getPostPath(post)}
                     className="editorial-latest-row"
                   >
                     <span className="editorial-index-circle">
@@ -171,7 +168,7 @@ const Main = ({
                     <span className="editorial-latest-date">
                       {formatDateShort(post.createdAt)}
                     </span>
-                  </button>
+                  </Link>
                 ))
               ) : (
                 <p className="editorial-empty">
@@ -188,12 +185,12 @@ const Main = ({
               <span>ARCHIVE / {String(posts.length).padStart(3, "0")}</span>
               <h2 id="archive-index-title">개발 글 모음</h2>
             </div>
-            <button type="button" onClick={() => router.push("/all-posts-page")}>
+            <Link href="/all-posts-page">
               모든 글 보기 <ArrowRight aria-hidden="true" />
-            </button>
+            </Link>
           </div>
 
-          <div className="editorial-table" role="list">
+          <div className="editorial-table">
             <div className="editorial-table-head" aria-hidden="true">
               <span>NO.</span>
               <span>CATEGORY</span>
@@ -202,11 +199,9 @@ const Main = ({
               <span>READ</span>
             </div>
             {indexedPosts.map((post, index) => (
-              <button
-                type="button"
-                role="listitem"
+              <Link
                 key={post.id}
-                onClick={() => router.push(getPostPath(post))}
+                href={getPostPath(post)}
                 className="editorial-table-row"
               >
                 <span className="editorial-row-number">
@@ -223,7 +218,7 @@ const Main = ({
                   <small>{post.excerpt}</small>
                 </span>
                 <ArrowUpRight className="editorial-row-arrow" aria-hidden="true" />
-              </button>
+              </Link>
             ))}
           </div>
         </section>
@@ -260,19 +255,14 @@ const Main = ({
                   <div className={`editorial-subcategory-reveal ${isExpanded ? "is-open" : ""}`}>
                     <div>
                       {parent.subCategories?.map((sub) => (
-                        <button
-                          type="button"
+                        <Link
                           key={sub.categoryTitle}
-                          onClick={() =>
-                            router.push(
-                              `/post/${parent.categoryTitle}/${sub.categoryTitle}`
-                            )
-                          }
+                          href={`/post/${encodeURIComponent(parent.categoryTitle)}/${encodeURIComponent(sub.categoryTitle)}`}
                         >
                           <CornerDownRight aria-hidden="true" />
                           {sub.categoryTitle}
                           <span>{sub.postCount ?? 0}</span>
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -299,9 +289,9 @@ const Main = ({
             <small>{userInfo?.user?.role || "Software Engineer"}</small>
           </div>
           <p>{userInfo?.user?.introduce}</p>
-          <button type="button" onClick={() => router.push("/about")}>
+          <Link href="/about">
             프로필 보기 <ArrowRight aria-hidden="true" />
-          </button>
+          </Link>
         </section>
       </main>
     </>
