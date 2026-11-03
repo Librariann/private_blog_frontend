@@ -15,6 +15,7 @@ export const LOCAL_STORAGE_TOKEN = "blog-token";
 export const handlePathes = ["/login", "/create-account", "/404", "/about"];
 export const authPage = ["/my-page", "/post-write"];
 export const CATEGORY_POST_PAGE_SIZE = 10;
+export const SITE_URL = "https://librarian-blog.dev";
 export const POST_STATUS_OBJECTS: Record<PostStatus, statusType> = {
   [PostStatus.Draft]: {
     statusName: "임시저장",
