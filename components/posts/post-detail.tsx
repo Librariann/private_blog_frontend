@@ -7,7 +7,8 @@ import {
   PostFieldsFragment,
 } from "@/gql/graphql";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
-import dynamic from "next/dynamic";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+import Link from "next/link";
 import Comments from "../comments/comments";
 import PostNavigation from "./post-navigation";
 import PostTags from "./post-tags";
@@ -24,6 +25,7 @@ import { Heading, PhrasingContent, Root, Text } from "mdast";
 import { useQuery } from "@apollo/client";
 import { GET_POST_BY_ID_QUERY } from "@/lib/queries";
 import { usePostEditStore } from "@/stores/usePostEditStore";
+import { getCanonicalUrl } from "@/lib/seo";
 
 type topicProps = {
   id: string;
@@ -44,6 +46,10 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
   });
   const router = useRouter();
   const postData = postDater?.getPostById?.post || post?.post;
+  const canonicalPath = postData?.category
+    ? `/post/${encodeURIComponent(postData.category.parentCategory?.categoryTitle || "")}/${encodeURIComponent(postData.category.categoryTitle)}/@Post-${postData.id}`
+    : router.asPath;
+  const canonicalUrl = getCanonicalUrl(canonicalPath);
   const { isDarkMode } = useDarkModeStore();
   const { data } = useMe();
   const { setEditingPost, setEditingMode } = usePostEditStore();
@@ -110,14 +116,6 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
     month: "long",
     day: "numeric",
   });
-
-  const EditorMarkdown = dynamic(
-    () =>
-      import("@uiw/react-md-editor").then((mod) => {
-        return mod.default.Markdown;
-      }),
-    { ssr: false }
-  );
 
   useEffect(() => {
     const updateHits = async () => {
@@ -187,6 +185,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
     <>
       <Head>
         <title>{postData?.title} | Librarian&apos;s</title>
+        <link rel="canonical" href={canonicalUrl} key="canonical" />
         <meta
           name="description"
           content={postData?.excerpt || postData?.contents.substring(0, 150)}
@@ -197,19 +196,18 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         <meta property="og:type" content="article" />
         <meta
           property="og:url"
-          content={`https://librarian-blog.dev${router.asPath}`}
+          content={canonicalUrl}
         />
       </Head>
       <main className="editorial-article-page">
         <div className="editorial-article-toolbar">
-          <button
-            type="button"
-            onClick={() => router.back()}
+          <Link
+            href="/all-posts-page"
             className="editorial-back"
           >
             <ArrowLeft aria-hidden="true" />
             <span>목록으로</span>
-          </button>
+          </Link>
 
           {isPostOwner && (
             <button
@@ -312,10 +310,9 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
             className="editorial-article-body"
             data-color-mode={isDarkMode ? "dark" : "light"}
           >
-            <EditorMarkdown
-              className="editorial-post-content"
+            <MarkdownPreview
+              className="editorial-post-content bg-transparent"
               source={postData?.contents}
-              style={{ backgroundColor: "transparent" }}
               remarkPlugins={[remarkKoreanStrong, remarkBreaks]}
               rehypePlugins={[rehypeSlug]}
             />
