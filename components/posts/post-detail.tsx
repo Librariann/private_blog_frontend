@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { remark } from "remark";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
+import { remarkKoreanStrong } from "@/lib/remark-korean-strong";
 import { useUpdatePostHits } from "@/hooks/hooks";
 import Head from "next/head";
 import { Heading, PhrasingContent, Root, Text } from "mdast";
@@ -315,7 +316,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
               className="editorial-post-content"
               source={postData?.contents}
               style={{ backgroundColor: "transparent" }}
-              remarkPlugins={[remarkBreaks]}
+              remarkPlugins={[remarkKoreanStrong, remarkBreaks]}
               rehypePlugins={[rehypeSlug]}
             />
           </div>

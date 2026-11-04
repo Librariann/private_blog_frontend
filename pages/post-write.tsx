@@ -39,6 +39,7 @@ import { useRouter } from "next/router";
 import { usePostEditStore } from "@/stores/usePostEditStore";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
+import { remarkKoreanStrong } from "@/lib/remark-korean-strong";
 
 function insertAtSelection(
   state: TextState,
@@ -433,7 +434,7 @@ const PostWrite = () => {
               previewOptions={{
                 className: "editorial-post-content",
                 style: { backgroundColor: "transparent" },
-                remarkPlugins: [remarkBreaks],
+                remarkPlugins: [remarkKoreanStrong, remarkBreaks],
                 rehypePlugins: [rehypeSlug],
                 wrapperElement: {
                   "data-color-mode": isDarkMode ? "dark" : "light",
