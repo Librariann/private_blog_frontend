@@ -1,15 +1,15 @@
 const capabilities = [
-  ["Backend Engineering", "Spring Boot와 Node.js 기반 서버 로직, API와 데이터 모델을 설계합니다."],
-  ["System Architecture", "도메인과 계층을 분리하고 서비스 전체의 데이터 흐름을 구조화합니다."],
-  ["Applied AI & LLM", "서비스 목적에 맞는 LLM을 학습·배포하고, 사용자 맥락을 분석해 행동과 개선 방향을 추천하는 기능을 설계합니다."],
-  ["DevOps & Infrastructure", "Private Cloud, Kubernetes, GitOps 기반의 배포와 운영 환경을 구축합니다."],
-  ["Frontend Engineering", "React와 Next.js로 제품의 인터페이스와 렌더링 구조를 구현합니다."],
+  ["백엔드", "Spring Boot와 Node.js로 서버를 만들고, API와 DB 구조를 설계해요."],
+  ["시스템 설계", "기능을 어디까지 나눌지, 데이터가 어디로 흘러갈지 설계해요."],
+  ["AI 기능", "LLM을 학습하고 배포해서 할 일이나 광고 개선안을 추천하는 기능에 붙여봤어요."],
+  ["배포와 운영", "프라이빗 클라우드를 구성하고, Kubernetes와 GitOps로 배포 환경을 만들었어요."],
+  ["프론트엔드", "React와 Next.js로 사용자 화면을 만들어요."],
 ];
 
 export function AboutMe() {
   return (
     <section id="capabilities" className="editorial-profile-section">
-      <header><span>01</span><div><p className="editorial-kicker">Capabilities</p><h2>시스템을 끝까지<br />이어 보는 역량</h2></div></header>
+      <header><span>01</span><div><p className="editorial-kicker">개발 분야</p><h2>하는 일</h2></div></header>
       <div className="editorial-capability-list">
         {capabilities.map(([title, description], index) => (
           <article key={title}>

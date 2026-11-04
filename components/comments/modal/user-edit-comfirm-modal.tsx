@@ -81,13 +81,12 @@ const UserEditConfirmModal = ({
       <DialogContent className="editorial-comment-edit-modal">
         <DialogHeader className="editorial-comment-edit-header">
           <div className="editorial-comment-edit-meta" aria-hidden="true">
-            <span>Edit / 01</span>
-            <span>Comment desk</span>
+            <span>댓글 관리</span>
+            <span>수정</span>
           </div>
           <DialogTitle>댓글 수정</DialogTitle>
           <DialogDescription>
-            내용을 다듬은 뒤, 작성할 때 설정한 비밀번호로 변경사항을
-            확인해주세요.
+            댓글을 처음 쓸 때 입력한 비밀번호가 필요해요.
           </DialogDescription>
         </DialogHeader>
 
@@ -97,7 +96,7 @@ const UserEditConfirmModal = ({
         >
           <label htmlFor="edit-comment-content">
             <span className="editorial-comment-edit-label">
-              <span>01 / Comment</span>
+              <span>댓글 내용</span>
               <span>{editComment.length}자</span>
             </span>
             <Textarea
@@ -105,15 +104,14 @@ const UserEditConfirmModal = ({
               value={editComment}
               rows={6}
               autoFocus
-              placeholder="수정할 댓글 내용을 적어주세요"
+              placeholder="댓글 내용"
               onChange={(event) => setEditComment(event.target.value)}
             />
           </label>
 
           <label htmlFor="edit-comment-password">
             <span className="editorial-comment-edit-label">
-              <span>02 / Password</span>
-              <span>확인용</span>
+              <span>비밀번호</span>
             </span>
             <Input
               id="edit-comment-password"

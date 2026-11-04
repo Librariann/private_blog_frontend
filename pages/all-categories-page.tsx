@@ -24,16 +24,16 @@ const AllCategoriesPage = () => {
       <main className="editorial-inner-page">
         <EditorialPageHeading
           index="02"
-          eyebrow="Index / Subjects"
-          title="관심사의 지도"
-          description="문제와 도구, 시행착오가 서로 만나는 지점을 주제별로 정리했습니다."
-          meta={`${categories.length} FIELDS / ${totalSubCategories} TOPICS`}
+          eyebrow="주제별 보기"
+          title="카테고리"
+          description="그동안 쓴 글을 주제별로 모아뒀어요."
+          meta={`카테고리 ${categories.length}개 · 세부 주제 ${totalSubCategories}개`}
         />
 
         <dl className="editorial-stats">
-          <div><dt>Fields</dt><dd>{categories.length.toString().padStart(2, "0")}</dd></div>
-          <div><dt>Topics</dt><dd>{totalSubCategories.toString().padStart(2, "0")}</dd></div>
-          <div><dt>Articles</dt><dd>{totalPosts.toString().padStart(2, "0")}</dd></div>
+          <div><dt>카테고리</dt><dd>{categories.length.toString().padStart(2, "0")}</dd></div>
+          <div><dt>세부 주제</dt><dd>{totalSubCategories.toString().padStart(2, "0")}</dd></div>
+          <div><dt>글</dt><dd>{totalPosts.toString().padStart(2, "0")}</dd></div>
         </dl>
 
         <section className="editorial-category-index">
@@ -47,7 +47,7 @@ const AllCategoriesPage = () => {
                   </div>
                   <div>
                     <h2>{parent.categoryTitle}</h2>
-                    <p>{parent.subCategories?.length || 0} TOPICS · {parent.postCount ?? 0} ARTICLES</p>
+                    <p>세부 주제 {parent.subCategories?.length || 0}개 · 글 {parent.postCount ?? 0}개</p>
                   </div>
                 </header>
                 <div className="editorial-topic-grid">
@@ -57,7 +57,7 @@ const AllCategoriesPage = () => {
                       onClick={() => router.push(`/post/${parent.categoryTitle}/${child.categoryTitle}`)}
                     >
                       <span>{child.categoryTitle}</span>
-                      <small>{child.postCount ?? 0} NOTES</small>
+                      <small>글 {child.postCount ?? 0}개</small>
                       <ArrowUpRight aria-hidden="true" />
                     </button>
                   ))}
@@ -68,7 +68,7 @@ const AllCategoriesPage = () => {
         </section>
 
         <section className="editorial-topic-cloud">
-          <span className="editorial-section-label">Frequent vocabulary</span>
+          <span className="editorial-section-label">많이 쓴 태그</span>
           <div>{popularHashTags.slice(0, 12).map((tag) => (
             <span key={tag.hashtag}>#{tag.hashtag}<sup>{tag.count}</sup></span>
           ))}</div>

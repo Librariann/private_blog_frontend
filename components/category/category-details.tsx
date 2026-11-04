@@ -131,34 +131,31 @@ const CategoryDetails = ({
       </button>
       <EditorialPageHeading
         index="03"
-        eyebrow="Subject / Collection"
+        eyebrow="카테고리"
         title={String(
           slug?.[1] || categoryMemoized?.categoryTitle || "카테고리"
         )}
-        description={
-          categoryMemoized?.description ||
-          "이 주제에 관해 기록한 생각과 구현의 과정입니다."
-        }
-        meta={`${totalCount} ARTICLES`}
+        description={categoryMemoized?.description ?? ""}
+        meta={`글 ${totalCount}개`}
       />
       <dl className="editorial-stats">
         <div>
-          <dt>Articles</dt>
+          <dt>글</dt>
           <dd>{totalCount.toString().padStart(2, "0")}</dd>
         </div>
         <div>
-          <dt>Total views</dt>
+          <dt>전체 조회수</dt>
           <dd>{totalViews.toLocaleString()}</dd>
         </div>
         <div>
-          <dt>Avg. read</dt>
+          <dt>평균 읽는 시간</dt>
           <dd>{averageReadTime}′</dd>
         </div>
       </dl>
       <section className="editorial-archive-results editorial-category-results">
         <div className="editorial-list-heading">
-          <h2>이 주제의 기록</h2>
-          <span>NEWEST FIRST</span>
+          <h2>이 카테고리의 글</h2>
+          <span>최신순</span>
         </div>
         {visiblePosts.length ? (
           visiblePosts.map((post) => (
@@ -174,7 +171,7 @@ const CategoryDetails = ({
             />
           ))
         ) : (
-          <div className="editorial-empty">아직 포스트가 없습니다.</div>
+          <div className="editorial-empty">아직 올라온 글이 없어요.</div>
         )}
         <div ref={sentinelRef} className="editorial-infinite-status">
           {isLoading && <span role="status">다음 글을 불러오는 중...</span>}
@@ -191,7 +188,7 @@ const CategoryDetails = ({
       {tags.length > 0 && (
         <section className="editorial-topic-cloud">
           <span className="editorial-section-label">
-            Vocabulary in this subject
+            관련 태그
           </span>
           <div>
             {tags.slice(0, 10).map(([tag, count]) => (

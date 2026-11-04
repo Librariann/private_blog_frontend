@@ -79,12 +79,12 @@ const Main = ({
         <title>{`${userInfo?.user?.nickname || "Librarian"}'s Archive | 개발 블로그`}</title>
         <meta
           name="description"
-          content={`${userInfo?.user?.nickname}의 기술 아카이브. 개발 과정에서 배운 문제 해결 방법과 경험을 기록합니다.`}
+          content="개발하면서 막혔던 것, 직접 해보고 알게 된 것들을 적는 블로그입니다."
         />
         <meta property="og:title" content="Librarian's Archive" />
         <meta
           property="og:description"
-          content={`Frontend, Backend, DevOps 기술 아카이브 · ${posts.length}개의 기록`}
+          content={`백엔드, 프론트엔드, 인프라 이야기 · 글 ${posts.length}개`}
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://librarian-blog.dev" />
@@ -115,17 +115,17 @@ const Main = ({
             </div>
 
             <p className="editorial-eyebrow">
-              {primaryPost?.category?.categoryTitle || "ENGINEERING NOTE"}
+              {primaryPost?.category?.categoryTitle || "개발 블로그"}
               <span aria-hidden="true">/</span>
-              FEATURED
+              추천 글
             </p>
             <h1 id="featured-post-title" className="editorial-display">
-              {primaryPost?.title || "기술과 경험을 오래 남는 기록으로 만듭니다."}
+              {primaryPost?.title || "개발하면서 배운 것들"}
             </h1>
             <div className="editorial-proof-line" aria-hidden="true" />
             <p className="editorial-deck">
               {primaryPost?.excerpt ||
-                "복잡한 문제를 풀며 발견한 판단 기준과 시행착오를 기록합니다."}
+                "개발하다 막힌 문제와 어떻게 풀었는지 적어둡니다."}
             </p>
             <div className="editorial-meta">
               <span>{primaryPost?.category?.categoryTitle || "NOTE"}</span>
@@ -147,8 +147,7 @@ const Main = ({
 
           <aside className="editorial-latest" aria-labelledby="latest-notes-title">
             <div className="editorial-section-heading">
-              <h2 id="latest-notes-title">Latest notes</h2>
-              <span>계속 기록하는 중</span>
+              <h2 id="latest-notes-title">최근 글</h2>
             </div>
 
             <div className="editorial-latest-list">
@@ -176,7 +175,7 @@ const Main = ({
                 ))
               ) : (
                 <p className="editorial-empty">
-                  첫 번째 기록을 준비하고 있습니다.
+                  아직 올라온 글이 없어요.
                 </p>
               )}
             </div>
@@ -187,7 +186,7 @@ const Main = ({
           <div className="editorial-index-header">
             <div>
               <span>ARCHIVE / {String(posts.length).padStart(3, "0")}</span>
-              <h2 id="archive-index-title">기술 기록 인덱스</h2>
+              <h2 id="archive-index-title">개발 글 모음</h2>
             </div>
             <button type="button" onClick={() => router.push("/all-posts-page")}>
               모든 글 보기 <ArrowRight aria-hidden="true" />
@@ -231,14 +230,13 @@ const Main = ({
 
         <section className="editorial-discovery" aria-label="주제별 탐색">
           <div className="editorial-discovery-intro">
-            <span>DISCOVER / BY SUBJECT</span>
+            <span>카테고리</span>
             <h2>
-              <span>관심 있는 문제부터</span>
-              <span>기록을 탐색하세요.</span>
+              <span>관심 있는 주제부터</span>
+              <span>골라 보세요.</span>
             </h2>
             <p>
-              기술 스택보다 해결하려 했던 문제와 판단의 맥락을 중심으로
-              기록합니다.
+              어디서 막혔고 어떻게 풀었는지, 주제별로 모아뒀어요.
             </p>
           </div>
 
@@ -284,7 +282,7 @@ const Main = ({
           </div>
 
           <div className="editorial-tags">
-            <span>POPULAR INDEX</span>
+            <span>많이 쓴 태그</span>
             <div>
               {popularHashTags?.slice(0, 8).map((tag) => (
                 <span key={tag.hashtag}>#{tag.hashtag}</span>
@@ -296,7 +294,7 @@ const Main = ({
         <section className="editorial-author" aria-label="작성자 소개">
           <span className="editorial-author-mark" aria-hidden="true">✳</span>
           <div>
-            <span>WRITTEN AND MAINTAINED BY</span>
+            <span>블로그 주인</span>
             <strong>{userInfo?.user?.nickname || "Park SeongHyun"}</strong>
             <small>{userInfo?.user?.role || "Software Engineer"}</small>
           </div>

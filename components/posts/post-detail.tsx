@@ -227,7 +227,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
         {/* Post Header */}
         <article>
           <header className="editorial-article-header">
-            <span className="editorial-kicker">{postData?.category?.categoryTitle} / Field note</span>
+            <span className="editorial-kicker">{postData?.category?.categoryTitle || "개발 글"}</span>
             <h1>{postData?.title}</h1>
             {postData?.excerpt && <p>{postData.excerpt}</p>}
             <div className="editorial-article-meta">
@@ -251,7 +251,7 @@ const PostDetail = ({ post }: PostDetailPageProps) => {
               >
                 <div className="flex items-center space-x-3">
                   <List className="w-4 h-4" />
-                  <span>Contents</span>
+                  <span>목차</span>
                 </div>
                 <motion.div
                   animate={{ rotate: isTocOpen ? 180 : 0 }}

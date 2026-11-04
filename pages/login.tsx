@@ -74,13 +74,13 @@ export default function Login() {
       <Head><title>로그인 | Librarian&apos;s Blog</title></Head>
       <main className="editorial-auth-page">
         <section className="editorial-auth-intro">
-          <span className="editorial-kicker">Private desk / Access</span>
+          <span className="editorial-kicker">블로그 관리</span>
           <span className="editorial-auth-index">A</span>
-          <h1>기록을 관리하는<br />작업실로 들어갑니다.</h1>
-          <p>발행, 분류, 댓글 관리 도구는 운영자에게만 열려 있습니다.</p>
+          <h1>관리자 로그인</h1>
+          <p>글을 쓰거나 댓글을 관리하려면 로그인하세요.</p>
         </section>
         <form onSubmit={handleSubmit(onSubmit)} className="editorial-auth-form">
-          <span className="editorial-section-label">Sign in</span>
+          <span className="editorial-section-label">로그인 정보</span>
           <label><span>Email</span>
         <input
           {...register("email", {

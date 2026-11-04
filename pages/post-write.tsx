@@ -367,7 +367,7 @@ const PostWrite = () => {
               value={excerpt}
               onChange={(e) => setExcerpt(e.target.value)}
               onKeyDown={handleAddTag}
-              placeholder="포스트의 간략한 요약을 작성하면 사람들이 보기 편해져요"
+              placeholder="어떤 글인지 짧게 적어 주세요"
               className={
                 isDarkMode
                   ? "bg-white/5 border-white/10 text-white placeholder:text-white/40"
@@ -383,7 +383,7 @@ const PostWrite = () => {
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleAddTag}
-                placeholder="태그를 입력해주세요 (엔터로 입력할 수 있어요)"
+                placeholder="태그를 적고 Enter를 누르세요"
                 className={
                   isDarkMode
                     ? "bg-transparent border-white/10 text-white placeholder:text-white/40"

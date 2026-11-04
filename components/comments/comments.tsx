@@ -39,8 +39,8 @@ const Comments = ({ comments, postId }: CommentsProps) => {
     <section className="editorial-comments">
       <div className="editorial-comments-heading">
         <MessageCircle className="w-5 h-5" />
-        <h3>독자의 메모</h3>
-        <span>{commentsList.length.toString().padStart(2, "0")} COMMENTS</span>
+        <h3>댓글</h3>
+        <span>{commentsList.length}개</span>
       </div>
 
       {/* Comment Form */}

@@ -88,13 +88,13 @@ function CreateAccount() {
       <Head><title>접근 요청 | Librarian&apos;s Blog</title></Head>
       <main className="editorial-auth-page">
         <section className="editorial-auth-intro">
-          <span className="editorial-kicker">Private desk / Request</span>
+          <span className="editorial-kicker">블로그 관리</span>
           <span className="editorial-auth-index">B</span>
-          <h1>새로운 계정으로<br />작업실을 엽니다.</h1>
-          <p>현재 새 계정은 관리자 승인 범위에서만 사용할 수 있습니다.</p>
+          <h1>계정 만들기</h1>
+          <p>계정은 관리자만 만들 수 있어요.</p>
         </section>
         <form onSubmit={handleSubmit(onSubmit)} className="editorial-auth-form">
-          <span className="editorial-section-label">Create account</span>
+          <span className="editorial-section-label">계정 정보</span>
           <label><span>Email</span>
         <input
           {...register("email", {

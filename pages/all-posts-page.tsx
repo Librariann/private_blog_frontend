@@ -161,16 +161,16 @@ const AllPostsPage = () => {
         <title>모든 포스트 | {userInfo?.user?.nickname}&apos;s blog</title>
         <meta
           name="description"
-          content={`총 ${totalCount}개의 기술 포스트를 읽어보세요.`}
+          content="블로그에 올린 개발 글을 모아뒀어요. 제목이나 요약으로 검색할 수 있습니다."
         />
       </Head>
       <main className="editorial-inner-page">
         <EditorialPageHeading
           index="01"
-          eyebrow="Archive / All notes"
-          title="모든 포스트"
-          description="기록은 시간순으로 쌓이고, 관심사는 주제별로 연결됩니다."
-          meta={`${totalCount.toString().padStart(2, "0")} ARTICLES`}
+          eyebrow="글 목록"
+          title="모든 글"
+          description="최근에 올린 글부터 볼 수 있어요."
+          meta={`글 ${totalCount.toString().padStart(2, "0")}개`}
         />
 
         <label className="editorial-search">
@@ -187,12 +187,12 @@ const AllPostsPage = () => {
 
         <div className="editorial-archive-layout">
           <aside className="editorial-filter-panel">
-            <span className="editorial-section-label">Filter by subject</span>
+            <span className="editorial-section-label">카테고리</span>
             <button
               className={selectedCategory === "all" ? "is-active" : ""}
               onClick={() => setSelectedCategory("all")}
             >
-              <span>전체 포스트</span>
+              <span>모든 글</span>
               <small>{selectedCategory === "all" ? totalCount : "ALL"}</small>
             </button>
             {categories?.map((parent) => (
@@ -230,7 +230,7 @@ const AllPostsPage = () => {
               </div>
             ))}
             <div className="editorial-filter-tags">
-              <span className="editorial-section-label">Popular tags</span>
+              <span className="editorial-section-label">많이 쓴 태그</span>
               <p>
                 {popularHashTags
                   .slice(0, 10)
@@ -243,9 +243,9 @@ const AllPostsPage = () => {
           <section className="editorial-archive-results">
             <div className="editorial-list-heading">
               <h2>
-                {selectedCategory === "all" ? "전체 기록" : selectedCategory}
+                {selectedCategory === "all" ? "전체 목록" : selectedCategory}
               </h2>
-              <span>{totalCount} RESULTS</span>
+              <span>{totalCount}개</span>
             </div>
             {posts.length
               ? posts.map((post) => (
@@ -264,7 +264,7 @@ const AllPostsPage = () => {
                   <div className="editorial-empty">
                     검색 결과가 없습니다.
                     <br />
-                    <small>다른 키워드나 주제를 선택해보세요.</small>
+                    <small>검색어를 바꾸거나 다른 카테고리를 골라 보세요.</small>
                   </div>
                 )}
             <div ref={sentinelRef} className="editorial-infinite-status">

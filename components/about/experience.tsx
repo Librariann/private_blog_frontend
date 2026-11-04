@@ -30,8 +30,8 @@ export function Experience() {
       period: "2023.02 - 2024.03",
       location: "Seoul, Korea",
       description: [
-        "공간정보 데이터를 효율적으로 핸들링하기 위한 전용 백엔드 API 서버 설계 및 구축",
-        "공간 인덱스(Spatial Index) 적용 및 복합 쿼리 최적화로 응답 지연 최소화",
+        "공간 데이터를 조회하는 전용 API 서버 설계·개발",
+        "공간 인덱스 적용과 복합 쿼리 최적화로 응답 시간 단축",
         "공간 데이터와 API, GeoServer 연동을 통해 실시간 도로 상태 및 위치정보 표시",
       ],
     },
@@ -54,7 +54,7 @@ export function Experience() {
       description: [
         "Spring Boot, MyBatis 기반으로 급여·평가 등 인사 도메인 REST API 구현",
         "Oracle -> Tibero 데이터베이스 마이그레이션 수행",
-        "이관 전후 Row Count 및 주요 Key(ID) 기준 랜덤 샘플 데이터 비교를 통해 정합성 검증 수행",
+        "이관 전후의 행 수를 확인하고, ID로 뽑은 무작위 표본을 비교해 데이터 검증",
       ],
     },
     {
@@ -76,12 +76,8 @@ export function Experience() {
       <header>
         <span>02</span>
         <div>
-          <p className="editorial-kicker">Experience / 2020—Now</p>
-          <h2>
-            운영에서 배운
-            <br />
-            개발의 기록
-          </h2>
+          <p className="editorial-kicker">2020년부터</p>
+          <h2>일해 온 곳</h2>
         </div>
       </header>
       <div className="editorial-experience-list">
