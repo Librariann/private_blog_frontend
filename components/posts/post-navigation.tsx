@@ -1,7 +1,7 @@
-import { GetPostByIdQuery, Post } from "@/gql/graphql";
+import { Post } from "@/gql/graphql";
 import { formatDateShort } from "@/utils/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 type navationType = Pick<
   Post,
@@ -27,13 +27,12 @@ export type PostNavigationProps = {
 };
 
 const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
-  const postBasePath = `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}`;
-  const router = useRouter();
+  const postBasePath = `/post/${encodeURIComponent(post.category?.parentCategory?.categoryTitle || "")}/${encodeURIComponent(post.category?.categoryTitle || "")}`;
   return (
     <nav className="editorial-post-navigation" aria-label="이전 및 다음 글">
       {prevPost ? (
-        <button
-          onClick={() => router.push(`${postBasePath}/@Post-${prevPost.id}`)}
+        <Link
+          href={`${postBasePath}/@Post-${prevPost.id}`}
           className="editorial-post-nav-link"
         >
           <div className="editorial-post-nav-label">
@@ -44,7 +43,7 @@ const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
           <p>
             {formatDateShort(prevPost?.createdAt)} • {prevPost?.readTime}분
           </p>
-        </button>
+        </Link>
       ) : (
         <div className="editorial-post-nav-empty">
           <div>이전글이 없습니다</div>
@@ -52,8 +51,8 @@ const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
       )}
 
       {nextPost ? (
-        <button
-          onClick={() => router.push(`${postBasePath}/@Post-${nextPost.id}`)}
+        <Link
+          href={`${postBasePath}/@Post-${nextPost.id}`}
           className="editorial-post-nav-link is-next"
         >
           <div className="editorial-post-nav-label">
@@ -64,7 +63,7 @@ const PostNavigation = ({ post, prevPost, nextPost }: PostNavigationProps) => {
           <p>
             {formatDateShort(nextPost?.createdAt)} • {nextPost?.readTime}분
           </p>
-        </button>
+        </Link>
       ) : (
         <div className="editorial-post-nav-empty is-next">
           <div>다음글이 없습니다</div>
