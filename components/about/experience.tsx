@@ -2,20 +2,20 @@ export function Experience() {
   const experiences = [
     {
       company: "Growdo Labs (그로우두 랩스)",
-      position: "1인 개발",
+      position: "Software Engineer (Fullstack)",
       period: "2025.11 - Present",
       location: "Seoul, Korea",
       description: [
-        "Growdo와 Ads_Tech (가칭)의 도메인 모델링, DB 스키마 및 NestJS API 설계·구현",
-        "Next.js 기반 사용자 화면 개발 및 Railway·Vercel 배포 환경 구축",
+        "Growdo와 GrowdoAds의 도메인 모델링, DB 스키마 및 NestJS API 설계·구현",
+        "NestJS 기반 백엔드 API 설계·구현 및 PostgreSQL 데이터베이스 구조 설계·개선",
+        "Next.js App router 기반 사용자 화면 개발",
         "각 서비스의 목적에 맞게 LLM을 학습·배포하고 AI 추천 기능에 연동",
-        "Growdo: 사용자 행동 패턴을 분석해 개인화된 할 일을 추천하는 AI 기능 개발 중",
-        "Ads_Tech: 사용자의 광고를 분석해 개선 방향을 제안하는 AI 기능 개발 중",
+        "쿠폰교환 및 도전과제 달성시의 데이터 정합성, 멱등성, 트랜잭션 처리 로직 구현",
       ],
     },
     {
       company: "(주)웨이버스",
-      position: "Software Engineer (Backend)",
+      position: "Software Engineer (Fullstack)",
       period: "2024.05 - 2025.08",
       location: "Seoul, Korea",
       description: [
@@ -26,7 +26,7 @@ export function Experience() {
     },
     {
       company: "JIN SYSTEM(주)",
-      position: "Software Engineer (Backend)",
+      position: "Software Engineer (Fullstack)",
       period: "2023.02 - 2024.03",
       location: "Seoul, Korea",
       description: [
@@ -37,7 +37,7 @@ export function Experience() {
     },
     {
       company: "한류뱅크(주)",
-      position: "Software Engineer (Backend)",
+      position: "Software Engineer (Fullstack)",
       period: "2021.12 - 2022.06",
       location: "Seoul, Korea",
       description: [

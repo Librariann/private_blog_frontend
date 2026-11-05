@@ -2,6 +2,7 @@ import { AboutMe } from "@/components/about/about-me";
 import { ContactMe } from "@/components/about/contact-me";
 import { Experience } from "@/components/about/experience";
 import { Hero } from "@/components/about/hero";
+import { PersonalProjects } from "@/components/about/personal-projects";
 import { Skills } from "@/components/about/skils";
 import Head from "next/head";
 
@@ -16,6 +17,7 @@ function About() {
         <Hero />
         <AboutMe />
         <Experience />
+        <PersonalProjects />
         <Skills />
         <ContactMe />
       </main>

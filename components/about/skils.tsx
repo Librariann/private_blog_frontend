@@ -9,7 +9,7 @@ const skillCategories = [
 export function Skills() {
   return (
     <section id="skills" className="editorial-profile-section">
-      <header><span>03</span><div><p className="editorial-kicker">기술 스택</p><h2>써본 기술</h2></div></header>
+      <header><span>04</span><div><p className="editorial-kicker">기술 스택</p><h2>써본 기술</h2></div></header>
       <div className="editorial-skill-index">
         {skillCategories.map(([title, skills], index) => (
           <article key={title}>
