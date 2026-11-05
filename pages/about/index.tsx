@@ -10,7 +10,7 @@ function About() {
     <>
       <Head>
         <title>개발자 프로필 | Park SeongHyun</title>
-        <meta name="description" content="시스템을 설계하고 운영하는 개발자 Park SeongHyun의 경력과 기술 프로필" />
+        <meta name="description" content="백엔드 개발자 박성현이에요. 제가 해온 일과 써본 기술을 소개해요." />
       </Head>
       <main className="editorial-profile">
         <Hero />

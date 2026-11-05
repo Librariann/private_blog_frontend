@@ -7,7 +7,11 @@ export function Hero() {
       <div className="editorial-profile-intro">
         <span className="editorial-kicker">소개</span>
         <h1>Park<br />SeongHyun</h1>
-        <p>백엔드 개발자 박성현입니다. 서버와 DB를 주로 다루고, 화면 개발과 배포도 직접 해요.</p>
+        <p>
+          안녕하세요, 백엔드 개발자 박성현입니다. 주로 API를 개발하고 DB
+          구조를 설계합니다. 필요하면 화면 개발과 배포도 직접 합니다. 이
+          블로그에는 개발하다 막혔던 문제와 해결 방법을 적고 있습니다.
+        </p>
       </div>
       <aside>
         <span>Backend · Frontend<br />Infrastructure · Architecture</span>
