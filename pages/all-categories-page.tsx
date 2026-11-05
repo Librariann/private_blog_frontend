@@ -2,11 +2,22 @@ import { EditorialPageHeading } from "@/components/editorial/page-heading";
 import { useGetCategories, useGetPopularHashTagList } from "@/hooks/hooks";
 import { ArrowUpRight, Hash } from "lucide-react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import Link from "next/link";
+import type { GetServerSideProps } from "next";
+import type { GetCategoriesQuery } from "@/gql/graphql";
+import { getCategories } from "@/lib/posts";
 
-const AllCategoriesPage = () => {
-  const router = useRouter();
-  const { categories } = useGetCategories();
+type AllCategoriesPageProps = {
+  initialCategories: NonNullable<GetCategoriesQuery["getCategories"]["categories"]>;
+};
+
+export const getServerSideProps: GetServerSideProps<AllCategoriesPageProps> = async () => ({
+  props: { initialCategories: await getCategories() },
+});
+
+const AllCategoriesPage = ({ initialCategories }: AllCategoriesPageProps) => {
+  const { categories: clientCategories } = useGetCategories();
+  const categories = clientCategories.length ? clientCategories : initialCategories;
   const popularHashTags = useGetPopularHashTagList();
   const totalSubCategories = categories.reduce(
     (sum, category) => sum + (category.subCategories?.length || 0), 0
@@ -52,14 +63,14 @@ const AllCategoriesPage = () => {
                 </header>
                 <div className="editorial-topic-grid">
                   {parent.subCategories?.map((child) => (
-                    <button
+                    <Link
                       key={child.categoryTitle}
-                      onClick={() => router.push(`/post/${parent.categoryTitle}/${child.categoryTitle}`)}
+                      href={`/post/${encodeURIComponent(parent.categoryTitle)}/${encodeURIComponent(child.categoryTitle)}`}
                     >
                       <span>{child.categoryTitle}</span>
                       <small>글 {child.postCount ?? 0}개</small>
                       <ArrowUpRight aria-hidden="true" />
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </article>
