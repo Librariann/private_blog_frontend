@@ -2,7 +2,7 @@ export function Experience() {
   const experiences = [
     {
       company: "Growdo Labs (그로우두 랩스)",
-      position: "Software Engineer (Fullstack)",
+      position: "Founder, Software Engineer (Fullstack)",
       period: "2025.11 - Present",
       location: "Seoul, Korea",
       description: [
