@@ -17,6 +17,7 @@ import { GlobalLoading } from "@/components/loading/global-loading";
 import { useRouter } from "next/router";
 import GlobalLoading2 from "@/components/loading/global-loading2";
 import "@fontsource-variable/noto-sans-kr/wght.css";
+import { getCanonicalUrl } from "@/lib/seo";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [apolloClient] = useState(() =>
@@ -50,6 +51,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
       <Head>
+        <link
+          rel="canonical"
+          href={getCanonicalUrl(router.asPath)}
+          key="canonical"
+        />
         <meta
           name="google-site-verification"
           content="Lur52L9fwqDX7fwgKdI3KDi0kVxdh79f1HVKoDEs-Oo"
