@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+
+const INSTALL_COMMAND = "npm install pay-rehearsal";
+
 const blogStack = [
   [
     "프론트엔드",
@@ -14,6 +18,34 @@ const gitLawnStack = [
 ] as const;
 
 export function PersonalProjects() {
+  const [copyStatus, setCopyStatus] = useState<
+    "idle" | "copying" | "copied" | "error"
+  >("idle");
+
+  useEffect(() => {
+    if (copyStatus !== "copied" && copyStatus !== "error") return;
+
+    const timeoutId = window.setTimeout(() => setCopyStatus("idle"), 2000);
+    return () => window.clearTimeout(timeoutId);
+  }, [copyStatus]);
+
+  const copyInstallCommand = async () => {
+    setCopyStatus("copying");
+    try {
+      await navigator.clipboard.writeText(INSTALL_COMMAND);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("error");
+    }
+  };
+
+  const copyLabel = {
+    idle: "복사",
+    copying: "복사 중",
+    copied: "복사됨",
+    error: "복사 실패",
+  }[copyStatus];
+
   return (
     <section
       id="projects"
@@ -62,6 +94,26 @@ export function PersonalProjects() {
             대기와 PayPal 승인·캡처 흐름까지 검증할 수 있습니다. npm에 공개
             배포했습니다.
           </p>
+          <div className="mt-4 max-w-prose">
+            <p className="text-sm font-semibold">npm으로 설치</p>
+            <div className="mt-2 flex items-center border border-[var(--editorial-rule)] bg-[var(--editorial-paper-deep)] text-[var(--editorial-ink)]">
+              <pre className="min-w-0 flex-1 overflow-x-auto px-3 py-2 font-mono text-sm">
+                <code>{INSTALL_COMMAND}</code>
+              </pre>
+              <button
+                type="button"
+                onClick={copyInstallCommand}
+                disabled={copyStatus === "copying" || copyStatus === "copied"}
+                aria-label={`설치 명령어 ${copyLabel}`}
+                aria-busy={copyStatus === "copying"}
+                className="min-h-11 min-w-20 shrink-0 border-l border-[var(--editorial-rule)] px-3 text-xs font-semibold hover:text-[var(--editorial-signal-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--editorial-signal)] disabled:cursor-default"
+              >
+                <span role="status" aria-live="polite">
+                  {copyLabel}
+                </span>
+              </button>
+            </div>
+          </div>
           <dl className="mt-6 border-y border-[var(--editorial-rule)] text-sm">
             <div className="grid gap-1 py-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4">
               <dt className="font-semibold">기술 스택</dt>
