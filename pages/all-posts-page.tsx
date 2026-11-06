@@ -3,23 +3,77 @@ import {
   GetPaginatedPostListQuery,
   GetPaginatedPostListQueryVariables,
   PostCardFieldsFragment,
+  GetCategoriesQuery,
 } from "@/gql/graphql";
+import type { GetServerSideProps } from "next";
+import Link from "next/link";
+import { createApolloClient } from "@/apollo";
+import { getCategories } from "@/lib/posts";
 import { useApolloClient } from "@apollo/client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
 import { ChevronDown, Search } from "lucide-react";
 import Head from "next/head";
-import { useUserInfoStore } from "@/stores/useUserInfoStore";
 import BlogPostCard2 from "@/components/cards/blog-post-card2";
 import { EditorialPageHeading } from "@/components/editorial/page-heading";
 import { CATEGORY_POST_PAGE_SIZE } from "@/common/constants";
 import { GET_PAGINATED_POST_LIST_QUERY } from "@/lib/queries";
 
-const AllPostsPage = () => {
-  const { categories } = useGetCategories();
-  const { userInfo } = useUserInfoStore();
+type AllPostsPageProps = {
+  initialPosts: PostCardFieldsFragment[];
+  initialTotalCount: number;
+  initialHasMore: boolean;
+  initialPage: number;
+  initialCategories: NonNullable<GetCategoriesQuery["getCategories"]["categories"]>;
+};
+
+export const getServerSideProps: GetServerSideProps<AllPostsPageProps> = async ({ query }) => {
+  const pageValue = query.page;
+  if (
+    pageValue !== undefined &&
+    (typeof pageValue !== "string" || !/^[1-9]\d*$/.test(pageValue))
+  ) {
+    return { notFound: true };
+  }
+
+  const initialPage = Number(pageValue || 1);
+  const offset = (initialPage - 1) * CATEGORY_POST_PAGE_SIZE;
+  if (!Number.isSafeInteger(offset) || offset > 2147483647) {
+    return { notFound: true };
+  }
+
+  const [{ data }, initialCategories] = await Promise.all([
+    createApolloClient().query<GetPaginatedPostListQuery, GetPaginatedPostListQueryVariables>({
+      query: GET_PAGINATED_POST_LIST_QUERY,
+      variables: { offset, limit: CATEGORY_POST_PAGE_SIZE },
+      fetchPolicy: "no-cache",
+    }),
+    getCategories(),
+  ]);
+  const page = data.getPaginatedPostList;
+  if (!page.ok) throw new Error(page.error || "Unable to load posts");
+  if (initialPage > 1 && !page.posts?.length) return { notFound: true };
+
+  return {
+    props: {
+      initialPosts: page.posts || [],
+      initialTotalCount: page.totalCount,
+      initialHasMore: page.hasMore,
+      initialPage,
+      initialCategories,
+    },
+  };
+};
+
+const AllPostsPage = ({
+  initialPosts,
+  initialTotalCount,
+  initialHasMore,
+  initialPage,
+  initialCategories,
+}: AllPostsPageProps) => {
+  const { categories: clientCategories } = useGetCategories();
+  const categories = clientCategories.length ? clientCategories : initialCategories;
   const client = useApolloClient();
-  const router = useRouter();
   const popularHashTags = useGetPopularHashTagList();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -27,15 +81,18 @@ const AllPostsPage = () => {
   const [expandedParents, setExpandedParents] = useState<Set<string>>(
     new Set()
   );
-  const [posts, setPosts] = useState<PostCardFieldsFragment[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState(initialPosts);
+  const [totalCount, setTotalCount] = useState(initialTotalCount);
+  const [hasMore, setHasMore] = useState(initialHasMore);
+  const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
   const queryVersionRef = useRef(0);
+  const isUnfiltered = !debouncedSearchQuery && selectedCategory === "all";
+  const pageOffset = isUnfiltered ? (initialPage - 1) * CATEGORY_POST_PAGE_SIZE : 0;
+  const nextPage = Math.ceil((pageOffset + posts.length) / CATEGORY_POST_PAGE_SIZE) + 1;
 
   useEffect(() => {
     const timer = window.setTimeout(
@@ -71,12 +128,21 @@ const AllPostsPage = () => {
   useEffect(() => {
     let active = true;
     const queryVersion = ++queryVersionRef.current;
+    if (isUnfiltered && reloadKey === 0) {
+      setPosts(initialPosts);
+      setTotalCount(initialTotalCount);
+      setHasMore(initialHasMore);
+      setIsLoading(false);
+      setLoadError(false);
+      loadingRef.current = false;
+      return;
+    }
     loadingRef.current = true;
     setIsLoading(true);
     setLoadError(false);
     setPosts([]);
 
-    void queryPosts(0)
+    void queryPosts(pageOffset)
       .then((page) => {
         if (!active || queryVersion !== queryVersionRef.current) return;
         setPosts(page?.posts || []);
@@ -98,7 +164,7 @@ const AllPostsPage = () => {
     return () => {
       active = false;
     };
-  }, [queryPosts, reloadKey]);
+  }, [queryPosts, reloadKey, isUnfiltered, pageOffset, initialPosts, initialTotalCount, initialHasMore]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || loadingRef.current) return;
@@ -109,7 +175,7 @@ const AllPostsPage = () => {
     setLoadError(false);
 
     try {
-      const page = await queryPosts(posts.length);
+      const page = await queryPosts(pageOffset + posts.length);
       if (queryVersion !== queryVersionRef.current) return;
       const nextPosts = page?.posts || [];
 
@@ -130,7 +196,7 @@ const AllPostsPage = () => {
       loadingRef.current = false;
       setIsLoading(false);
     }
-  }, [hasMore, posts.length, queryPosts]);
+  }, [hasMore, pageOffset, posts.length, queryPosts]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -158,7 +224,7 @@ const AllPostsPage = () => {
   return (
     <>
       <Head>
-        <title>모든 포스트 | {userInfo?.user?.nickname}&apos;s blog</title>
+        <title>{`모든 글${initialPage > 1 ? ` · ${initialPage}페이지` : ""} | Librarian's Archive`}</title>
         <meta
           name="description"
           content="블로그에 올린 개발 글을 모아뒀어요. 제목이나 요약으로 검색할 수 있습니다."
@@ -253,11 +319,6 @@ const AllPostsPage = () => {
                     key={post.id}
                     post={post}
                     mainYn={false}
-                    onClick={() =>
-                      router.push(
-                        `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
-                      )
-                    }
                   />
                 ))
               : !isLoading && (
@@ -285,6 +346,20 @@ const AllPostsPage = () => {
                 <span>모든 글을 불러왔습니다.</span>
               )}
             </div>
+            {isUnfiltered && (
+              <nav aria-label="글 목록 페이지" className="mt-6 flex items-center justify-between gap-4">
+                {initialPage > 1 ? (
+                  <Link href={initialPage === 2 ? "/all-posts-page" : `/all-posts-page?page=${initialPage - 1}`} prefetch={false} rel="prev" className="editorial-back">
+                    이전 페이지
+                  </Link>
+                ) : <span />}
+                {hasMore && (
+                  <Link href={`/all-posts-page?page=${nextPage}`} prefetch={false} rel="next" className="editorial-back">
+                    다음 페이지
+                  </Link>
+                )}
+              </nav>
+            )}
           </section>
         </div>
       </main>
