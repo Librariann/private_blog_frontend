@@ -1,8 +1,9 @@
 import { BlogPostCardProps } from "./blog-post-card";
 import { formatNumberConvertK } from "@/utils/utils";
 import { ArrowUpRight, Eye } from "lucide-react";
+import Link from "next/link";
 
-const BlogPostCard2 = ({ post, onClick }: BlogPostCardProps) => {
+const BlogPostCard2 = ({ post }: BlogPostCardProps) => {
   const date = new Date(post.createdAt).toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "2-digit",
@@ -10,8 +11,11 @@ const BlogPostCard2 = ({ post, onClick }: BlogPostCardProps) => {
   });
 
   return (
-    <article className="editorial-post-row group" onClick={onClick}>
-      <button type="button" className="editorial-post-row-button">
+    <article className="editorial-post-row group">
+      <Link
+        href={`/post/${encodeURIComponent(post.category?.parentCategory?.categoryTitle || "")}/${encodeURIComponent(post.category?.categoryTitle || "")}/@Post-${post.id}`}
+        className="editorial-post-row-button"
+      >
         <div className="editorial-post-row-meta">
           <span>{post.category?.categoryTitle || "NOTE"}</span>
           <time>{date}</time>
@@ -33,7 +37,7 @@ const BlogPostCard2 = ({ post, onClick }: BlogPostCardProps) => {
           <img src={post.thumbnailUrl} alt="" className="editorial-post-row-image" />
         )}
         <ArrowUpRight className="editorial-post-row-arrow" aria-hidden="true" />
-      </button>
+      </Link>
     </article>
   );
 };
