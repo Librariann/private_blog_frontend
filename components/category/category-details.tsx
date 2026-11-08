@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { CATEGORY_POST_PAGE_SIZE } from "@/common/constants";
 import { Post } from "@/gql/graphql";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { useFindOneCategoryById } from "@/hooks/hooks";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -126,9 +127,9 @@ const CategoryDetails = ({
 
   return (
     <main className="editorial-inner-page">
-      <button className="editorial-back" onClick={() => router.back()}>
+      <Link className="editorial-back" href="/all-categories-page">
         <ArrowLeft aria-hidden="true" /> 전체 카테고리
-      </button>
+      </Link>
       <EditorialPageHeading
         index="03"
         eyebrow="카테고리"
@@ -163,11 +164,6 @@ const CategoryDetails = ({
               key={post.id}
               post={post}
               mainYn={false}
-              onClick={() =>
-                router.push(
-                  `/post/${post.category?.parentCategory?.categoryTitle}/${post.category?.categoryTitle}/@Post-${post.id}`
-                )
-              }
             />
           ))
         ) : (
