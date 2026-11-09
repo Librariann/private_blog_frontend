@@ -4,7 +4,7 @@ import styled from "styled-components";
 const GlobalLoading2 = () => {
   return (
     <StyledWrapper>
-      <div className="loadingOverlay">
+      <div className="loadingOverlay" data-global-loading>
         <div className="loader">
           <div className="loader-square" />
           <div className="loader-square" />

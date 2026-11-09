@@ -1,20 +1,15 @@
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import Header from "../header";
 import PostWriteButton from "../post-write-button";
-import { authTokenVar, isLoggedInVar } from "@/apollo";
+import { isLoggedInVar } from "@/apollo";
 import { useReactiveVar } from "@apollo/client";
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  authPage,
-  handlePathes,
-  LOCAL_STORAGE_TOKEN,
-} from "@/common/constants";
+import { authPage, handlePathes } from "@/common/constants";
 import { useLoadingStore } from "@/stores/useLoadingStore";
 import Footer from "../footer";
 import { useDarkModeStore } from "@/stores/useDarkmodStore";
 import { useMe } from "@/hooks/useMe";
-import { toast } from "react-toastify";
 import GlobalLoading2 from "../loading/global-loading2";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -23,13 +18,15 @@ type Props = {
 };
 
 function Layout({ children }: Props) {
-  const { pathname, push } = useRouter();
+  const { pathname } = useRouter();
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const [mounted, setMounted] = useState(false);
   const { globalLoading } = useLoadingStore();
   const { isDarkMode, setIsDarkMode } = useDarkModeStore();
 
-  const { data, error } = useMe();
+  useMe();
+  const requiresLogin =
+    authPage.includes(pathname) || pathname.startsWith("/settings/");
 
   const onToggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -37,23 +34,15 @@ function Layout({ children }: Props) {
 
   useEffect(() => {
     startTransition(() => setMounted(true));
-    if (data === undefined && error === "Token has expired") {
-      toast.error("로그인 시간이 만료되었습니다. 다시 로그인 해주세요.");
-      localStorage.setItem(LOCAL_STORAGE_TOKEN, "");
-      authTokenVar(null);
-      isLoggedInVar(false);
-      push("/");
-    }
-  }, [data, error, push]);
+  }, []);
 
-  //로그인 했을경우에만 접근 가능
   useEffect(() => {
-    // 클라이언트 측에서만 실행되도록 설정
-    if (authPage.includes(pathname) && !isLoggedIn) {
-      toast.error("권한이 없습니다.");
-      push("/");
+    if (mounted && requiresLogin && !isLoggedIn) {
+      void Router.replace("/login");
     }
-  }, [pathname, isLoggedIn, push]);
+  }, [mounted, requiresLogin, isLoggedIn]);
+
+  if (requiresLogin && (!mounted || !isLoggedIn)) return null;
 
   const aboutPage = pathname === "/about";
   const isLayoutVisible = !handlePathes.includes(pathname) || aboutPage;

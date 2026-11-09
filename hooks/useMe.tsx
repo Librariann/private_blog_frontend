@@ -1,4 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useReactiveVar } from "@apollo/client";
+import { authTokenVar } from "@/apollo";
 
 export const ME_QUERY = gql`
   query me {
@@ -52,7 +53,10 @@ export type MeType = {
 };
 
 export const useMe = () => {
+  const token = useReactiveVar(authTokenVar);
   const { data, error } = useQuery<MeType>(ME_QUERY, {
+    skip: !token,
+    ssr: false,
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-first",
   });

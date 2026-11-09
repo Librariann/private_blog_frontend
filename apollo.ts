@@ -7,8 +7,9 @@ import {
   makeVar,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
+import { toast } from "react-toastify";
 import { LOCAL_STORAGE_TOKEN } from "./common/constants";
-import { useMe } from "./hooks/useMe";
 
 // 클라이언트에서만 사용할 수 있는 localStorage 접근
 export const getToken = () => {
@@ -41,9 +42,30 @@ const authLink = setContext((_, { headers }) => {
 });
 
 export function createApolloClient(initialState = null) {
-  return new ApolloClient({
+  const sessionErrorLink = onError(({ graphQLErrors, operation }) => {
+    if (
+      typeof window === "undefined" ||
+      !graphQLErrors?.some(({ message }) => message === "Token has expired")
+    ) {
+      return;
+    }
+
+    const expiredToken = operation.getContext().headers?.["X-JWT"];
+    if (!expiredToken || expiredToken !== authTokenVar()) return;
+
+    // A late response must not clear a newer login.
+    if (getToken() === expiredToken) {
+      localStorage.removeItem(LOCAL_STORAGE_TOKEN);
+    }
+    authTokenVar(null);
+    isLoggedInVar(false);
+    apolloClient.cache.evict({ fieldName: "me" });
+    toast.error("로그인이 만료됐어요. 글은 계속 볼 수 있습니다.");
+  });
+
+  const apolloClient = new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: authLink.concat(httpLink),
+    link: authLink.concat(sessionErrorLink).concat(httpLink),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: "cache-and-network",
@@ -77,5 +99,6 @@ export function createApolloClient(initialState = null) {
       },
     }).restore(initialState || {}),
   });
+  return apolloClient;
 }
 export const client = createApolloClient();

@@ -1047,6 +1047,10 @@ html {
   }
 }
 
+html:has([data-global-loading]) {
+  overflow: hidden;
+}
+
 html body[data-scroll-locked] {
   margin-right: 0 !important;
   padding-right: 0 !important;
