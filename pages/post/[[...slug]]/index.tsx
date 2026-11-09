@@ -35,7 +35,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     let category;
     let postsData;
     let isParentCategory = false;
-    const categories = await getCategories();
 
     // 블로그 상세페이지
     if (slugLength > 0 && slug[slugLength - 1]?.startsWith("@Post-")) {
@@ -47,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       }
     } else if (slugLength > 0 && slug[slugLength - 1]) {
       // 하위 카테고리
+      const categories = await getCategories();
       category = categories
         ?.find((category) => category.categoryTitle === slug[slugLength - 2])
         ?.subCategories?.find(
